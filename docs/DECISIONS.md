@@ -16,3 +16,12 @@
 12. **Library `typecheck`** uses `tsc -b` (not `--noEmit`) so TypeScript project references resolve correctly. **Web `typecheck`** runs `next typegen` first. Next.js 16 gitignores `next-env.d.ts` and writes route types under `.next/`; `app/layout.tsx` imports CSS, which `tsc` accepts only after those files exist. `next-env.d.ts` is also in `.prettierignore` because Next rewrites it.
 13. **No `$schema` in shared `tsconfig` fragments** under `packages/config/typescript/` — avoids VS Code/Cursor trying to download `json.schemastore.org` when `json.schemaDownload.enable` is off; `tsc` does not require it.
 14. **Next.js cache components** (`cacheComponents` and `partialPrefetching`) are on in `apps/web/next.config.ts`. Later cookie, header, and other uncached server reads follow that Next.js 16 model.
+
+## T0.2 — CI baseline (2026-11-06)
+
+1. **GitHub Actions** workflow `.github/workflows/ci.yml` — triggers on `push` to `main` and `pull_request`; permissions `contents: read` only.
+2. **Quality job:** Node **22**, `pnpm/action-setup` (reads `packageManager`), `pnpm install --frozen-lockfile`, then `format:check`, `lint`, `typecheck`, `test`, `build`, `verify:client-bundle`. Placeholder `NEXT_PUBLIC_*` env vars for Next build only (no service role).
+3. **Security job:** Gitleaks via `gitleaks/gitleaks-action@v2` with `GITLEAKS_CONFIG: .gitleaks.toml`; **full history** on `push` to `main` (`fetch-depth: 0`), shallow checkout otherwise. Then `pnpm audit --audit-level high` (high/critical block; moderate/low do not).
+4. **Client bundle check:** `scripts/verify-no-secrets-in-client-bundle.mjs` scans `apps/web/.next` `*.js`/`*.css` (excluding `.map`) for high-signal secret patterns after production build.
+5. **allowBuilds** in `pnpm-workspace.yaml`: `esbuild`, `sharp`, `unrs-resolver` — required so CI can run postinstall/build steps without interactive `pnpm approve-builds`.
+6. **Prettier** ignores `.gitleaks.toml` (no bundled TOML parser).

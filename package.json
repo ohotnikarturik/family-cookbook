@@ -14,6 +14,7 @@
     "test": "pnpm -r --filter \"./packages/*\" build && pnpm -r test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "verify:client-bundle": "node scripts/verify-no-secrets-in-client-bundle.mjs",
     "dev:web": "pnpm --filter @family-cookbook/web dev",
     "dev:mcp": "pnpm --filter @family-cookbook/mcp dev"
   },

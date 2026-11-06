@@ -35,7 +35,20 @@ cp .env.example .env.local   # placeholders only; configure in later tasks
 pnpm install
 ```
 
-Dependency install scripts are limited to `esbuild` in `pnpm-workspace.yaml`. If install reports `ERR_PNPM_IGNORED_BUILDS` for another package, review that script and add it to `allowBuilds`. Do not approve every build script.
+Dependency install scripts that need explicit approval are listed under `allowBuilds` in [`pnpm-workspace.yaml`](pnpm-workspace.yaml) (`esbuild`, `sharp`, `unrs-resolver`). If install reports `ERR_PNPM_IGNORED_BUILDS` for another package, review that script before adding it.
+
+## Continuous integration
+
+GitHub Actions workflow **[CI](.github/workflows/ci.yml)** runs on every push to `main` and on pull requests:
+
+- **Quality:** `pnpm format:check`, `lint`, `typecheck`, `test`, `build`, then `verify:client-bundle` (heuristic scan of `apps/web/.next` static assets)
+- **Security:** Gitleaks (with [`.gitleaks.toml`](.gitleaks.toml)) and `pnpm audit --audit-level high`
+
+Local parity before pushing:
+
+```bash
+pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm verify:client-bundle && pnpm audit --audit-level high
+```
 
 ## Commands (repository root)
 
@@ -48,6 +61,7 @@ pnpm lint             # ESLint across workspace
 pnpm test             # Build libraries, then Vitest smoke tests
 pnpm format:check     # Prettier check
 pnpm format           # Prettier write
+pnpm verify:client-bundle   # After build: scan web client bundles for secret-like patterns
 ```
 
 ## Initial UI languages

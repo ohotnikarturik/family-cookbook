@@ -1,0 +1,16 @@
+# Gitleaks config for CI and local runs. See https://github.com/gitleaks/gitleaks
+title = "family-cookbook"
+
+[extend]
+# Use default ruleset; tune only allowlists here.
+useDefault = true
+
+[allowlist]
+description = "Reduce false positives for docs, lockfile, env template, and bundle scanner source"
+
+paths = [
+  '''pnpm-lock\.yaml''',
+  '''(?i).*\.md$''',
+  '''\.env\.example$''',
+  '''scripts/verify-no-secrets-in-client-bundle\.mjs''',
+]
