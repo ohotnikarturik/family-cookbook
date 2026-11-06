@@ -1,0 +1,88 @@
+{
+  "home": {
+    "title": "Family Cookbook",
+    "subtitle": "Monorepo bootstrap placeholder. Product UI arrives in later tasks.",
+    "contractsLabel": "contracts",
+    "applicationLayersLabel": "application layers",
+    "designGalleryLink": "Design gallery (development)"
+  },
+  "design": {
+    "title": "Design gallery",
+    "intro": "Preview of Family Cookbook tokens, themes, and component patterns. This page is for development and design QA.",
+    "skipToContent": "Skip to content",
+    "kickers": {
+      "theme": "Preferences",
+      "typography": "Scale",
+      "buttons": "Actions",
+      "forms": "Fields",
+      "recipeCard": "Surface",
+      "navigation": "Wayfinding",
+      "dialog": "Modal",
+      "status": "Feedback"
+    },
+    "sections": {
+      "theme": "Theme",
+      "typography": "Typography",
+      "buttons": "Buttons",
+      "forms": "Forms",
+      "recipeCard": "Recipe card",
+      "navigation": "Navigation",
+      "dialog": "Dialog",
+      "status": "Status states"
+    },
+    "recipe": {
+      "title": "Hearty lentil soup",
+      "subtitle": "A warm bowl for weeknights",
+      "time": "45 min",
+      "servings": "4 servings"
+    },
+    "form": {
+      "titleLabel": "Recipe title",
+      "titlePlaceholder": "e.g. Grandma's apple cake",
+      "notesLabel": "Notes",
+      "notesPlaceholder": "Optional story or tips…",
+      "helper": "Labels stay visible; hints explain the field without hiding errors."
+    },
+    "nav": {
+      "label": "Primary navigation",
+      "recipes": "Recipes",
+      "family": "Family",
+      "account": "Account"
+    },
+    "dialog": {
+      "trigger": "Open sample dialog",
+      "title": "Archive this recipe?",
+      "description": "It will be hidden from the active recipe list and can be restored later.",
+      "cancel": "Cancel",
+      "confirm": "Archive recipe"
+    },
+    "status": {
+      "loading": "Loading recipes…",
+      "empty": "No recipes yet. Add your first family favorite.",
+      "error": "We could not load recipes. Check your connection and try again.",
+      "success": "Changes saved to the family cookbook.",
+      "infoTitle": "Info pattern",
+      "infoDescription": "Inline notices can pair title and body for longer guidance."
+    },
+    "typography": {
+      "displayLine": "Display — serif for recipe titles",
+      "bodyLine": "Body text stays in the sans family for readability. Muted lines use the muted foreground token.",
+      "smallLine": "Small supporting copy for hints, metadata, and captions.",
+      "monoLine": "font-mono — 1.2rem · version strings"
+    },
+    "buttons": {
+      "primary": "Primary",
+      "secondary": "Secondary",
+      "outline": "Outline",
+      "destructive": "Destructive",
+      "quiet": "Quiet"
+    },
+    "recipeCardFooter": "View recipe"
+  },
+  "theme": {
+    "label": "Appearance",
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark"
+  }
+}

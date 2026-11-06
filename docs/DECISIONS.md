@@ -23,5 +23,15 @@
 2. **Quality job:** Node **22**, `pnpm/action-setup` (reads `packageManager`), `pnpm install --frozen-lockfile`, then `format:check`, `lint`, `typecheck`, `test`, `build`, `verify:client-bundle`. Placeholder `NEXT_PUBLIC_*` env vars for Next build only (no service role).
 3. **Security job:** Gitleaks via `gitleaks/gitleaks-action@v2` with `GITLEAKS_CONFIG: .gitleaks.toml`; **full history** on `push` to `main` (`fetch-depth: 0`), shallow checkout otherwise. Then `pnpm audit --audit-level high` (high/critical block; moderate/low do not).
 4. **Client bundle check:** `scripts/verify-no-secrets-in-client-bundle.mjs` scans `apps/web/.next` `*.js`/`*.css` (excluding `.map`) for high-signal secret patterns after production build.
-5. **allowBuilds** in `pnpm-workspace.yaml`: `esbuild`, `sharp`, `unrs-resolver` — required so CI can run postinstall/build steps without interactive `pnpm approve-builds`.
+5. **allowBuilds** in `pnpm-workspace.yaml`: `esbuild`, `sharp`, `unrs-resolver`, and `@swc/core` (`next-intl` depends on it). Required so CI can run those install scripts without interactive `pnpm approve-builds`.
 6. **Prettier** ignores `.gitleaks.toml` (no bundled TOML parser).
+
+## T0.3 — Design system foundation (2026-11-07)
+
+1. **Semantic tokens** live in `apps/web/app/globals.css` as CSS variables (OKLCH) with `@theme inline` mapping to Tailwind utilities; dark mode is **class-based** on `<html>` (`.dark`), resolved before first paint and by `ThemeProvider` on the client.
+2. **Typography:** **Geist** sans + **Geist Mono** for UI/code; **Source Serif 4** (`next/font/google`, Latin + Cyrillic subsets) for display headings via `--font-source-serif` and `font-serif-display`.
+3. **Theme preference** is stored in a **non-httpOnly** cookie `fc-theme` with values `system | light | dark` (aligns with future `profiles.theme_preference`). A **blocking inline script** in the root layout reads `document.cookie` and sets `.dark` / `color-scheme` with **no `cookies()` read in the root layout**, keeping Cache Components / static shells predictable.
+4. **Persistence:** client changes call the server action `setThemePreferenceAction` so responses include `Set-Cookie`; `ThemeProvider` applies the class on change. It does not touch `documentElement` until the cookie has been read, so the inline script is not overwritten with `system` on hydration.
+5. **UI primitives** follow shadcn-style patterns under `apps/web/components/ui/*` (Radix + CVA), **wired to semantic CSS variables** — not the default zinc scale.
+6. **next-intl (minimal):** `createNextIntlPlugin('./i18n/request.ts')` in `next.config.ts`; single locale **`en`** and `messages/en.json` for home + design gallery copy until **T0.4** adds full `[locale]` routing and `fi` / `ru` / `uk` catalogs.
+7. **Design gallery** at `/design`: **development by default** (`notFound()` in production). Enable on staging with **`NEXT_PUBLIC_ENABLE_DESIGN_GALLERY=true`**. A dev-only link to `/design` appears on the home footer when `NODE_ENV !== 'production'`.

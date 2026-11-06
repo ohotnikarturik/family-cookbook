@@ -64,6 +64,12 @@ pnpm format           # Prettier write
 pnpm verify:client-bundle   # After build: scan web client bundles for secret-like patterns
 ```
 
+## Design gallery (development)
+
+With **`pnpm dev:web`**, open [http://localhost:3003/design](http://localhost:3003/design) to preview tokens, light/dark/system theme (cookie `fc-theme`), and component stubs. The home page includes a footer link to the gallery only when not running a production build.
+
+To expose `/design` in a **production** or staging build, set **`NEXT_PUBLIC_ENABLE_DESIGN_GALLERY=true`** in the environment (see [`.env.example`](.env.example)); otherwise the route returns 404.
+
 ## Initial UI languages
 
 English (`en`), Finnish (`fi`), Russian (`ru`), and Ukrainian (`uk`) — UI i18n foundation is task T0.4. Recipe content languages are separate metadata.
