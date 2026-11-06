@@ -1,0 +1,115 @@
+{
+  "locale": {
+    "label": "Käyttöliittymän kieli",
+    "languages": {
+      "en": "English",
+      "fi": "Suomi",
+      "ru": "Русский",
+      "uk": "Українська"
+    }
+  },
+  "validation": {
+    "tooShort": "Kirjoita vähintään kaksi merkkiä.",
+    "tooLong": "Pidä tämä alle 80 merkin.",
+    "invalid": "Tarkista tämä kenttä ja yritä uudelleen."
+  },
+  "home": {
+    "title": "Family Cookbook",
+    "subtitle": "Monorepon väliaikainen sivu. Varsinainen tuotekäyttöliittymä tulee myöhemmissä tehtävissä.",
+    "contractsLabel": "contracts",
+    "applicationLayersLabel": "application-kerrokset",
+    "designGalleryLink": "Design-galleria (kehitys)",
+    "formatDemo": {
+      "title": "Paikallinen muotoilu (esimerkki)",
+      "numberLabel": "Luku",
+      "dateLabel": "Päivä ja aika",
+      "pluralLabel": "Monikko",
+      "recipeCount": "{count, plural, one {# resepti} other {# reseptiä}}"
+    },
+    "sampleForm": {
+      "label": "Näyttönimi (demo)",
+      "placeholder": "Nimesi",
+      "submit": "Tallenna",
+      "success": "Tallennettu (vain demo — ei vielä tietokantaan)."
+    }
+  },
+  "design": {
+    "title": "Design-galleria",
+    "intro": "Family Cookbook -suunnittelumallien esikatselu: teemat, komponentit ja typografia. Sivu on kehitystä ja laadunvalvontaa varten.",
+    "skipToContent": "Hyppää sisältöön",
+    "kickers": {
+      "theme": "Asetukset",
+      "typography": "Skaala",
+      "buttons": "Toiminnot",
+      "forms": "Kentät",
+      "recipeCard": "Pinta",
+      "navigation": "Navigointi",
+      "dialog": "Modaali",
+      "status": "Palaute"
+    },
+    "sections": {
+      "theme": "Teema",
+      "typography": "Typografia",
+      "buttons": "Painikkeet",
+      "forms": "Lomakkeet",
+      "recipeCard": "Reseptikortti",
+      "navigation": "Navigointi",
+      "dialog": "Dialogi",
+      "status": "Tilaviestit"
+    },
+    "recipe": {
+      "title": "Tuhti linssikeitto",
+      "subtitle": "Lämmittävä annos arki-illoille",
+      "time": "45 min",
+      "servings": "4 annosta"
+    },
+    "form": {
+      "titleLabel": "Reseptin otsikko",
+      "titlePlaceholder": "esim. mummon omenapiirakka",
+      "notesLabel": "Muistiinpanot",
+      "notesPlaceholder": "Valinnainen tarina tai vinkit…",
+      "helper": "Nimikkeet pysyvät näkyvissä; vihjeteksti täydentää kenttää ilman virheiden piilottamista."
+    },
+    "nav": {
+      "label": "Päänavigointi",
+      "recipes": "Reseptit",
+      "family": "Perhe",
+      "account": "Tili"
+    },
+    "dialog": {
+      "trigger": "Avaa esimerkkidialogi",
+      "title": "Arkistoidaanko tämä resepti?",
+      "description": "Se piilotetaan aktiivisesta reseptilistasta ja voidaan palauttaa myöhemmin.",
+      "cancel": "Peruuta",
+      "confirm": "Arkistoi resepti"
+    },
+    "status": {
+      "loading": "Ladataan reseptejä…",
+      "empty": "Ei reseptejä vielä. Lisää ensimmäinen perheen suosikki.",
+      "error": "Emme voineet ladata reseptejä. Tarkista yhteys ja yritä uudelleen.",
+      "success": "Muutokset tallennettiin perheen keittokirjaan.",
+      "infoTitle": "Tietoalue",
+      "infoDescription": "Huomautukset voivat käyttää sekä otsikkoa että pidempää leipätekstiä."
+    },
+    "typography": {
+      "displayLine": "Display — seriffi reseptin otsikoille",
+      "bodyLine": "Leipäteksti pysyy sans-perheessä luettavuuden vuoksi. Himmeät rivit käyttävä himmeän etualan väriä.",
+      "smallLine": "Pieni tukiteksti vihjeille, metatiedoille ja kuvateksteille.",
+      "monoLine": "font-mono — 1.2rem · versiomerkkijonot"
+    },
+    "buttons": {
+      "primary": "Ensisijainen",
+      "secondary": "Toissijainen",
+      "outline": "Ääriviiva",
+      "destructive": "Tuhoava",
+      "quiet": "Hillitty"
+    },
+    "recipeCardFooter": "Näytä resepti"
+  },
+  "theme": {
+    "label": "Ulkoasu",
+    "system": "Järjestelmä",
+    "light": "Vaalea",
+    "dark": "Tumma"
+  }
+}

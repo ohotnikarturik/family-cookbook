@@ -2,8 +2,9 @@ import { ChefHat, Type } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import type { ReactNode } from 'react';
+import { Suspense } from 'react';
 
-import { DialogSample } from '@/app/design/dialog-sample';
+import { DialogSampleLoader } from '@/app/[locale]/design/dialog-sample-loader';
 import { FormFieldSample } from '@/components/product/form-field-sample';
 import { PrimaryNavSample } from '@/components/product/primary-nav-sample';
 import { RecipeCardSample } from '@/components/product/recipe-card-sample';
@@ -12,24 +13,42 @@ import { ThemeSwitcher } from '@/components/theme/ThemeSwitcher';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { type AppLocale, locales } from '@/i18n/routing';
 
 const galleryEnabled =
   process.env['NODE_ENV'] !== 'production' ||
   process.env['NEXT_PUBLIC_ENABLE_DESIGN_GALLERY'] === 'true';
 
-function sectionSlug(title: string): string {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
+type PageProps = Readonly<{ params: Promise<{ locale: string }> }>;
 
-export default async function DesignGalleryPage() {
+export default function DesignGalleryPage({ params }: PageProps) {
   if (!galleryEnabled) {
     notFound();
   }
 
-  const t = await getTranslations('design');
+  return (
+    <Suspense fallback={<DesignFallback />}>
+      <DesignGallery params={params} />
+    </Suspense>
+  );
+}
+
+function DesignFallback() {
+  return (
+    <div aria-busy="true" className="min-h-screen bg-background px-4 py-12">
+      <div className="mx-auto h-10 w-56 animate-pulse rounded-md bg-muted" />
+    </div>
+  );
+}
+
+async function DesignGallery({ params }: PageProps) {
+  const { locale: localeParam } = await params;
+  if (!(locales as readonly string[]).includes(localeParam)) {
+    notFound();
+  }
+  const locale = localeParam as AppLocale;
+
+  const t = await getTranslations({ locale, namespace: 'design' });
 
   return (
     <div className="min-h-screen bg-background">
@@ -61,11 +80,15 @@ export default async function DesignGalleryPage() {
       </header>
 
       <main id="design-main" className="mx-auto max-w-3xl space-y-16 px-4 py-12 sm:px-6">
-        <DesignSection title={t('sections.theme')} kicker={t('kickers.theme')}>
+        <DesignSection slug="theme" title={t('sections.theme')} kicker={t('kickers.theme')}>
           <ThemeSwitcher />
         </DesignSection>
 
-        <DesignSection title={t('sections.typography')} kicker={t('kickers.typography')}>
+        <DesignSection
+          slug="typography"
+          title={t('sections.typography')}
+          kicker={t('kickers.typography')}
+        >
           <Card>
             <CardHeader className="flex flex-row items-start gap-3">
               <Type className="mt-1 size-5 shrink-0 text-muted-foreground" aria-hidden />
@@ -89,7 +112,7 @@ export default async function DesignGalleryPage() {
           </Card>
         </DesignSection>
 
-        <DesignSection title={t('sections.buttons')} kicker={t('kickers.buttons')}>
+        <DesignSection slug="buttons" title={t('sections.buttons')} kicker={t('kickers.buttons')}>
           <div className="flex flex-wrap gap-3">
             <Button type="button">{t('buttons.primary')}</Button>
             <Button type="button" variant="secondary">
@@ -107,7 +130,7 @@ export default async function DesignGalleryPage() {
           </div>
         </DesignSection>
 
-        <DesignSection title={t('sections.forms')} kicker={t('kickers.forms')}>
+        <DesignSection slug="forms" title={t('sections.forms')} kicker={t('kickers.forms')}>
           <FormFieldSample
             titleLabel={t('form.titleLabel')}
             titlePlaceholder={t('form.titlePlaceholder')}
@@ -117,7 +140,11 @@ export default async function DesignGalleryPage() {
           />
         </DesignSection>
 
-        <DesignSection title={t('sections.recipeCard')} kicker={t('kickers.recipeCard')}>
+        <DesignSection
+          slug="recipe-card"
+          title={t('sections.recipeCard')}
+          kicker={t('kickers.recipeCard')}
+        >
           <RecipeCardSample
             title={t('recipe.title')}
             subtitle={t('recipe.subtitle')}
@@ -128,6 +155,7 @@ export default async function DesignGalleryPage() {
         </DesignSection>
 
         <DesignSection
+          slug="navigation"
           title={t('sections.navigation')}
           kicker={t('kickers.navigation')}
           id="sample-nav"
@@ -142,11 +170,11 @@ export default async function DesignGalleryPage() {
           />
         </DesignSection>
 
-        <DesignSection title={t('sections.dialog')} kicker={t('kickers.dialog')}>
-          <DialogSample />
+        <DesignSection slug="dialog" title={t('sections.dialog')} kicker={t('kickers.dialog')}>
+          <DialogSampleLoader />
         </DesignSection>
 
-        <DesignSection title={t('sections.status')} kicker={t('kickers.status')}>
+        <DesignSection slug="status" title={t('sections.status')} kicker={t('kickers.status')}>
           <div className="space-y-4">
             <LoadingStrip label={t('status.loading')} />
             <Alert>
@@ -166,12 +194,12 @@ export default async function DesignGalleryPage() {
 }
 
 function DesignSection({
+  slug,
   title,
   kicker,
   id,
   children,
-}: Readonly<{ title: string; kicker: string; id?: string; children: ReactNode }>) {
-  const slug = sectionSlug(title);
+}: Readonly<{ slug: string; title: string; kicker: string; id?: string; children: ReactNode }>) {
   const headingId = `design-section-${slug}`;
 
   return (

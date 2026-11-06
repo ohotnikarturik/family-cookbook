@@ -1,11 +1,8 @@
-import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Source_Serif_4 } from 'next/font/google';
 import type { ReactNode } from 'react';
-import { getMessages } from 'next-intl/server';
 
 import { ThemeScript } from '@/components/theme/theme-script';
-
-import { AppProviders } from './providers';
+import { defaultLocale } from '@/i18n/routing';
 
 import './globals.css';
 
@@ -25,25 +22,16 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-export const metadata: Metadata = {
-  title: 'Family Cookbook',
-  description: 'Private family recipe library',
-};
-
-export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
-  const messages = await getMessages();
-
+export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html
-      lang="en"
+      lang={defaultLocale}
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} ${sourceSerif.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <ThemeScript />
-        <AppProviders locale="en" messages={messages}>
-          {children}
-        </AppProviders>
+        {children}
       </body>
     </html>
   );

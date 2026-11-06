@@ -8,3 +8,5 @@ export const bootstrapHealthSchema = z.object({
 });
 
 export type BootstrapHealth = z.infer<typeof bootstrapHealthSchema>;
+
+export { sampleDisplayNameSchema, type SampleDisplayNameInput } from './sample-profile.js';

@@ -1,10 +1,37 @@
 {
+  "locale": {
+    "label": "Interface language",
+    "languages": {
+      "en": "English",
+      "fi": "Finnish",
+      "ru": "Russian",
+      "uk": "Ukrainian"
+    }
+  },
+  "validation": {
+    "tooShort": "Enter at least two characters.",
+    "tooLong": "Keep this under 80 characters.",
+    "invalid": "Check this field and try again."
+  },
   "home": {
     "title": "Family Cookbook",
     "subtitle": "Monorepo bootstrap placeholder. Product UI arrives in later tasks.",
     "contractsLabel": "contracts",
     "applicationLayersLabel": "application layers",
-    "designGalleryLink": "Design gallery (development)"
+    "designGalleryLink": "Design gallery (development)",
+    "formatDemo": {
+      "title": "Locale formatting (sample)",
+      "numberLabel": "Number",
+      "dateLabel": "Date and time",
+      "pluralLabel": "Plural",
+      "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
+    },
+    "sampleForm": {
+      "label": "Display name (demo)",
+      "placeholder": "Your name",
+      "submit": "Save",
+      "success": "Saved (demo only — not stored yet)."
+    }
   },
   "design": {
     "title": "Design gallery",

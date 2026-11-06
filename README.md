@@ -53,7 +53,7 @@ pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build && p
 ## Commands (repository root)
 
 ```bash
-pnpm dev:web          # Next.js dev server (http://localhost:3003)
+pnpm dev:web          # Next.js dev server; UI at http://localhost:3003/en (locale prefix)
 pnpm dev:mcp          # MCP placeholder (default http://localhost:8787)
 pnpm build            # Build all packages, then apps
 pnpm typecheck        # TypeScript across workspace; web runs `next typegen` first
@@ -66,10 +66,16 @@ pnpm verify:client-bundle   # After build: scan web client bundles for secret-li
 
 ## Design gallery (development)
 
-With **`pnpm dev:web`**, open [http://localhost:3003/design](http://localhost:3003/design) to preview tokens, light/dark/system theme (cookie `fc-theme`), and component stubs. The home page includes a footer link to the gallery only when not running a production build.
+With **`pnpm dev:web`**, open [http://localhost:3003/en/design](http://localhost:3003/en/design) (replace `en` with `fi`, `ru`, or `uk`) to preview tokens, light/dark/system theme (cookie `fc-theme`), and component stubs. The localized home page includes a footer link to the gallery only when not running a production build.
 
-To expose `/design` in a **production** or staging build, set **`NEXT_PUBLIC_ENABLE_DESIGN_GALLERY=true`** in the environment (see [`.env.example`](.env.example)); otherwise the route returns 404.
+To expose `/{locale}/design` in a **production** or staging build, set **`NEXT_PUBLIC_ENABLE_DESIGN_GALLERY=true`** in the environment (see [`.env.example`](.env.example)); otherwise the route returns 404.
+
+## UI locales and messages
+
+- **Locales:** `en`, `fi`, `ru`, `uk` — URLs always include the prefix (e.g. `/en`, `/fi/recipes` when routes exist).
+- **Catalogs:** [`apps/web/messages/`](apps/web/messages/) — edit all four JSON files when adding or changing UI strings.
+- **Anonymous language preference:** cookie **`fc-locale`** (set via the language switcher). Database column **`profiles.preferred_language`** applies after Supabase auth ([`PROJECT_SPEC.md`](PROJECT_SPEC.md)); migration: [`supabase/migrations/20251106221000_profiles.sql`](supabase/migrations/20251106221000_profiles.sql).
 
 ## Initial UI languages
 
-English (`en`), Finnish (`fi`), Russian (`ru`), and Ukrainian (`uk`) — UI i18n foundation is task T0.4. Recipe content languages are separate metadata.
+English (`en`), Finnish (`fi`), Russian (`ru`), and Ukrainian (`uk`) — recipe content languages are separate metadata.
