@@ -1,0 +1,11 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/contracts" },
+    { "path": "packages/domain" },
+    { "path": "packages/permissions" },
+    { "path": "packages/application" },
+    { "path": "packages/data-access" },
+    { "path": "apps/mcp" }
+  ]
+}

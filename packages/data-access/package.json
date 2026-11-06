@@ -1,0 +1,31 @@
+{
+  "name": "@family-cookbook/data-access",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc -b",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@family-cookbook/contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "@family-cookbook/config": "workspace:*",
+    "@types/node": "22.15.32",
+    "eslint": "9.39.5",
+    "typescript": "5.9.3",
+    "vitest": "5.1.0"
+  }
+}

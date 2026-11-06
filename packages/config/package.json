@@ -1,0 +1,27 @@
+{
+  "name": "@family-cookbook/config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./eslint/base": "./eslint/base.mjs",
+    "./typescript/base.json": "./typescript/base.json",
+    "./typescript/node.json": "./typescript/node.json",
+    "./typescript/nextjs.json": "./typescript/nextjs.json",
+    "./vitest/base": "./vitest/base.mjs"
+  },
+  "scripts": {
+    "build": "node -e \"process.exit(0)\"",
+    "typecheck": "node -e \"process.exit(0)\"",
+    "lint": "eslint eslint vitest",
+    "test": "node -e \"process.exit(0)\""
+  },
+  "dependencies": {
+    "@eslint/js": "9.39.5",
+    "eslint": "9.39.5",
+    "typescript-eslint": "8.46.2"
+  },
+  "devDependencies": {
+    "vitest": "5.1.0"
+  }
+}
