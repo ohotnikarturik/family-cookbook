@@ -33,3 +33,9 @@ export {
   updateLastSelectedFamilyId,
 } from './family/last-selected-family.js';
 export { listMyActiveFamilies } from './family/list-my-families.js';
+export { hashInvitationToken } from './invitations/hash-token.js';
+export { findPendingInvitationByEmail } from './invitations/find-pending-by-email.js';
+export { insertFamilyInvitation } from './invitations/insert-invitation.js';
+export { listPendingFamilyInvitations } from './invitations/list-pending.js';
+export { redeemFamilyInvitation } from './invitations/redeem-invitation.js';
+export { revokeFamilyInvitation } from './invitations/revoke-invitation.js';

@@ -77,13 +77,14 @@
   "onboarding": {
     "title": "Aloita perheen keittokirja",
     "subtitle": "Anna työtilalle nimi. Sinusta tulee ensimmäinen omistaja.",
-    "inviteLaterHint": "Sukulaisten kutsuminen sähköpostilla tulee myöhemmässä vaiheessa.",
+    "inviteLaterHint": "Kun perhe on luotu, voit kutsua sukulaisia sähköpostilla. Jos sait jo kutsun, avaa linkki viestistä.",
     "nameLabel": "Perheen nimi",
     "defaultLanguageLabel": "Reseptien oletuskieli",
     "defaultLanguageHint": "Käytetään järkevänä oletuksena uusille resepteille. Käyttöliittymän kieli on erillinen.",
     "submit": "Luo perhe",
     "creating": "Luodaan…",
     "backAccount": "Takaisin tiliin",
+    "haveInviteLink": "Onko kutsu? Avaa sähköpostissa oleva linkki",
     "errors": {
       "validation": "Tarkista perheen nimi ja yritä uudelleen.",
       "createFailed": "Perhettä ei voitu luoda. Yritä hetken kuluttua."
@@ -103,6 +104,7 @@
       "kicker": "Perheen keittokirja",
       "navLabel": "Perhesivuston navigointi",
       "allFamilies": "Kaikki perheet",
+      "invitations": "Kutsut",
       "account": "Tili"
     },
     "dashboard": {
@@ -119,6 +121,61 @@
       "editor": "Muokkaaja",
       "contributor": "Tekijä",
       "viewer": "Katselija"
+    }
+  },
+  "invitations": {
+    "title": "Kutsu sukulaisia",
+    "subtitle": "Lähetä kertakäyttöinen linkki. Kutsutun on kirjauduttava samalla osoitteella.",
+    "backDashboard": "Takaisin etusivulle",
+    "form": {
+      "emailLabel": "Sähköpostiosoite",
+      "roleLabel": "Rooli",
+      "submit": "Lähetä kutsu",
+      "sending": "Lähetetään…",
+      "sent": "Kutsusähköposti lähetettiin."
+    },
+    "list": {
+      "heading": "Odottavat kutsut",
+      "empty": "Ei odottavia kutsuja.",
+      "expires": "Vanhenee {date}",
+      "expired": "Vanhentunut {date}",
+      "revoke": "Peru",
+      "revoking": "Perutaan…"
+    },
+    "email": {
+      "subject": "Kutsu: {familyName}",
+      "intro": "{inviter} kutsui sinut liittymään perheeseen {familyName} Family Cookbookissa.",
+      "action": "Hyväksy kutsu",
+      "signInWith": "Hyväksy kutsu kirjautumalla osoitteella {email}.",
+      "inviterFallback": "Perheenjäsen"
+    },
+    "errors": {
+      "validation": "Tarkista sähköposti ja rooli.",
+      "forbidden": "Et voi kutsua tähän perheeseen.",
+      "duplicatePending": "Tälle osoitteelle on jo aktiivinen kutsu.",
+      "emailFailed": "Kutsusähköpostia ei voitu lähettää. Mitään ei tallennettu. Yritä uudelleen.",
+      "emailFailedKept": "Kutsusähköpostia ei voitu lähettää. Peru odottava kutsu ja yritä uudelleen.",
+      "loadFailed": "Kutsuja ei voitu ladata. Päivitä sivu ja yritä uudelleen.",
+      "revokeFailed": "Kutsua ei voitu perua. Yritä uudelleen.",
+      "createFailed": "Kutsua ei voitu luoda."
+    }
+  },
+  "inviteAccept": {
+    "title": "Hyväksy kutsu",
+    "subtitle": "Liity perheen työtilaan kutsusähköpostin mukaan.",
+    "signedInAs": "Kirjautunut: {email}",
+    "missingToken": "Avaa koko kutsulinkki sähköpostistasi.",
+    "submit": "Hyväksy kutsu",
+    "accepting": "Hyväksytään…",
+    "signOut": "Kirjaudu ulos ja vaihda osoite",
+    "backFamilies": "Perheesi",
+    "errors": {
+      "invalid": "Tämä kutsulinkki ei kelpaa.",
+      "emailMismatch": "Kirjaudu sisään samalla sähköpostiosoitteella, johon kutsu lähetettiin.",
+      "emailUnverified": "Vahvista sähköpostiosoitteesi ennen kuin hyväksyt kutsun.",
+      "expired": "Kutsu on vanhentunut. Pyydä uusi.",
+      "unavailable": "Kutsu ei ole enää voimassa.",
+      "generic": "Kutsua ei voitu hyväksyä. Yritä uudelleen."
     }
   },
   "design": {

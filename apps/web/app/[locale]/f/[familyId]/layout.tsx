@@ -1,4 +1,8 @@
-import { listMyFamilies, resolveAccessibleFamily } from '@family-cookbook/application';
+import {
+  canManageInvitations,
+  listMyFamilies,
+  resolveAccessibleFamily,
+} from '@family-cookbook/application';
 import { getSessionUser } from '@family-cookbook/data-access';
 import { createServerSupabaseClient } from '@family-cookbook/data-access/supabase/server';
 import { getTranslations } from 'next-intl/server';
@@ -74,6 +78,14 @@ async function FamilyLayoutShell({ children, params }: Props) {
           <FamilySwitcher families={families} currentFamilyId={workspace.workspace.id} />
         </div>
         <nav aria-label={t('shell.navLabel')} className="flex flex-wrap gap-4 text-sm">
+          {canManageInvitations(workspace.workspace.role) ? (
+            <Link
+              href={`/f/${workspace.workspace.id}/settings/invitations`}
+              className="font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              {t('shell.invitations')}
+            </Link>
+          ) : null}
           <Link
             href="/families"
             className="font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"

@@ -96,6 +96,20 @@ After sign-in, the app sends you to **`/{locale}/onboarding`** when you have no 
 
 Family URLs use an explicit UUID segment (`/en/f/aaaaaaaa-…`). Opening another family’s id without membership returns **404** (RLS + layout guard).
 
+## Invitations (T1.5)
+
+**SMTP (invite emails):** Local stack exposes Mailpit SMTP on **`127.0.0.1:54325`** (`smtp_port` in [`supabase/config.toml`](../supabase/config.toml)). After enabling or changing SMTP, restart the stack (`pnpm supabase:stop` → `pnpm supabase:start`). Run **`pnpm supabase:sync-env`** so [`apps/web/.env.local`](../apps/web/.env.local) gets `INVITATION_SMTP_*` defaults.
+
+| Goal | Steps |
+| --- | --- |
+| **Send invite** | Sign in as **owner/admin** (e.g. `owner-a@family-cookbook.test`) → family dashboard → **Invitations** → email + role → **Send invitation** |
+| **Read invite mail** | Mailpit UI http://127.0.0.1:54324 — subject/body includes link to `/{locale}/invite/accept?token=…` |
+| **Accept** | Open link (or paste token on accept page) → sign in **as the same email** → **Accept invitation** → dashboard for that family |
+| **Revoke** | **Invitations** settings → **Revoke** on a pending row |
+| **Send again** | If the email is not sent, the pending row is withdrawn. Send the same address again. An expired pending invite is replaced the same way. |
+
+Magic-link sign-in still uses Auth → Mailpit (port 54324). Invite delivery uses SMTP (54325); both land in the same Mailpit inbox locally. The accept page can sign out and return to the same link when the signed-in email is not the invited one.
+
 ## pgTAP
 
 RLS tests live under [`supabase/tests/`](../supabase/tests/). After a reset:

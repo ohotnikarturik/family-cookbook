@@ -6,6 +6,8 @@ export const familyIdSchema = z.uuid();
 
 export const familyRoleSchema = z.enum(['owner', 'admin', 'editor', 'contributor', 'viewer']);
 
+export type FamilyRole = z.infer<typeof familyRoleSchema>;
+
 export const createFamilyInputSchema = z.object({
   name: z.string().trim().min(1).max(120),
   defaultLanguage: profilePreferredLanguageSchema.optional(),

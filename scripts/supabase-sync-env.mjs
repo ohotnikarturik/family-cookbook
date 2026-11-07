@@ -67,11 +67,21 @@ if (!lines.has('SUPABASE_PROJECT_ID')) {
   lines.set('SUPABASE_PROJECT_ID', 'SUPABASE_PROJECT_ID=family-cookbook');
 }
 
+lines.set('INVITATION_SMTP_HOST', 'INVITATION_SMTP_HOST=127.0.0.1');
+lines.set('INVITATION_SMTP_PORT', 'INVITATION_SMTP_PORT=54325');
+lines.set(
+  'INVITATION_SMTP_FROM',
+  'INVITATION_SMTP_FROM=Family Cookbook <invites@family-cookbook.test>',
+);
+
 const orderedKeys = [
   'NEXT_PUBLIC_SUPABASE_URL',
   'NEXT_PUBLIC_SUPABASE_ANON_KEY',
   'NEXT_PUBLIC_APP_URL',
   'SUPABASE_PROJECT_ID',
+  'INVITATION_SMTP_HOST',
+  'INVITATION_SMTP_PORT',
+  'INVITATION_SMTP_FROM',
 ];
 
 const body = [];

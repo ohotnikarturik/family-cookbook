@@ -29,3 +29,23 @@ export {
   setActiveFamilyPreference,
   type SetActiveFamilyPreferenceResult,
 } from './family/set-active-family-preference.js';
+export { acceptInvitation, type AcceptInvitationResult } from './invitations/accept-invitation.js';
+export { buildInvitationEmail } from './invitations/build-invitation-email.js';
+export { canAssignInviteRole, canManageInvitations } from './invitations/can-invite.js';
+export {
+  createInvitation,
+  type CreateInvitationContext,
+  type CreateInvitationResult,
+  type InvitationEmailRenderInput,
+} from './invitations/create-invitation.js';
+export type {
+  InvitationEmailContent,
+  InvitationEmailPayload,
+  InvitationEmailSender,
+} from './invitations/email-sender.js';
+export {
+  listFamilyInvitations,
+  type ListFamilyInvitationsResult,
+} from './invitations/list-family-invitations.js';
+export { resolveInvitationEmailSender } from './invitations/resolve-email-sender.js';
+export { revokeInvitation, type RevokeInvitationResult } from './invitations/revoke-invitation.js';

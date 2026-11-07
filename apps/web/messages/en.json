@@ -77,13 +77,14 @@
   "onboarding": {
     "title": "Start your family cookbook",
     "subtitle": "Give your workspace a name. You will be the first owner.",
-    "inviteLaterHint": "Inviting relatives by email arrives in a later step.",
+    "inviteLaterHint": "After you create the family, you can invite relatives by email. If you already have an invitation, open the link in that message.",
     "nameLabel": "Family name",
     "defaultLanguageLabel": "Default recipe language",
     "defaultLanguageHint": "Used as a sensible default for new recipes in this family. Your interface language stays separate.",
     "submit": "Create family",
     "creating": "Creating…",
     "backAccount": "Back to account",
+    "haveInviteLink": "Have an invitation? Open the link from your email",
     "errors": {
       "validation": "Check the family name and try again.",
       "createFailed": "We could not create the family. Try again in a moment."
@@ -103,6 +104,7 @@
       "kicker": "Family cookbook",
       "navLabel": "Family navigation",
       "allFamilies": "All families",
+      "invitations": "Invitations",
       "account": "Account"
     },
     "dashboard": {
@@ -119,6 +121,61 @@
       "editor": "Editor",
       "contributor": "Contributor",
       "viewer": "Viewer"
+    }
+  },
+  "invitations": {
+    "title": "Invite relatives",
+    "subtitle": "Send a single-use email link. The invitee must sign in with the same address.",
+    "backDashboard": "Back to dashboard",
+    "form": {
+      "emailLabel": "Email address",
+      "roleLabel": "Role",
+      "submit": "Send invitation",
+      "sending": "Sending…",
+      "sent": "Invitation email sent."
+    },
+    "list": {
+      "heading": "Pending invitations",
+      "empty": "No pending invitations.",
+      "expires": "Expires {date}",
+      "expired": "Expired {date}",
+      "revoke": "Revoke",
+      "revoking": "Revoking…"
+    },
+    "email": {
+      "subject": "Invitation to {familyName}",
+      "intro": "{inviter} invited you to join {familyName} on Family Cookbook.",
+      "action": "Accept invitation",
+      "signInWith": "Sign in with {email} to accept.",
+      "inviterFallback": "A family member"
+    },
+    "errors": {
+      "validation": "Check the email and role.",
+      "forbidden": "You cannot invite for this family.",
+      "duplicatePending": "An active invitation already exists for this email.",
+      "emailFailed": "The invitation email could not be sent. Nothing was saved. Try again.",
+      "emailFailedKept": "The invitation email could not be sent. Revoke the pending invitation and try again.",
+      "loadFailed": "We could not load invitations. Refresh the page and try again.",
+      "revokeFailed": "We could not revoke that invitation. Try again.",
+      "createFailed": "Could not create the invitation."
+    }
+  },
+  "inviteAccept": {
+    "title": "Accept invitation",
+    "subtitle": "Join the family workspace shown in your invitation email.",
+    "signedInAs": "Signed in as {email}",
+    "missingToken": "Open the full invitation link from your email. It contains a secure token.",
+    "submit": "Accept invitation",
+    "accepting": "Accepting…",
+    "signOut": "Sign out and switch email",
+    "backFamilies": "Your families",
+    "errors": {
+      "invalid": "This invitation link is not valid.",
+      "emailMismatch": "Sign in with the same email address that received the invitation.",
+      "emailUnverified": "Confirm your email address before accepting this invitation.",
+      "expired": "This invitation has expired. Ask for a new one.",
+      "unavailable": "This invitation is no longer available.",
+      "generic": "We could not accept the invitation. Try again."
     }
   },
   "design": {

@@ -14,6 +14,8 @@ import { redirect } from 'next/navigation';
 
 import { profileBootstrapHintsFromCookies } from '@/lib/auth-hints';
 import { LOCALE_COOKIE, parseAppLocale } from '@/lib/locale';
+import { resolveSignedInLandingPath } from '@/lib/post-auth-path';
+import type { AppLocale } from '@/i18n/routing';
 
 export type MagicLinkState =
   | null
@@ -30,6 +32,13 @@ async function authLocale(): Promise<string> {
 async function callbackOrigin(): Promise<string> {
   const host = (await headers()).get('host');
   return resolveAuthAppOrigin(host);
+}
+
+function optionalNextPath(raw: FormDataEntryValue | null): string | undefined {
+  if (typeof raw !== 'string' || raw.trim() === '') {
+    return undefined;
+  }
+  return sanitizeAuthRedirect(raw, '');
 }
 
 function safeNextPath(raw: FormDataEntryValue | null, fallback: string): string {
@@ -49,7 +58,7 @@ export async function requestMagicLinkAction(
     return { ok: false, error: t('errors.invalidEmail') };
   }
 
-  const nextPath = safeNextPath(formData.get('next'), `/${locale}/account`);
+  const nextPath = optionalNextPath(formData.get('next'));
   const supabase = await createServerSupabaseClient();
   const { error } = await supabase.auth.signInWithOtp({
     email: emailParsed.data,
@@ -97,7 +106,11 @@ export async function verifyEmailOtpAction(
   const jar = await cookies();
   await ensureProfileForCurrentUser(supabase, profileBootstrapHintsFromCookies(jar));
 
-  redirect(safeNextPath(formData.get('next'), `/${locale}/account`));
+  const nextPath = optionalNextPath(formData.get('next'));
+  if (nextPath) {
+    redirect(nextPath);
+  }
+  redirect(await resolveSignedInLandingPath(supabase, locale as AppLocale));
 }
 
 export async function signOutAction(formData: FormData): Promise<void> {

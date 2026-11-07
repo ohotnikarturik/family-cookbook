@@ -22,12 +22,14 @@
     "@family-cookbook/contracts": "workspace:*",
     "@family-cookbook/data-access": "workspace:*",
     "@family-cookbook/domain": "workspace:*",
-    "@family-cookbook/permissions": "workspace:*"
+    "@family-cookbook/permissions": "workspace:*",
+    "nodemailer": "7.0.11"
   },
   "devDependencies": {
     "@family-cookbook/config": "workspace:*",
     "@supabase/supabase-js": "2.119.0",
     "@types/node": "22.15.32",
+    "@types/nodemailer": "6.4.17",
     "eslint": "9.39.5",
     "typescript": "5.9.3",
     "vitest": "5.1.0"

@@ -36,7 +36,10 @@ async function SignInContent({ params, searchParams }: Props) {
   const sp = await searchParams;
   const t = await getTranslations({ locale, namespace: 'auth' });
 
-  const nextPath = sanitizeAuthRedirect(sp.next, `/${locale}/account`);
+  const nextPath =
+    typeof sp.next === 'string' && sp.next !== ''
+      ? sanitizeAuthRedirect(sp.next, `/${locale}/account`)
+      : '';
 
   return (
     <main className="mx-auto flex min-h-screen max-w-lg flex-col justify-center gap-6 px-6 py-16 font-sans">

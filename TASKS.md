@@ -76,6 +76,8 @@ Work in order. A task is complete only when its acceptance criteria and relevant
 
 **Acceptance:** expired, revoked, replayed, wrong-email and concurrent redemption attempts fail safely; role assignment restrictions pass tests.
 
+**Status:** Done (2026-11-07).
+
 ## EPIC 2 — Recipe domain and core UI
 
 ### T2.1 Recipe schemas and aggregate model
