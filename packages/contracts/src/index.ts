@@ -23,3 +23,13 @@ export {
   type ProfileBootstrapHints,
 } from './profile-bootstrap.js';
 export { sampleDisplayNameSchema, type SampleDisplayNameInput } from './sample-profile.js';
+export {
+  createFamilyInputSchema,
+  familyIdSchema,
+  familyRoleSchema,
+  familySummarySchema,
+  familyWorkspaceSchema,
+  type CreateFamilyInput,
+  type FamilySummary,
+  type FamilyWorkspace,
+} from './family.js';

@@ -58,12 +58,16 @@ Work in order. A task is complete only when its acceptance criteria and relevant
 
 **Acceptance:** browser session is cookie-based and refresh works; no auth token is put in localStorage by app code; protected server routes reject anonymous requests.
 
+**Status:** Done (2026-11-07).
+
 ### T1.4 Family lifecycle and selection
 - Implement create family + initial owner membership as one transaction.
 - Implement list memberships and family switcher.
 - Store last-selected family as a preference only; every data call still checks membership.
 
 **Acceptance:** a user can own/join multiple families; family A data is not visible in family B context.
+
+**Status:** Done (2026-11-07).
 
 ### T1.5 Invitation flow
 - Implement invitation create/revoke/accept use cases.

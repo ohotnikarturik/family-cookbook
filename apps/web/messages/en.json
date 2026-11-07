@@ -70,7 +70,55 @@
     "auth": {
       "navLabel": "Account access",
       "signIn": "Sign in",
+      "account": "Account",
+      "families": "Your families"
+    }
+  },
+  "onboarding": {
+    "title": "Start your family cookbook",
+    "subtitle": "Give your workspace a name. You will be the first owner.",
+    "inviteLaterHint": "Inviting relatives by email arrives in a later step.",
+    "nameLabel": "Family name",
+    "defaultLanguageLabel": "Default recipe language",
+    "defaultLanguageHint": "Used as a sensible default for new recipes in this family. Your interface language stays separate.",
+    "submit": "Create family",
+    "creating": "Creating…",
+    "backAccount": "Back to account",
+    "errors": {
+      "validation": "Check the family name and try again.",
+      "createFailed": "We could not create the family. Try again in a moment."
+    }
+  },
+  "family": {
+    "switcher": {
+      "label": "Active family",
+      "switching": "Switching family…"
+    },
+    "list": {
+      "title": "Your families",
+      "subtitle": "Choose a workspace. Recipes and members stay inside each family.",
+      "backAccount": "Back to account"
+    },
+    "shell": {
+      "kicker": "Family cookbook",
+      "navLabel": "Family navigation",
+      "allFamilies": "All families",
       "account": "Account"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "subtitle": "Recipes and search will land here in a later task.",
+      "yourRole": "Your role",
+      "memberCount": "Active members",
+      "scopeNote": "Tenant scope",
+      "scopeProof": "Counts and details below are loaded only for {name} using an explicit family context."
+    },
+    "roles": {
+      "owner": "Owner",
+      "admin": "Admin",
+      "editor": "Editor",
+      "contributor": "Contributor",
+      "viewer": "Viewer"
     }
   },
   "design": {

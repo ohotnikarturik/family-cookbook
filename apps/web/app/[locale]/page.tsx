@@ -1,8 +1,13 @@
 import { applicationBootstrapMarker } from '@family-cookbook/application';
 import { PACKAGE_VERSION as contractsVersion } from '@family-cookbook/contracts';
+import { getSessionUser } from '@family-cookbook/data-access';
+import { createServerSupabaseClient } from '@family-cookbook/data-access/supabase/server';
 import { getFormatter, getTranslations } from 'next-intl/server';
-import { notFound } from 'next/navigation';
+import { connection } from 'next/server';
+import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
+
+import { resolveSignedInLandingPath } from '@/lib/post-auth-path';
 
 import { HomeAuthLinks } from '@/components/home/home-auth-links';
 import { SampleDisplayNameForm } from '@/components/home/sample-display-name-form';
@@ -34,11 +39,18 @@ function HomeFallback() {
 }
 
 async function HomeContent(props: Props) {
+  await connection();
   const { locale: localeParam } = await props.params;
   if (!(locales as readonly string[]).includes(localeParam)) {
     notFound();
   }
   const locale = localeParam as AppLocale;
+
+  const supabase = await createServerSupabaseClient();
+  const sessionUser = await getSessionUser(supabase);
+  if (sessionUser) {
+    redirect(await resolveSignedInLandingPath(supabase, locale));
+  }
 
   const t = await getTranslations({ locale, namespace: 'home' });
   const format = await getFormatter({ locale });

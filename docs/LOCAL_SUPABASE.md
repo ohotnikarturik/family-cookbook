@@ -83,6 +83,19 @@ The web app calls `signInWithOtp` with a redirect to the Next.js callback (`@sup
 
 The sign-in page shows **both** forms for parity with hosted Supabase (some projects include OTP in email). For day-to-day local work, ignore the code section and use the link only. The long `pkce_…` token in the URL is **not** what the code field expects.
 
+## Families (T1.4)
+
+After sign-in, the app sends you to **`/{locale}/onboarding`** when you have no memberships, otherwise to **`/{locale}/f/{familyId}`** (preferred family from `profiles.last_selected_family_id` when still a member, else the first membership).
+
+| Goal | Steps |
+| --- | --- |
+| **Create a family** | Sign in → onboarding form (name + default recipe language) → lands on the new dashboard as **owner** |
+| **List families** | `/{locale}/families` (e.g. `multi@family-cookbook.test` after Mailpit sign-in) |
+| **Switch family** | Use **Active family** on a family dashboard, or open another family from the list |
+| **Multi-family seed** | `multi@family-cookbook.test` — **editor** in Family A, **viewer** in Family B ([`TEST_IDENTITIES.md`](fixtures/TEST_IDENTITIES.md)) |
+
+Family URLs use an explicit UUID segment (`/en/f/aaaaaaaa-…`). Opening another family’s id without membership returns **404** (RLS + layout guard).
+
 ## pgTAP
 
 RLS tests live under [`supabase/tests/`](../supabase/tests/). After a reset:

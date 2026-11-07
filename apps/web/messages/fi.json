@@ -70,7 +70,55 @@
     "auth": {
       "navLabel": "Tilin käyttö",
       "signIn": "Kirjaudu",
+      "account": "Tili",
+      "families": "Perheet"
+    }
+  },
+  "onboarding": {
+    "title": "Aloita perheen keittokirja",
+    "subtitle": "Anna työtilalle nimi. Sinusta tulee ensimmäinen omistaja.",
+    "inviteLaterHint": "Sukulaisten kutsuminen sähköpostilla tulee myöhemmässä vaiheessa.",
+    "nameLabel": "Perheen nimi",
+    "defaultLanguageLabel": "Reseptien oletuskieli",
+    "defaultLanguageHint": "Käytetään järkevänä oletuksena uusille resepteille. Käyttöliittymän kieli on erillinen.",
+    "submit": "Luo perhe",
+    "creating": "Luodaan…",
+    "backAccount": "Takaisin tiliin",
+    "errors": {
+      "validation": "Tarkista perheen nimi ja yritä uudelleen.",
+      "createFailed": "Perhettä ei voitu luoda. Yritä hetken kuluttua."
+    }
+  },
+  "family": {
+    "switcher": {
+      "label": "Aktiivinen perhe",
+      "switching": "Vaihdetaan perhettä…"
+    },
+    "list": {
+      "title": "Perheesi",
+      "subtitle": "Valitse työtila. Reseptit ja jäsenet pysyvät perheen sisällä.",
+      "backAccount": "Takaisin tiliin"
+    },
+    "shell": {
+      "kicker": "Perheen keittokirja",
+      "navLabel": "Perhesivuston navigointi",
+      "allFamilies": "Kaikki perheet",
       "account": "Tili"
+    },
+    "dashboard": {
+      "title": "Etusivu",
+      "subtitle": "Reseptit ja haku tulevat tänne myöhemmässä tehtävässä.",
+      "yourRole": "Roolisi",
+      "memberCount": "Aktiiviset jäsenet",
+      "scopeNote": "Vuokraajan rajaus",
+      "scopeProof": "Alla olevat luvut haetaan vain kohteelle {name} eksplisiittisellä perhe kontekstilla."
+    },
+    "roles": {
+      "owner": "Omistaja",
+      "admin": "Ylläpitäjä",
+      "editor": "Muokkaaja",
+      "contributor": "Tekijä",
+      "viewer": "Katselija"
     }
   },
   "design": {

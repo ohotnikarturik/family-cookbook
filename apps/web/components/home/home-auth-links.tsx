@@ -30,6 +30,12 @@ export async function HomeAuthLinks({ locale }: Props) {
   return (
     <nav aria-label={t('navLabel')} className="flex flex-wrap gap-3 text-sm">
       <Link
+        href="/families"
+        className="font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        {t('families')}
+      </Link>
+      <Link
         href="/account"
         className="font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >

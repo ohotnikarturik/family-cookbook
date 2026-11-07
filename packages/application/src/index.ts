@@ -15,3 +15,17 @@ export {
   loadVerifiedAuthUser,
   type EnsureProfileForUserResult,
 } from './profile/ensure-profile-for-user.js';
+export { createFamily, type CreateFamilyResult } from './family/create-family.js';
+export { listMyFamilies, type ListMyFamiliesResult } from './family/list-my-families.js';
+export {
+  resolveAccessibleFamily,
+  type ResolveAccessibleFamilyResult,
+} from './family/resolve-accessible-family.js';
+export {
+  resolveDefaultFamilyId,
+  type ResolveDefaultFamilyIdResult,
+} from './family/resolve-default-family-id.js';
+export {
+  setActiveFamilyPreference,
+  type SetActiveFamilyPreferenceResult,
+} from './family/set-active-family-preference.js';
