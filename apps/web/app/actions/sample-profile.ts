@@ -14,7 +14,7 @@ export async function submitSampleDisplayNameAction(
 ): Promise<SampleProfileState> {
   const jar = await cookies();
   const locale = parseAppLocale(jar.get(LOCALE_COOKIE)?.value);
-  const t = await getTranslations({ locale, namespace: 'validation' });
+  const tValidation = await getTranslations({ locale, namespace: 'validation' });
 
   const raw = formData.get('displayName');
   const displayName = typeof raw === 'string' ? raw : '';
@@ -23,12 +23,12 @@ export async function submitSampleDisplayNameAction(
   if (!parsed.success) {
     const issue = parsed.error.issues[0];
     if (issue && issue.code === 'too_small' && issue.origin === 'string') {
-      return { ok: false, error: t('tooShort') };
+      return { ok: false, error: tValidation('tooShort') };
     }
     if (issue && issue.code === 'too_big' && issue.origin === 'string') {
-      return { ok: false, error: t('tooLong') };
+      return { ok: false, error: tValidation('tooLong') };
     }
-    return { ok: false, error: t('invalid') };
+    return { ok: false, error: tValidation('invalid') };
   }
 
   return { ok: true };

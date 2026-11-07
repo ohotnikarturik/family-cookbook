@@ -20,11 +20,13 @@
   },
   "dependencies": {
     "@family-cookbook/contracts": "workspace:*",
+    "@family-cookbook/data-access": "workspace:*",
     "@family-cookbook/domain": "workspace:*",
     "@family-cookbook/permissions": "workspace:*"
   },
   "devDependencies": {
     "@family-cookbook/config": "workspace:*",
+    "@supabase/supabase-js": "2.119.0",
     "@types/node": "22.15.32",
     "eslint": "9.39.5",
     "typescript": "5.9.3",

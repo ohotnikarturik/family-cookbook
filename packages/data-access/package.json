@@ -7,6 +7,34 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./supabase/env": {
+      "types": "./dist/supabase/env.d.ts",
+      "default": "./dist/supabase/env.js"
+    },
+    "./supabase/server": {
+      "types": "./dist/supabase/server.d.ts",
+      "default": "./dist/supabase/server.js"
+    },
+    "./supabase/middleware": {
+      "types": "./dist/supabase/middleware.d.ts",
+      "default": "./dist/supabase/middleware.js"
+    },
+    "./supabase/browser": {
+      "types": "./dist/supabase/browser.d.ts",
+      "default": "./dist/supabase/browser.js"
+    },
+    "./auth/session": {
+      "types": "./dist/auth/session.d.ts",
+      "default": "./dist/auth/session.js"
+    },
+    "./auth/redirect": {
+      "types": "./dist/auth/redirect.d.ts",
+      "default": "./dist/auth/redirect.js"
+    },
+    "./profile/ensure-profile": {
+      "types": "./dist/profile/ensure-profile.d.ts",
+      "default": "./dist/profile/ensure-profile.js"
     }
   },
   "files": [
@@ -19,7 +47,14 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@family-cookbook/contracts": "workspace:*"
+    "@family-cookbook/contracts": "workspace:*",
+    "@supabase/ssr": "0.12.7",
+    "@supabase/supabase-js": "2.119.0",
+    "next": "16.4.5",
+    "zod": "4.6.7"
+  },
+  "peerDependencies": {
+    "next": ">=16.4.5"
   },
   "devDependencies": {
     "@family-cookbook/config": "workspace:*",

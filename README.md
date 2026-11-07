@@ -76,13 +76,13 @@ pnpm supabase:stop
 pnpm supabase:status
 pnpm supabase:reset       # migrations + seed from an empty database
 pnpm supabase:migrate     # pending migrations only; prefer reset for a clean slate
-pnpm supabase:env         # copy NEXT_PUBLIC_SUPABASE_* into .env.local
+pnpm supabase:sync-env    # write NEXT_PUBLIC_SUPABASE_* to apps/web/.env.local
 pnpm supabase:query -- "select display_name from public.profiles"
 ```
 
 On **macOS**, avoid cloning under **`~/Desktop`** if you want Studio — see [`docs/LOCAL_SUPABASE.md`](docs/LOCAL_SUPABASE.md#studio-on-macos).
 
-Test sign-in accounts (local only): [`docs/fixtures/TEST_IDENTITIES.md`](docs/fixtures/TEST_IDENTITIES.md).
+Test sign-in accounts (local only): [`docs/fixtures/TEST_IDENTITIES.md`](docs/fixtures/TEST_IDENTITIES.md). **Magic link / OTP:** [`docs/LOCAL_SUPABASE.md`](docs/LOCAL_SUPABASE.md#auth-t13) (Mailpit at port 54324).
 
 ## Design gallery (development)
 

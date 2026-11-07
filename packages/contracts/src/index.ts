@@ -9,4 +9,17 @@ export const bootstrapHealthSchema = z.object({
 
 export type BootstrapHealth = z.infer<typeof bootstrapHealthSchema>;
 
+export {
+  authEmailOtpSchema,
+  authEmailSchema,
+  EMAIL_OTP_LENGTH,
+  type AuthEmail,
+  type AuthEmailOtp,
+} from './auth-email.js';
+export {
+  profileBootstrapHintsSchema,
+  profilePreferredLanguageSchema,
+  profileThemePreferenceSchema,
+  type ProfileBootstrapHints,
+} from './profile-bootstrap.js';
 export { sampleDisplayNameSchema, type SampleDisplayNameInput } from './sample-profile.js';

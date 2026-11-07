@@ -15,7 +15,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "verify:client-bundle": "node scripts/verify-no-secrets-in-client-bundle.mjs",
-    "dev:web": "pnpm --filter @family-cookbook/web dev",
+    "dev:web": "pnpm --filter \"./packages/*\" build && pnpm --filter @family-cookbook/web dev",
     "dev:mcp": "pnpm --filter @family-cookbook/mcp dev",
     "supabase:start": "node scripts/supabase-start.mjs",
     "supabase:start:full": "supabase start",
@@ -24,6 +24,7 @@
     "supabase:query": "node scripts/supabase-query.mjs",
     "supabase:status": "supabase status",
     "supabase:env": "supabase status -o env",
+    "supabase:sync-env": "node scripts/supabase-sync-env.mjs",
     "supabase:reset": "supabase db reset",
     "supabase:migrate": "supabase migration up",
     "supabase:test": "node scripts/supabase-test.mjs"

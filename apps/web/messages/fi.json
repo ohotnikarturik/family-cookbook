@@ -8,6 +8,41 @@
       "uk": "Українська"
     }
   },
+  "errors": {
+    "authRequired": "Kirjaudu sisään jatkaaksesi."
+  },
+  "auth": {
+    "title": "Kirjaudu",
+    "subtitle": "Käytä sähköpostin kertakäyttöistä linkkiä tai syötä viestin koodi.",
+    "emailLabel": "Sähköposti",
+    "sendMagicLink": "Lähetä taikalinkki",
+    "sending": "Lähetetään…",
+    "emailSent": "Jos tilille {email} löytyy käyttäjä, saat viestin pian. Avaa linkki tai syötä koodi alle.",
+    "otpHeading": "Sähköpostikoodi",
+    "otpHint": "Syötä sähköpostin 6-numeroinen koodi (tai käytä viestin linkkiä).",
+    "otpLabel": "6-numeroinen koodi",
+    "otpNeedsEmail": "Lähetä ensin taikalinkki, jotta tiedämme minkä osoitteen vahvistamme.",
+    "verifyOtp": "Vahvista koodi",
+    "verifying": "Vahvistetaan…",
+    "backHome": "Takaisin etusivulle",
+    "errors": {
+      "invalidEmail": "Anna kelvollinen sähköpostiosoite.",
+      "sendFailed": "Viestin lähetys epäonnistui. Yritä hetken kuluttua uudelleen.",
+      "invalidOtp": "Syötä sähköpostin 6-numeroinen koodi.",
+      "verifyFailed": "Koodi ei kelvannut. Pyydä uusi viesti, jos vanhentui.",
+      "callback": "Kirjautuminen keskeytyi. Yritä uudelleen."
+    }
+  },
+  "account": {
+    "title": "Tilisi",
+    "subtitle": "Olet kirjautunut Family Cookbookiin.",
+    "signedInAs": "Istunto",
+    "displayName": "Näyttönimi",
+    "email": "Sähköposti",
+    "unknownMember": "Jäsen",
+    "signOut": "Kirjaudu ulos",
+    "backHome": "Takaisin etusivulle"
+  },
   "validation": {
     "tooShort": "Kirjoita vähintään kaksi merkkiä.",
     "tooLong": "Pidä tämä alle 80 merkin.",
@@ -29,8 +64,13 @@
     "sampleForm": {
       "label": "Näyttönimi (demo)",
       "placeholder": "Nimesi",
-      "submit": "Tallenna",
-      "success": "Tallennettu (vain demo — ei vielä tietokantaan)."
+      "submit": "Tarkista",
+      "success": "Tarkistettu (vain demo — mitään ei tallenneta)."
+    },
+    "auth": {
+      "navLabel": "Tilin käyttö",
+      "signIn": "Kirjaudu",
+      "account": "Tili"
     }
   },
   "design": {

@@ -8,6 +8,41 @@
       "uk": "Ukrainian"
     }
   },
+  "errors": {
+    "authRequired": "Sign in to continue."
+  },
+  "auth": {
+    "title": "Sign in",
+    "subtitle": "Use a one-time email link or enter the code from your message.",
+    "emailLabel": "Email",
+    "sendMagicLink": "Send magic link",
+    "sending": "Sending…",
+    "emailSent": "If an account exists for {email}, you will receive a message shortly. Open the link or enter the code below.",
+    "otpHeading": "Email code",
+    "otpHint": "Enter the 6-digit code from the email (or use the magic link in the message).",
+    "otpLabel": "6-digit code",
+    "otpNeedsEmail": "Send a magic link first so we know which email to verify.",
+    "verifyOtp": "Verify code",
+    "verifying": "Verifying…",
+    "backHome": "Back to home",
+    "errors": {
+      "invalidEmail": "Enter a valid email address.",
+      "sendFailed": "We could not send the message. Try again in a moment.",
+      "invalidOtp": "Enter the 6-digit code from your email.",
+      "verifyFailed": "That code did not work. Request a new message if it expired.",
+      "callback": "Sign-in could not be completed. Try again."
+    }
+  },
+  "account": {
+    "title": "Your account",
+    "subtitle": "You are signed in to Family Cookbook.",
+    "signedInAs": "Session",
+    "displayName": "Display name",
+    "email": "Email",
+    "unknownMember": "Member",
+    "signOut": "Sign out",
+    "backHome": "Back to home"
+  },
   "validation": {
     "tooShort": "Enter at least two characters.",
     "tooLong": "Keep this under 80 characters.",
@@ -29,8 +64,13 @@
     "sampleForm": {
       "label": "Display name (demo)",
       "placeholder": "Your name",
-      "submit": "Save",
-      "success": "Saved (demo only — not stored yet)."
+      "submit": "Check",
+      "success": "Validated (demo only — nothing is saved)."
+    },
+    "auth": {
+      "navLabel": "Account access",
+      "signIn": "Sign in",
+      "account": "Account"
     }
   },
   "design": {

@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { bootstrapHealthSchema, PACKAGE_VERSION, sampleDisplayNameSchema } from './index.js';
+import {
+  authEmailOtpSchema,
+  bootstrapHealthSchema,
+  PACKAGE_VERSION,
+  sampleDisplayNameSchema,
+} from './index.js';
 
 describe('@family-cookbook/contracts', () => {
   it('exports a package version', () => {
@@ -27,5 +32,13 @@ describe('@family-cookbook/contracts', () => {
     if (!tooBig.success) {
       expect(tooBig.error.issues[0]).toMatchObject({ code: 'too_big', origin: 'string' });
     }
+  });
+
+  it('accepts a 6-digit email code and rejects other tokens', () => {
+    expect(authEmailOtpSchema.parse(' 123456 ')).toBe('123456');
+    expect(authEmailOtpSchema.safeParse('12345').success).toBe(false);
+    expect(authEmailOtpSchema.safeParse('1234567').success).toBe(false);
+    expect(authEmailOtpSchema.safeParse('12ab56').success).toBe(false);
+    expect(authEmailOtpSchema.safeParse('pkce_token').success).toBe(false);
   });
 });

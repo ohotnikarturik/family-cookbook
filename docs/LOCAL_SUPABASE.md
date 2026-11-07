@@ -14,16 +14,19 @@ Verified with **Supabase CLI 3.0.0**.
 
 ```bash
 pnpm install
-cp .env.example .env.local
 pnpm supabase:start          # pulls images on first run
 pnpm supabase:reset          # migrations + seed from empty DB
-pnpm supabase:env            # print keys for .env.local
+pnpm supabase:sync-env       # writes NEXT_PUBLIC_* into apps/web/.env.local
 ```
 
-Copy from `pnpm supabase:env` into `.env.local`:
+`pnpm supabase:sync-env` maps local Supabase **`API_URL`** / **`ANON_KEY`** into:
 
-- `NEXT_PUBLIC_SUPABASE_URL` (default `http://127.0.0.1:54321`)
+- `NEXT_PUBLIC_SUPABASE_URL` (often `http://127.0.0.1:54321`)
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+Next.js loads **`apps/web/.env.local`** (the app’s working directory). After sync, restart **`pnpm dev:web`** if it was already running.
+
+Raw CLI output (different variable names): `pnpm supabase:env`
 
 Set `SUPABASE_PROJECT_ID=family-cookbook` to match `project_id` in `config.toml` (documentation only for now).
 
@@ -52,13 +55,33 @@ Do **not** commit `service_role` keys. For rare local admin tasks, read `SUPABAS
 | Studio | http://127.0.0.1:54323 |
 | Mail (Inbucket / local SMTP UI) | http://127.0.0.1:54324 |
 
-Auth redirect allow-list includes `http://127.0.0.1:3003` and `http://localhost:3003` for the web app ([`NEXT_PUBLIC_APP_URL`](../.env.example)).
+Auth `site_url` is `http://localhost:3003` (same as [`NEXT_PUBLIC_APP_URL`](../.env.example)). The redirect allow-list also includes `http://127.0.0.1:3003`.
 
 New `public` tables are not granted to the Data API automatically (`auto_expose_new_tables = false`). Each migration must `GRANT` the roles that should reach the table. Local Auth allows **100** emails per hour (`auth.rate_limit.email_sent`) so magic-link tests are not capped at the CLI default of 2. Restart the stack after changing `config.toml`.
 
 ## Seed data
 
 Test users, profiles, families, and memberships: [`docs/fixtures/TEST_IDENTITIES.md`](fixtures/TEST_IDENTITIES.md).
+
+## Auth (T1.3)
+
+1. Run `pnpm supabase:sync-env` (after `pnpm supabase:start`); it sets `NEXT_PUBLIC_APP_URL=http://localhost:3003`, which matches [`config.toml`](../supabase/config.toml) `site_url`.
+2. Start web: `pnpm dev:web` → open `http://localhost:3003/en/auth/sign-in`. `http://127.0.0.1:3003` also works. Request the link and open it in the **same host** — the PKCE cookie is not shared between `localhost` and `127.0.0.1`.
+3. Enter an email; open **Mailpit** at http://127.0.0.1:54324 and **click the sign-in link** in the message (HTML or Text tab).
+4. Callback is **`/auth/callback`** (not locale-prefixed). After sign-in, `/en/account` should show your session; **Sign out** clears the cookie session. The account page creates a `profiles` row if the callback did not.
+
+New sign-ups create `auth.users` + `profiles` on first successful login. Seeded personas in [`fixtures/TEST_IDENTITIES.md`](fixtures/TEST_IDENTITIES.md) can sign in with their `.test` emails via Mailpit (not password UI in MVP).
+
+### Magic link vs email code (local)
+
+The web app calls `signInWithOtp` with a redirect to the Next.js callback (`@supabase/ssr` / PKCE cookie session). **Locally, Auth emails are link-only:** subject *Your sign-in link*, body with a URL like `http://127.0.0.1:54321/auth/v1/verify?token=pkce_…`. There is **no 6-digit code** in Mailpit (HTML, Text, or Raw) unless you customize GoTrue email templates (e.g. add `{{ .Token }}`).
+
+| Path | Local dev |
+| --- | --- |
+| **Magic link** (recommended) | Click **Sign in** in Mailpit → browser hits Auth verify → redirects to `/auth/callback` |
+| **“Verify code” on sign-in** | Needs a **6-digit** OTP in the email (`auth.email.otp_length`); **not available** with default local templates. The code field rejects anything else |
+
+The sign-in page shows **both** forms for parity with hosted Supabase (some projects include OTP in email). For day-to-day local work, ignore the code section and use the link only. The long `pkce_…` token in the URL is **not** what the code field expects.
 
 ## pgTAP
 

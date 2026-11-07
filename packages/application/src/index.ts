@@ -9,3 +9,9 @@ export const applicationBootstrapMarker = {
   domain: domainVersion,
   permissions: permissionsVersion,
 };
+
+export {
+  ensureProfileForCurrentUser,
+  loadVerifiedAuthUser,
+  type EnsureProfileForUserResult,
+} from './profile/ensure-profile-for-user.js';

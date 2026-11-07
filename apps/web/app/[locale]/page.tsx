@@ -4,6 +4,7 @@ import { getFormatter, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
+import { HomeAuthLinks } from '@/components/home/home-auth-links';
 import { SampleDisplayNameForm } from '@/components/home/sample-display-name-form';
 import { LanguageSwitcher } from '@/components/i18n/language-switcher';
 import { Link } from '@/i18n/navigation';
@@ -54,6 +55,9 @@ async function HomeContent(props: Props) {
         </h1>
         <p className="text-muted-foreground">{t('subtitle')}</p>
         <LanguageSwitcher />
+        <Suspense fallback={null}>
+          <HomeAuthLinks locale={locale} />
+        </Suspense>
       </div>
 
       <section
