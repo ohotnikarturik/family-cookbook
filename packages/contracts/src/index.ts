@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const PACKAGE_VERSION = '0.0.0';
 
-/** Placeholder schema; replaced in T2.1 with recipe boundaries. */
+/** MCP health check payload (apps/mcp). */
 export const bootstrapHealthSchema = z.object({
   status: z.literal('ok'),
 });
@@ -46,3 +46,86 @@ export {
   type InviteMemberInput,
   type PendingInvitation,
 } from './invitation.js';
+export {
+  MAX_RECIPE_INGREDIENT_TRANSLATIONS,
+  MAX_RECIPE_INGREDIENTS,
+  MAX_RECIPE_STEP_TRANSLATIONS,
+  MAX_RECIPE_STEPS,
+  MAX_RECIPE_TRANSLATIONS,
+  MAX_TAGS_PER_RECIPE,
+  RECIPE_HISTORY_LIMIT_MAX,
+  RECIPE_MINUTES_MAX,
+  RECIPE_SERVINGS_MAX,
+  RECIPE_TITLE_MAX,
+  SEARCH_RECIPES_LIMIT_MAX,
+} from './recipe-limits.js';
+export { recipeLanguageTagSchema, type RecipeLanguageTag } from './recipe-language.js';
+export {
+  recipeIngredientInputSchema,
+  recipeIngredientsInputSchema,
+  type RecipeIngredientInput,
+} from './recipe-ingredient.js';
+export {
+  recipeStepInputSchema,
+  recipeStepsInputSchema,
+  type RecipeStepInput,
+} from './recipe-step.js';
+export {
+  familyTagSummarySchema,
+  recipeTagAttachSchema,
+  recipeTagByIdSchema,
+  recipeTagByNameSchema,
+  recipeTagNameSchema,
+  recipeTagsAttachInputSchema,
+  type FamilyTagSummary,
+  type RecipeTagAttach,
+  type RecipeTagName,
+} from './recipe-tag.js';
+export {
+  recipeIngredientTranslationInputSchema,
+  recipeIngredientTranslationsInputSchema,
+  recipeStepTranslationInputSchema,
+  recipeStepTranslationsInputSchema,
+  recipeTranslationInputSchema,
+  recipeTranslationsInputSchema,
+  translationReviewStatusSchema,
+  type RecipeIngredientTranslationInput,
+  type RecipeStepTranslationInput,
+  type RecipeTranslationInput,
+  type TranslationReviewStatus,
+} from './recipe-translation.js';
+export {
+  recipeCoreFieldsSchema,
+  recipeIdSchema,
+  recipeStatusSchema,
+  type RecipeCoreFields,
+  type RecipeStatus,
+} from './recipe-core.js';
+export {
+  createRecipeInputSchema,
+  createRecipePayloadSchema,
+  type CreateRecipeInput,
+  type CreateRecipePayload,
+} from './recipe-create.js';
+export {
+  updateRecipeInputSchema,
+  updateRecipePayloadSchema,
+  type UpdateRecipeInput,
+  type UpdateRecipePayload,
+} from './recipe-update.js';
+export {
+  recipeSearchSortSchema,
+  searchRecipesInputSchema,
+  type RecipeSearchSort,
+  type SearchRecipesInput,
+} from './recipe-search.js';
+export {
+  archiveRecipeInputSchema,
+  getRecipeHistoryInputSchema,
+  getRecipeInputSchema,
+  restoreRecipeInputSchema,
+  type ArchiveRecipeInput,
+  type GetRecipeHistoryInput,
+  type GetRecipeInput,
+  type RestoreRecipeInput,
+} from './recipe-lifecycle.js';

@@ -409,6 +409,9 @@ importers:
 
   packages/permissions:
     dependencies:
+      '@family-cookbook/contracts':
+        specifier: workspace:*
+        version: link:../contracts
       '@family-cookbook/domain':
         specifier: workspace:*
         version: link:../domain

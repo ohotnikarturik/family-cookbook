@@ -86,6 +86,8 @@ Work in order. A task is complete only when its acceptance criteria and relevant
 
 **Acceptance:** boundary schemas reject invalid lengths, counts, negative time/servings, and malformed language tags.
 
+**Status:** Done (2026-11-07).
+
 ### T2.2 Recipe database schema
 - Implement recipes, ingredients, steps, family tags, recipe tags, translations, revision snapshots, audit events.
 - Add composite family foreign keys, RLS, constraints, search indexes.
