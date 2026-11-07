@@ -104,6 +104,8 @@ Work in order. A task is complete only when its acceptance criteria and relevant
 
 **Acceptance:** web-independent unit/integration tests prove role rules, ownership rules and version conflict behavior.
 
+**Status:** Done (2026-11-08).
+
 ### T2.4 Web dashboard and recipe browsing
 - Build family dashboard, family selector, recipe list, filters, pagination, and recipe detail.
 - Use Server Components for protected reads; add Client Components only for interaction.

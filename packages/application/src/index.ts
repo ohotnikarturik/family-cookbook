@@ -49,3 +49,10 @@ export {
 } from './invitations/list-family-invitations.js';
 export { resolveInvitationEmailSender } from './invitations/resolve-email-sender.js';
 export { revokeInvitation, type RevokeInvitationResult } from './invitations/revoke-invitation.js';
+export { archiveRecipe, type ArchiveRecipeResult } from './recipe/archive-recipe.js';
+export { createRecipe, type CreateRecipeResult } from './recipe/create-recipe.js';
+export { getRecipe, type GetRecipeResult } from './recipe/get-recipe.js';
+export { getRecipeHistory, type GetRecipeHistoryResult } from './recipe/get-recipe-history.js';
+export { restoreRecipe, type RestoreRecipeResult } from './recipe/restore-recipe.js';
+export { searchRecipes, type SearchRecipesResult } from './recipe/search-recipes.js';
+export { updateRecipe, type UpdateRecipeResult } from './recipe/update-recipe.js';
