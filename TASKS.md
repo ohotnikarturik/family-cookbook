@@ -94,6 +94,8 @@ Work in order. A task is complete only when its acceptance criteria and relevant
 
 **Acceptance:** a child row cannot reference a parent from another family; RLS tests cover every new table.
 
+**Status:** Done (2026-11-08).
+
 ### T2.3 Shared application use cases
 - Implement `createRecipe`, `getRecipe`, `searchRecipes`, `updateRecipe`, `archiveRecipe`, `restoreRecipe`, and `getRecipeHistory`.
 - Use request-scoped user-bound repository.

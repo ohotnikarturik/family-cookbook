@@ -107,3 +107,14 @@
 6. **Domain** [`packages/domain`](../packages/domain): pure `RecipeAggregate` read-model types (including ingredient/step translations), status unions, and `isRecipeVersionConflict` / `recipeVersionMatches` (no `contracts` dependency).
 7. **Permissions** [`packages/permissions/src/recipe-capabilities.ts`](../packages/permissions/src/recipe-capabilities.ts): recipe capability matrix per PROJECT_SPEC §6.2; package depends on `@family-cookbook/contracts` for `FamilyRole`. Invitation capabilities remain in `application` until a later refactor.
 8. **Tests:** Vitest in `contracts` (`recipe-validation.test.ts`), `domain` (`recipe-version.test.ts`), and `permissions` (`recipe-capabilities.test.ts`).
+
+## T2.2 — Recipe database schema (2026-11-08)
+
+1. **Migration** [`supabase/migrations/20251108020000_recipe_schema_and_rls.sql`](../supabase/migrations/20251108020000_recipe_schema_and_rls.sql): enums `recipe_status`, `translation_review_status`; tables through `audit_events` per PROJECT_SPEC §7.1; CHECK bounds aligned with `packages/contracts` recipe limits; composite `(id, family_id)` FKs on all family-owned children.
+2. **Deferred:** `recipe_assets` and `recipe_steps.media_asset_id` FK (**T3.1**). Transactional aggregate write RPC and child-row `DELETE` grants (**T2.3**).
+3. **Search:** `pg_trgm` (schema `extensions`) GIN on `recipes.title`; stored `search_document tsvector` (`simple`) on title/description/category; index on `recipe_ingredients (family_id, name)`.
+4. **private helpers:** `can_create_recipe`, `can_edit_recipe`, `can_manage_recipe_tags`, `can_view_recipe_history`, `can_view_audit_events` — mirror `packages/permissions` recipe matrix; `EXECUTE` granted to `authenticated` only.
+5. **RLS:** members read recipe aggregate; writes use editor/contributor-ownership rules; revisions append-only insert; audit **select** owner/admin/editor only; audit **insert** non-viewer members with `actor_user_id = auth.uid()`. No `DELETE` grants on recipe/audit tables.
+6. **Identity:** `private.recipes_guard_identity` / `private.reject_family_id_change` keep `family_id` (and recipe `created_by`) immutable even when the table owner bypasses RLS. `recipe_revisions` and `audit_events` reject `UPDATE`.
+7. **family_tags:** `private.family_tag_normalize_name` sets `normalized_name` from trimmed `name`; CHECK rejects whitespace-only names.
+8. **pgTAP:** extended [`01_rls_enabled.sql`](../supabase/tests/01_rls_enabled.sql); new [`80_recipe_composite_fk.sql`](../supabase/tests/80_recipe_composite_fk.sql), [`81_recipe_cross_family_isolation.sql`](../supabase/tests/81_recipe_cross_family_isolation.sql), [`82_recipe_role_restrictions.sql`](../supabase/tests/82_recipe_role_restrictions.sql). Contributor update denial asserted via unchanged title (RLS returns 0 rows, no SQLSTATE).
