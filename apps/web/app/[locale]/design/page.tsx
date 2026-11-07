@@ -8,6 +8,7 @@ import { DialogSampleLoader } from '@/app/[locale]/design/dialog-sample-loader';
 import { FormFieldSample } from '@/components/product/form-field-sample';
 import { PrimaryNavSample } from '@/components/product/primary-nav-sample';
 import { RecipeCardSample } from '@/components/product/recipe-card-sample';
+import { SkipLink } from '@/components/product/skip-link';
 import { LoadingStrip, StatusRow } from '@/components/product/status-row';
 import { ThemeSwitcher } from '@/components/theme/ThemeSwitcher';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -52,12 +53,7 @@ async function DesignGallery({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <a
-        href="#design-main"
-        className="absolute left-4 top-4 z-[100] -translate-y-[200%] rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground shadow-md transition-transform focus:translate-y-0 focus:outline-none focus-visible:ring-[length:var(--ring-width)] focus-visible:ring-ring focus-visible:ring-offset-[length:var(--ring-offset)] focus-visible:ring-offset-background"
-      >
-        {t('skipToContent')}
-      </a>
+      <SkipLink href="#design-main">{t('skipToContent')}</SkipLink>
       <header className="border-b border-border bg-surface-raised/80 backdrop-blur-sm">
         <div className="mx-auto flex max-w-3xl flex-col gap-4 px-4 py-8 sm:px-6">
           <div className="flex flex-wrap items-center gap-3">
