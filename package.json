@@ -25,7 +25,8 @@
     "supabase:status": "supabase status",
     "supabase:env": "supabase status -o env",
     "supabase:reset": "supabase db reset",
-    "supabase:migrate": "supabase migration up"
+    "supabase:migrate": "supabase migration up",
+    "supabase:test": "node scripts/supabase-test.mjs"
   },
   "devDependencies": {
     "only-allow": "1.2.1",

@@ -58,11 +58,16 @@ New `public` tables are not granted to the Data API automatically (`auto_expose_
 
 ## Seed data
 
-Test users and profiles: [`docs/fixtures/TEST_IDENTITIES.md`](fixtures/TEST_IDENTITIES.md). Family rows arrive in **T1.2**.
+Test users, profiles, families, and memberships: [`docs/fixtures/TEST_IDENTITIES.md`](fixtures/TEST_IDENTITIES.md).
 
 ## pgTAP
 
-RLS tests will live under [`supabase/tests/`](../supabase/tests/) starting in T1.2.
+RLS tests live under [`supabase/tests/`](../supabase/tests/). After a reset:
+
+```bash
+pnpm supabase:reset   # stack must be running
+pnpm supabase:test    # uses docker exec when CLI pg_prove mount fails (macOS Desktop paths)
+```
 
 ## Studio on macOS
 

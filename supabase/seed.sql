@@ -1,5 +1,5 @@
 -- LOCAL DEVELOPMENT ONLY — never run against a hosted Supabase project.
--- Deterministic auth users + public.profiles for tests (families/memberships: T1.2).
+-- Deterministic auth users, profiles, families, and memberships for local tests.
 -- Password for all seeded users: see docs/fixtures/TEST_IDENTITIES.md
 
 create extension if not exists pgcrypto;
@@ -134,3 +134,88 @@ begin
     );
   end loop;
 end $$;
+
+-- Families and memberships (T1.2) — stable UUIDs in docs/fixtures/TEST_IDENTITIES.md
+insert into
+  public.families (id, name, default_language, created_by)
+values
+  (
+    'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'::uuid,
+    'Andersen Test Kitchen',
+    'en',
+    '11111111-1111-4111-8111-111111111101'::uuid
+  ),
+  (
+    'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb'::uuid,
+    'Berg Test Pantry',
+    'en',
+    '22222222-2222-4222-8222-222222222201'::uuid
+  );
+
+insert into
+  public.family_members (id, family_id, user_id, role, status, joined_at)
+values
+  (
+    'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaa0001'::uuid,
+    'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'::uuid,
+    '11111111-1111-4111-8111-111111111101'::uuid,
+    'owner',
+    'active',
+    now()
+  ),
+  (
+    'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaa0002'::uuid,
+    'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'::uuid,
+    '11111111-1111-4111-8111-111111111104'::uuid,
+    'admin',
+    'active',
+    now()
+  ),
+  (
+    'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaa0003'::uuid,
+    'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'::uuid,
+    '11111111-1111-4111-8111-111111111102'::uuid,
+    'editor',
+    'active',
+    now()
+  ),
+  (
+    'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaa0004'::uuid,
+    'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'::uuid,
+    '11111111-1111-4111-8111-111111111103'::uuid,
+    'viewer',
+    'active',
+    now()
+  ),
+  (
+    'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaa0005'::uuid,
+    'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'::uuid,
+    '33333333-3333-4333-8333-333333333301'::uuid,
+    'editor',
+    'active',
+    now()
+  ),
+  (
+    'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbb0001'::uuid,
+    'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb'::uuid,
+    '22222222-2222-4222-8222-222222222201'::uuid,
+    'owner',
+    'active',
+    now()
+  ),
+  (
+    'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbb0002'::uuid,
+    'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb'::uuid,
+    '22222222-2222-4222-8222-222222222202'::uuid,
+    'contributor',
+    'active',
+    now()
+  ),
+  (
+    'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbb0003'::uuid,
+    'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb'::uuid,
+    '33333333-3333-4333-8333-333333333301'::uuid,
+    'viewer',
+    'active',
+    now()
+  );

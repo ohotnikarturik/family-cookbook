@@ -60,3 +60,12 @@
 6. **Secrets:** no `service_role` in repo or `.env.example`; local keys from `supabase status -o env` into gitignored `.env.local`.
 7. **pgTAP:** placeholder [`supabase/tests/README.md`](../supabase/tests/README.md) until T1.2.
 8. **CI:** migration reset job deferred until pgTAP/Docker in GHA (PROJECT_SPEC §18.5).
+
+## T1.2 — Base schema and RLS helpers (2026-11-07)
+
+1. **Migration** [`supabase/migrations/20251107200000_tenant_schema_and_rls.sql`](../supabase/migrations/20251107200000_tenant_schema_and_rls.sql): enums `family_role`, `membership_status`; tables `families`, `family_members`, `family_invitations`; partial unique index `family_members_one_active_owner_uidx` (at most one active owner per family).
+2. **RLS helpers** in schema **`private`** (not API-exposed): `SECURITY DEFINER`, `search_path = pg_catalog, public`; `EXECUTE` granted only to `authenticated` on predicates used by policies.
+3. **Policies:** members read tenant rows via `private.is_active_member`; family create by `created_by = auth.uid()`; membership bootstrap (creator → sole owner) or owner/admin invite with §6.2 role guards (`membership_role_allowed_for_inviter` — admin cannot assign admin/owner; only owner may invite admin). No `DELETE` grants on tenant tables in MVP.
+4. **pgTAP:** [`supabase/tests/`](../supabase/tests/) + **`pnpm supabase:test`** ([`scripts/supabase-test.mjs`](../scripts/supabase-test.mjs) via `docker exec` when Desktop bind mounts block `supabase test db`); JWT shim **`tests.request_as_user`** (`SECURITY INVOKER`, superuser-only; fix in [`20251107213000_fix_tests_request_as_user.sql`](../supabase/migrations/20251107213000_fix_tests_request_as_user.sql)).
+5. **Seed:** Families A/B and memberships in [`supabase/seed.sql`](../supabase/seed.sql); **Multi Family** is `editor` in A and `viewer` in B (stable IDs in [`docs/fixtures/TEST_IDENTITIES.md`](fixtures/TEST_IDENTITIES.md)).
+6. **Deferred to T1.4/T1.5:** deferred “≥1 active owner” trigger, invitation redemption RPC, permanent owner-transfer definer function.
