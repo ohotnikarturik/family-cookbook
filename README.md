@@ -27,6 +27,7 @@ Private, multi-tenant family recipe library — mobile-first web app and remote 
 
 - Node.js **≥ 20.9** (22 recommended; see `.nvmrc`)
 - pnpm **12.16.1** (Corepack: `corepack enable`)
+- **Local database (optional until T1.3):** [Docker](https://docs.docker.com/get-docker/) and Supabase CLI via `pnpm install` (see [Local Supabase](docs/LOCAL_SUPABASE.md))
 
 ## Setup
 
@@ -63,6 +64,25 @@ pnpm format:check     # Prettier check
 pnpm format           # Prettier write
 pnpm verify:client-bundle   # After build: scan web client bundles for secret-like patterns
 ```
+
+## Local Supabase
+
+Full steps: [`docs/LOCAL_SUPABASE.md`](docs/LOCAL_SUPABASE.md).
+
+```bash
+pnpm supabase:start       # start stack (falls back without Studio if the mount fails)
+pnpm supabase:start:full  # require Studio
+pnpm supabase:stop
+pnpm supabase:status
+pnpm supabase:reset       # migrations + seed from an empty database
+pnpm supabase:migrate     # pending migrations only; prefer reset for a clean slate
+pnpm supabase:env         # copy NEXT_PUBLIC_SUPABASE_* into .env.local
+pnpm supabase:query -- "select display_name from public.profiles"
+```
+
+On **macOS**, avoid cloning under **`~/Desktop`** if you want Studio — see [`docs/LOCAL_SUPABASE.md`](docs/LOCAL_SUPABASE.md#studio-on-macos).
+
+Test sign-in accounts (local only): [`docs/fixtures/TEST_IDENTITIES.md`](docs/fixtures/TEST_IDENTITIES.md).
 
 ## Design gallery (development)
 

@@ -16,10 +16,20 @@
     "format:check": "prettier --check .",
     "verify:client-bundle": "node scripts/verify-no-secrets-in-client-bundle.mjs",
     "dev:web": "pnpm --filter @family-cookbook/web dev",
-    "dev:mcp": "pnpm --filter @family-cookbook/mcp dev"
+    "dev:mcp": "pnpm --filter @family-cookbook/mcp dev",
+    "supabase:start": "node scripts/supabase-start.mjs",
+    "supabase:start:full": "supabase start",
+    "supabase:start:core": "supabase start -x studio",
+    "supabase:stop": "supabase stop",
+    "supabase:query": "node scripts/supabase-query.mjs",
+    "supabase:status": "supabase status",
+    "supabase:env": "supabase status -o env",
+    "supabase:reset": "supabase db reset",
+    "supabase:migrate": "supabase migration up"
   },
   "devDependencies": {
     "only-allow": "1.2.1",
-    "prettier": "3.6.2"
+    "prettier": "3.6.2",
+    "supabase": "3.0.0"
   }
 }
