@@ -11,6 +11,7 @@ import { notFound, redirect } from 'next/navigation';
 import { Suspense, type ReactNode } from 'react';
 
 import { FamilySwitcher } from '@/components/family/family-switcher';
+import { UnavailablePage } from '@/components/product/unavailable-page';
 import { Link } from '@/i18n/navigation';
 import { locales, type AppLocale } from '@/i18n/routing';
 
@@ -55,11 +56,8 @@ async function FamilyLayoutShell({ children, params }: Props) {
   if (workspace.status === 'auth_required') {
     redirect(`/${locale}/auth/sign-in?next=/${locale}/f/${familyId}`);
   }
-  if (workspace.status === 'forbidden' || workspace.status === 'validation_error') {
-    notFound();
-  }
   if (workspace.status !== 'ok') {
-    notFound();
+    return <UnavailablePage locale={locale} />;
   }
 
   const listed = await listMyFamilies(supabase);
@@ -78,6 +76,12 @@ async function FamilyLayoutShell({ children, params }: Props) {
           <FamilySwitcher families={families} currentFamilyId={workspace.workspace.id} />
         </div>
         <nav aria-label={t('shell.navLabel')} className="flex flex-wrap gap-4 text-sm">
+          <Link
+            href={`/f/${workspace.workspace.id}/recipes`}
+            className="font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {t('shell.recipes')}
+          </Link>
           {canManageInvitations(workspace.workspace.role) ? (
             <Link
               href={`/f/${workspace.workspace.id}/settings/invitations`}

@@ -8,7 +8,8 @@
     "start": "next start -p 3003",
     "typecheck": "next typegen && tsc --noEmit",
     "lint": "eslint",
-    "test": "node -e \"process.exit(0)\""
+    "test": "node -e \"process.exit(0)\"",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@family-cookbook/application": "workspace:*",
@@ -27,7 +28,9 @@
     "tailwind-merge": "2.6.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.11.0",
     "@family-cookbook/config": "workspace:*",
+    "@playwright/test": "1.56.1",
     "@tailwindcss/turbopack": "4.3.4",
     "@types/node": "22.15.32",
     "@types/react": "19.3.0",

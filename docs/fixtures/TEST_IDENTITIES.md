@@ -33,3 +33,18 @@ Used by [`supabase/seed.sql`](../../supabase/seed.sql) after `pnpm supabase:rese
 | `bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbb0001` | B | Owner B | `owner` |
 | `bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbb0002` | B | Contributor B | `contributor` |
 | `bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbb0003` | B | Multi Family | `viewer` |
+
+## Recipes (T2.4 browse fixtures)
+
+Seeded from [`supabase/seed-recipes.sql`](../../supabase/seed-recipes.sql). Family A has **30 active** + **1 archived** recipe (pagination threshold 25).
+
+| Recipe ID | Family | Title | Filters / notes |
+| --- | --- | --- | --- |
+| `eeeeeeee-eeee-4eee-8eee-eeeeeeee0101` | A | Grandma's cardamom buns | `fi`, Baking, tag `dessert` |
+| `eeeeeeee-eeee-4eee-8eee-eeeeeeee0102` | A | Weeknight salmon soup | `en`, Main, tag `fish`, ingredient salmon |
+| `eeeeeeee-eeee-4eee-8eee-eeeeeeee0103` | A | Archived beet salad | **archived** |
+| `eeeeeeee-eeee-4eee-8eee-eeeeeeee0104`–`0131` | A | Family A filler recipe *n* (`n` = 4…31) | pagination fillers |
+| `eeeeeeee-eeee-4eee-8eee-eeeeeeee0201` | B | Contributor's pancakes | `ru`, Contributor B |
+| `eeeeeeee-eeee-4eee-8eee-eeeeeeee0202` | B | Owner B house bread | Baking |
+
+UI steps: [`UI_TEST_T2_4.md`](./UI_TEST_T2_4.md).

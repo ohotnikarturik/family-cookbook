@@ -11,6 +11,11 @@
   "errors": {
     "authRequired": "Kirjaudu sisään jatkaaksesi."
   },
+  "notFound": {
+    "title": "Sivua ei löytynyt",
+    "description": "Tätä sivua ei ole saatavilla.",
+    "home": "Takaisin etusivulle"
+  },
   "auth": {
     "title": "Kirjaudu",
     "subtitle": "Käytä sähköpostin kertakäyttöistä linkkiä tai syötä viestin koodi.",
@@ -103,17 +108,21 @@
     "shell": {
       "kicker": "Perheen keittokirja",
       "navLabel": "Perhesivuston navigointi",
+      "recipes": "Reseptit",
       "allFamilies": "Kaikki perheet",
       "invitations": "Kutsut",
       "account": "Tili"
     },
     "dashboard": {
       "title": "Etusivu",
-      "subtitle": "Reseptit ja haku tulevat tänne myöhemmässä tehtävässä.",
+      "subtitle": "Perheen viimeksi päivitetyt reseptit. Haku ja suodattimet ovat täydellä reseptilistalla.",
       "yourRole": "Roolisi",
       "memberCount": "Aktiiviset jäsenet",
       "scopeNote": "Vuokraajan rajaus",
-      "scopeProof": "Alla olevat luvut haetaan vain kohteelle {name} eksplisiittisellä perhe kontekstilla."
+      "scopeProof": "Alla olevat luvut haetaan vain kohteelle {name} eksplisiittisellä perhe kontekstilla.",
+      "browseRecipes": "Selaa kaikkia reseptejä",
+      "recentRecipes": "Viimeksi päivitetty",
+      "loading": "Ladataan perhettä…"
     },
     "roles": {
       "owner": "Omistaja",
@@ -256,5 +265,66 @@
     "system": "Järjestelmä",
     "light": "Vaalea",
     "dark": "Tumma"
+  },
+  "recipes": {
+    "list": {
+      "title": "Reseptit",
+      "subtitle": "Hae ja avaa perheen reseptejä. Tulokset pysyvät tässä työtilassa.",
+      "resultsLabel": "Reseptitulokset",
+      "updated": "Päivitetty {date}",
+      "archivedBadge": "Arkistoitu",
+      "uncategorized": "Luokittelematon"
+    },
+    "filters": {
+      "legend": "Reseptihaun suodattimet",
+      "query": "Haku",
+      "queryHint": "Otsikko tai kuvaus",
+      "category": "Kategoria",
+      "tag": "Tunniste",
+      "ingredient": "Ainesosa",
+      "ingredientHint": "Hakee ainesten nimistä",
+      "language": "Reseptin kieli",
+      "languagePlaceholder": "esim. fi tai en",
+      "sort": "Järjestä",
+      "includeArchived": "Näytä arkistoidut",
+      "apply": "Käytä suodattimia",
+      "clear": "Tyhjennä suodattimet"
+    },
+    "sort": {
+      "updatedAt": "Viimeksi päivitetty",
+      "createdAt": "Lisäyspäivä",
+      "title": "Otsikko"
+    },
+    "pagination": {
+      "label": "Reseptisivut",
+      "first": "Ensimmäinen sivu",
+      "next": "Seuraava sivu",
+      "count": "{count, plural, one {# resepti tällä sivulla} other {# reseptiä tällä sivulla}}"
+    },
+    "detail": {
+      "backToList": "Takaisin resepteihin",
+      "description": "Kuvaus",
+      "ingredients": "Ainekset",
+      "steps": "Vaiheet",
+      "tags": "Tunnisteet",
+      "notes": "Muistiinpanot",
+      "servings": "Annoksia",
+      "prepMinutes": "Esivalmistelu (min)",
+      "cookMinutes": "Kypsennys (min)",
+      "sourceLanguage": "Lähdekieli",
+      "category": "Kategoria",
+      "step": "Vaihe {position}"
+    },
+    "status": {
+      "loading": "Ladataan reseptejä…",
+      "emptyTitle": "Ei reseptejä",
+      "empty": "Mikään resepti ei vastaa suodattimia. Tyhjennä suodattimet tai lisää reseptejä, kun muokkaus on käytössä.",
+      "errorTitle": "Reseptejä ei voitu ladata",
+      "error": "Reseptejä ei voitu ladata. Tarkista yhteys ja yritä uudelleen.",
+      "forbiddenTitle": "Ei saatavilla",
+      "forbidden": "Sinulla ei ole oikeutta tähän reseptiin tässä perhekontekstissa.",
+      "invalidFiltersTitle": "Tarkista suodattimet",
+      "invalidFilters": "Yksi tai useampi suodatin on virheellinen. Tyhjennä suodattimet ja yritä uudelleen."
+    }
   }
 }

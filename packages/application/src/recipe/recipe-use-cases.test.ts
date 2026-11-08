@@ -14,6 +14,7 @@ vi.mock('@family-cookbook/data-access', async (importOriginal) => {
     getFamilyWorkspaceForMember: vi.fn(),
     createRecipeAggregate: vi.fn(),
     getRecipeHeader: vi.fn(),
+    getRecipeById: vi.fn(),
     updateRecipeAggregate: vi.fn(),
   };
 });
@@ -25,12 +26,14 @@ vi.mock('../profile/ensure-profile-for-user.js', () => ({
 import {
   createRecipeAggregate,
   getFamilyWorkspaceForMember,
+  getRecipeById,
   getRecipeHeader,
   updateRecipeAggregate,
 } from '@family-cookbook/data-access';
 import { loadVerifiedAuthUser } from '../profile/ensure-profile-for-user.js';
 import { archiveRecipe } from './archive-recipe.js';
 import { createRecipe } from './create-recipe.js';
+import { getRecipe } from './get-recipe.js';
 import { updateRecipe } from './update-recipe.js';
 
 const mockClient = {} as AppSupabaseClient;
@@ -207,6 +210,86 @@ describe('updateRecipe', () => {
     });
 
     expect(result).toEqual({ status: 'version_conflict', currentVersion: 3 });
+  });
+});
+
+describe('getRecipe', () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
+
+  it('forbids non-members', async () => {
+    vi.mocked(loadVerifiedAuthUser).mockResolvedValue({
+      status: 'ok',
+      userId: OWNER_B,
+      email: 'owner-b@test.test',
+    });
+    vi.mocked(getFamilyWorkspaceForMember).mockResolvedValue({
+      ok: false,
+      error: 'forbidden',
+    });
+
+    const result = await getRecipe(mockClient, {
+      familyId: FAMILY_A,
+      recipeId: RECIPE_A,
+    });
+
+    expect(result).toEqual({ status: 'forbidden' });
+    expect(getRecipeById).not.toHaveBeenCalled();
+  });
+
+  it('allows viewers to load a recipe', async () => {
+    vi.mocked(loadVerifiedAuthUser).mockResolvedValue({
+      status: 'ok',
+      userId: VIEWER_A,
+      email: 'viewer@test.test',
+    });
+    vi.mocked(getFamilyWorkspaceForMember).mockResolvedValue({
+      ok: true,
+      workspace: {
+        id: FAMILY_A,
+        name: 'A',
+        defaultLanguage: 'en',
+        role: 'viewer',
+        memberCount: 4,
+      },
+    });
+    vi.mocked(getRecipeById).mockResolvedValue({
+      ok: true,
+      recipe: {
+        id: RECIPE_A,
+        familyId: FAMILY_A,
+        title: 'Soup',
+        sourceLanguage: 'en',
+        category: null,
+        status: 'active',
+        version: 1,
+        createdBy: VIEWER_A,
+        updatedAt: '2026-01-01T00:00:00.000Z',
+        createdAt: '2026-01-01T00:00:00.000Z',
+        description: null,
+        servings: null,
+        prepMinutes: null,
+        cookMinutes: null,
+        notes: null,
+        archivedAt: null,
+        updatedBy: VIEWER_A,
+        ingredients: [],
+        steps: [],
+        tags: [],
+        translations: [],
+      },
+    });
+
+    const result = await getRecipe(mockClient, {
+      familyId: FAMILY_A,
+      recipeId: RECIPE_A,
+    });
+
+    expect(result.status).toBe('ok');
+    if (result.status === 'ok') {
+      expect(result.recipe.title).toBe('Soup');
+    }
   });
 });
 

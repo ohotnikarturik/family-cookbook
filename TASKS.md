@@ -113,6 +113,8 @@ Work in order. A task is complete only when its acceptance criteria and relevant
 
 **Acceptance:** mobile layout works at 320px/360px; loading/empty/error/forbidden states exist; searches are family-scoped; keyboard operation and automated accessibility checks pass.
 
+**Status:** Done (2026-11-08).
+
 ### T2.5 Recipe editor
 - Build create/edit form with dynamic ingredients and ordered steps.
 - Add servings, timings, category, notes, tags, source language.

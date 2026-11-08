@@ -1,6 +1,6 @@
 begin;
 
-select plan (6);
+select plan (8);
 
 insert into public.recipes (
   id,
@@ -83,9 +83,21 @@ select tests.request_as_user ('11111111-1111-4111-8111-111111111101');
 
 select
   results_eq (
-    $$ select count(*)::bigint from public.recipes $$,
-    array[1::bigint],
-    'Owner A sees Family A recipes only'
+    $$ select id
+       from public.recipes
+       where id in (
+         'eeeeeeee-eeee-4eee-8eee-eeeeeeee0002'::uuid,
+         'eeeeeeee-eeee-4eee-8eee-eeeeeeee0003'::uuid
+       )
+       order by id $$,
+    $$ select 'eeeeeeee-eeee-4eee-8eee-eeeeeeee0002'::uuid $$,
+    'Owner A sees the Family A test recipe and not the Family B test recipe'
+  );
+
+select
+  is_empty (
+    $$ select 1 from public.recipes where id = 'eeeeeeee-eeee-4eee-8eee-eeeeeeee0201'::uuid $$,
+    'Owner A cannot read Family B seed recipes'
   );
 
 select
@@ -118,9 +130,21 @@ select
 
 select
   results_eq (
-    $$ select count(*)::bigint from public.recipes $$,
-    array[1::bigint],
-    'Contributor B sees Family B recipes only'
+    $$ select id
+       from public.recipes
+       where id in (
+         'eeeeeeee-eeee-4eee-8eee-eeeeeeee0002'::uuid,
+         'eeeeeeee-eeee-4eee-8eee-eeeeeeee0003'::uuid
+       )
+       order by id $$,
+    $$ select 'eeeeeeee-eeee-4eee-8eee-eeeeeeee0003'::uuid $$,
+    'Contributor B sees the Family B test recipe and not the Family A test recipe'
+  );
+
+select
+  is_empty (
+    $$ select 1 from public.recipes where id = 'eeeeeeee-eeee-4eee-8eee-eeeeeeee0101'::uuid $$,
+    'Contributor B cannot read Family A seed recipes'
   );
 
 select

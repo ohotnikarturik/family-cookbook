@@ -11,6 +11,11 @@
   "errors": {
     "authRequired": "Sign in to continue."
   },
+  "notFound": {
+    "title": "Page not found",
+    "description": "That page is not available.",
+    "home": "Back to home"
+  },
   "auth": {
     "title": "Sign in",
     "subtitle": "Use a one-time email link or enter the code from your message.",
@@ -103,17 +108,21 @@
     "shell": {
       "kicker": "Family cookbook",
       "navLabel": "Family navigation",
+      "recipes": "Recipes",
       "allFamilies": "All families",
       "invitations": "Invitations",
       "account": "Account"
     },
     "dashboard": {
       "title": "Dashboard",
-      "subtitle": "Recipes and search will land here in a later task.",
+      "subtitle": "Recently updated recipes for this family. Search and filters are on the full recipe list.",
       "yourRole": "Your role",
       "memberCount": "Active members",
       "scopeNote": "Tenant scope",
-      "scopeProof": "Counts and details below are loaded only for {name} using an explicit family context."
+      "scopeProof": "Counts and details below are loaded only for {name} using an explicit family context.",
+      "browseRecipes": "Browse all recipes",
+      "recentRecipes": "Recently updated",
+      "loading": "Loading this family…"
     },
     "roles": {
       "owner": "Owner",
@@ -256,5 +265,66 @@
     "system": "System",
     "light": "Light",
     "dark": "Dark"
+  },
+  "recipes": {
+    "list": {
+      "title": "Recipes",
+      "subtitle": "Search and open family recipes. Results stay inside this workspace.",
+      "resultsLabel": "Recipe results",
+      "updated": "Updated {date}",
+      "archivedBadge": "Archived",
+      "uncategorized": "Uncategorized"
+    },
+    "filters": {
+      "legend": "Recipe search filters",
+      "query": "Search",
+      "queryHint": "Title or description",
+      "category": "Category",
+      "tag": "Tag",
+      "ingredient": "Ingredient",
+      "ingredientHint": "Matches ingredient names",
+      "language": "Recipe language",
+      "languagePlaceholder": "e.g. en or fi",
+      "sort": "Sort by",
+      "includeArchived": "Include archived recipes",
+      "apply": "Apply filters",
+      "clear": "Clear filters"
+    },
+    "sort": {
+      "updatedAt": "Last updated",
+      "createdAt": "Date added",
+      "title": "Title"
+    },
+    "pagination": {
+      "label": "Recipe pages",
+      "first": "First page",
+      "next": "Next page",
+      "count": "Showing {count, plural, one {# recipe on this page} other {# recipes on this page}}"
+    },
+    "detail": {
+      "backToList": "Back to recipes",
+      "description": "Description",
+      "ingredients": "Ingredients",
+      "steps": "Steps",
+      "tags": "Tags",
+      "notes": "Notes",
+      "servings": "Servings",
+      "prepMinutes": "Prep (min)",
+      "cookMinutes": "Cook (min)",
+      "sourceLanguage": "Source language",
+      "category": "Category",
+      "step": "Step {position}"
+    },
+    "status": {
+      "loading": "Loading recipes…",
+      "emptyTitle": "No recipes yet",
+      "empty": "No recipes match your filters yet. Clear filters or add recipes when editing is available.",
+      "errorTitle": "Could not load recipes",
+      "error": "We could not load recipes. Check your connection and try again.",
+      "forbiddenTitle": "Not available",
+      "forbidden": "You do not have access to this recipe in this family context.",
+      "invalidFiltersTitle": "Check your filters",
+      "invalidFilters": "One or more filters are invalid. Clear filters and try again."
+    }
   }
 }

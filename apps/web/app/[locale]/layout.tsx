@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
 import type { ReactNode } from 'react';
 import { Suspense } from 'react';
 
-import { type AppLocale, locales } from '@/i18n/routing';
+import en from '../../messages/en.json';
 
 import { LocaleShell } from './locale-shell';
 
@@ -12,17 +11,12 @@ type Props = Readonly<{
   params: Promise<{ locale: string }>;
 }>;
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale } = await params;
-  if (!(locales as readonly string[]).includes(locale)) {
-    return {};
-  }
-  const t = await getTranslations({ locale: locale as AppLocale, namespace: 'home' });
-  return {
-    title: t('title'),
-    description: t('subtitle'),
-  };
-}
+// Title is the same in every UI locale. Reading `params` here makes Cache Components
+// treat metadata as runtime data and log a prefetch error on every navigation.
+export const metadata: Metadata = {
+  title: en.home.title,
+  description: en.home.subtitle,
+};
 
 export default function LocaleLayout({ children, params }: Props) {
   return (
