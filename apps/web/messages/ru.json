@@ -314,7 +314,19 @@
       "cookMinutes": "Готовка (мин)",
       "sourceLanguage": "Исходный язык",
       "category": "Категория",
-      "step": "Шаг {position}"
+      "step": "Шаг {position}",
+      "media": {
+        "heading": "Фото и источники",
+        "photos": "Фотографии",
+        "documents": "Исходные документы",
+        "downloadPdf": "Скачать PDF",
+        "loadError": "Не удалось загрузить файл.",
+        "loading": "Файл загружается…",
+        "imageAlt": "Фото блюда",
+        "documentFallback": "Документ рецепта",
+        "pdfDescription": "PDF открывается как загрузка, а не на странице.",
+        "stepPhotoAlt": "Фото шага"
+      }
     },
     "history": {
       "viewHistory": "История изменений",

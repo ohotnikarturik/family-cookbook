@@ -30,3 +30,4 @@ export {
   type ValidateUploadedBytesInput,
   type ValidateUploadedBytesResult,
 } from './file-signature.js';
+export { safeRecipeAssetDownloadFilename } from './safe-download-filename.js';

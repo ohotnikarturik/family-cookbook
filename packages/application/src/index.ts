@@ -57,6 +57,10 @@ export {
   finalizeRecipeUpload,
   type FinalizeRecipeUploadUseCaseResult,
 } from './recipe-asset/finalize-recipe-upload.js';
+export {
+  createRecipeAssetDownloadUrl,
+  type CreateRecipeAssetDownloadUrlResult,
+} from './recipe-asset/create-recipe-asset-download-url.js';
 export { archiveRecipe, type ArchiveRecipeResult } from './recipe/archive-recipe.js';
 export { createRecipe, type CreateRecipeResult } from './recipe/create-recipe.js';
 export { getRecipe, type GetRecipeResult } from './recipe/get-recipe.js';

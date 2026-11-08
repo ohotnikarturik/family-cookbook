@@ -136,6 +136,7 @@ async function RecipeDetailContent({ params }: Props) {
       </div>
       <RecipeDetailView
         recipe={recipe}
+        familyId={familyId}
         facts={facts}
         ingredients={recipe.ingredients.map((ingredient) => ({
           position: ingredient.position,
@@ -156,6 +157,18 @@ async function RecipeDetailContent({ params }: Props) {
           notesHeading: t('detail.notes'),
           archived: t('list.archivedBadge'),
           stepLabel: (position) => t('detail.step', { position }),
+        }}
+        mediaLabels={{
+          sectionHeading: t('detail.media.heading'),
+          photosHeading: t('detail.media.photos'),
+          documentsHeading: t('detail.media.documents'),
+          downloadPdf: t('detail.media.downloadPdf'),
+          loadError: t('detail.media.loadError'),
+          loading: t('detail.media.loading'),
+          imageAltFallback: t('detail.media.imageAlt'),
+          documentFallback: t('detail.media.documentFallback'),
+          pdfDescription: t('detail.media.pdfDescription'),
+          stepPhotoAlt: t('detail.media.stepPhotoAlt'),
         }}
       />
     </section>

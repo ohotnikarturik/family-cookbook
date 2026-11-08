@@ -43,7 +43,24 @@ export async function getRecipeById(
       recipe_steps (
         position,
         instruction,
-        duration_minutes
+        duration_minutes,
+        media_asset_id
+      ),
+      recipe_assets (
+        id,
+        family_id,
+        recipe_id,
+        uploaded_by,
+        bucket_id,
+        object_path,
+        asset_kind,
+        original_filename,
+        detected_mime_type,
+        byte_size,
+        checksum_sha256,
+        processing_status,
+        created_at,
+        available_at
       ),
       recipe_tags (
         tag_id,

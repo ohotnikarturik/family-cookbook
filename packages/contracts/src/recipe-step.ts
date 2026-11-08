@@ -11,6 +11,7 @@ export const recipeStepInputSchema = z.object({
   position: z.number().int().positive(),
   instruction: z.string().trim().min(RECIPE_STEP_INSTRUCTION_MIN).max(RECIPE_STEP_INSTRUCTION_MAX),
   durationMinutes: z.number().int().min(0).max(RECIPE_MINUTES_MAX).nullable().optional(),
+  mediaAssetId: z.uuid().nullable().optional(),
 });
 
 export type RecipeStepInput = z.infer<typeof recipeStepInputSchema>;

@@ -151,6 +151,8 @@ Work in order. A task is complete only when its acceptance criteria and relevant
 
 **Acceptance:** original asset remains intact and private; signed URLs are generated only after permission checks and are not persisted/logged.
 
+**Status:** Done (2026-11-09).
+
 ### T3.3 Manual translations
 - Implement recipe/ingredient/step translations and review status.
 - Add translation selector in detail screen.

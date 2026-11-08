@@ -1,4 +1,7 @@
-import type { RecipeDetail } from '@family-cookbook/contracts';
+import type { RecipeAssetSummary, RecipeDetail } from '@family-cookbook/contracts';
+
+import { RecipeMediaGallery, type RecipeMediaCard } from '@/components/recipe/recipe-media-gallery';
+import { RecipeStepPhoto } from '@/components/recipe/recipe-step-photo';
 
 type Fact = Readonly<{
   label: string;
@@ -23,16 +26,54 @@ type Labels = Readonly<{
   stepLabel: (position: number) => string;
 }>;
 
+type MediaLabels = Readonly<{
+  sectionHeading: string;
+  photosHeading: string;
+  documentsHeading: string;
+  downloadPdf: string;
+  loadError: string;
+  loading: string;
+  imageAltFallback: string;
+  documentFallback: string;
+  pdfDescription: string;
+  stepPhotoAlt: string;
+}>;
+
 type Props = Readonly<{
   recipe: RecipeDetail;
+  familyId: string;
   titleLang?: string;
   facts: Fact[];
   ingredients: IngredientLine[];
   labels: Labels;
+  mediaLabels: MediaLabels;
 }>;
 
-export function RecipeDetailView({ recipe, titleLang, facts, ingredients, labels }: Props) {
+export function RecipeDetailView({
+  recipe,
+  familyId,
+  titleLang,
+  facts,
+  ingredients,
+  labels,
+  mediaLabels,
+}: Props) {
   const bodyLang = titleLang;
+  const inlineStepAssetIds = new Set(
+    recipe.steps.flatMap((step) => {
+      if (!step.mediaAssetId) {
+        return [];
+      }
+      const asset = recipe.assets.find((item) => item.id === step.mediaAssetId);
+      if (!asset || !isInlineStepPhoto(asset)) {
+        return [];
+      }
+      return [asset.id];
+    }),
+  );
+  const galleryAssets = recipe.assets
+    .filter((asset) => !inlineStepAssetIds.has(asset.id))
+    .map(toMediaCard);
 
   return (
     <article className="space-y-8">
@@ -65,6 +106,13 @@ export function RecipeDetailView({ recipe, titleLang, facts, ingredients, labels
           ))}
         </dl>
       </header>
+
+      <RecipeMediaGallery
+        familyId={familyId}
+        recipeId={recipe.id}
+        assets={galleryAssets}
+        labels={mediaLabels}
+      />
 
       {ingredients.length > 0 ? (
         <section aria-labelledby="recipe-ingredients-heading">
@@ -110,10 +158,22 @@ export function RecipeDetailView({ recipe, titleLang, facts, ingredients, labels
                 >
                   {step.position}
                 </span>
-                <p className="pt-1 leading-relaxed text-foreground" lang={bodyLang}>
-                  <span className="sr-only">{labels.stepLabel(step.position)}. </span>
-                  {step.instruction}
-                </p>
+                <div className="min-w-0 flex-1">
+                  <p className="pt-1 leading-relaxed text-foreground" lang={bodyLang}>
+                    <span className="sr-only">{labels.stepLabel(step.position)}. </span>
+                    {step.instruction}
+                  </p>
+                  {step.mediaAssetId && inlineStepAssetIds.has(step.mediaAssetId) ? (
+                    <RecipeStepPhoto
+                      familyId={familyId}
+                      recipeId={recipe.id}
+                      assetId={step.mediaAssetId}
+                      alt={mediaLabels.stepPhotoAlt}
+                      loadErrorLabel={mediaLabels.loadError}
+                      loadingLabel={mediaLabels.loading}
+                    />
+                  ) : null}
+                </div>
               </li>
             ))}
           </ol>
@@ -150,6 +210,23 @@ export function RecipeDetailView({ recipe, titleLang, facts, ingredients, labels
       ) : null}
     </article>
   );
+}
+
+function isInlineStepPhoto(asset: RecipeAssetSummary): boolean {
+  return (
+    asset.assetKind === 'step_photo' &&
+    asset.processingStatus === 'available' &&
+    asset.detectedMimeType !== 'application/pdf'
+  );
+}
+
+function toMediaCard(asset: RecipeAssetSummary): RecipeMediaCard {
+  return {
+    id: asset.id,
+    assetKind: asset.assetKind,
+    originalFilename: asset.originalFilename,
+    detectedMimeType: asset.detectedMimeType,
+  };
 }
 
 function ArchivedBadge({

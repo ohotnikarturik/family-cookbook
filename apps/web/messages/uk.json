@@ -314,7 +314,19 @@
       "cookMinutes": "Готування (хв)",
       "sourceLanguage": "Мова оригіналу",
       "category": "Категорія",
-      "step": "Крок {position}"
+      "step": "Крок {position}",
+      "media": {
+        "heading": "Фото та джерела",
+        "photos": "Фото",
+        "documents": "Оригінальні документи",
+        "downloadPdf": "Завантажити PDF",
+        "loadError": "Не вдалося завантажити файл.",
+        "loading": "Файл завантажується…",
+        "imageAlt": "Фото страви",
+        "documentFallback": "Документ рецепта",
+        "pdfDescription": "PDF відкривається як завантаження, а не на сторінці.",
+        "stepPhotoAlt": "Фото кроку"
+      }
     },
     "history": {
       "viewHistory": "Історія змін",

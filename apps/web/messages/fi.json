@@ -314,7 +314,19 @@
       "cookMinutes": "Kypsennys (min)",
       "sourceLanguage": "Lähdekieli",
       "category": "Kategoria",
-      "step": "Vaihe {position}"
+      "step": "Vaihe {position}",
+      "media": {
+        "heading": "Kuvat ja lähteet",
+        "photos": "Kuvat",
+        "documents": "Alkuperäiset asiakirjat",
+        "downloadPdf": "Lataa PDF",
+        "loadError": "Tiedostoa ei voitu ladata.",
+        "loading": "Tiedosto latautuu…",
+        "imageAlt": "Reseptikuva",
+        "documentFallback": "Reseptin asiakirja",
+        "pdfDescription": "PDF avataan latauksena, ei sivulla.",
+        "stepPhotoAlt": "Vaihekuva"
+      }
     },
     "history": {
       "viewHistory": "Näytä historia",

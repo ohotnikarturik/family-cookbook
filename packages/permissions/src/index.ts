@@ -12,6 +12,7 @@ export {
   canManageRecipeTags,
   canRestoreRecipe,
   canViewAuditEvents,
+  canViewRecipeAsset,
   canViewRecipeHistory,
   canViewRecipes,
 } from './recipe-capabilities.js';

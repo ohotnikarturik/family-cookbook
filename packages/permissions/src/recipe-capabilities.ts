@@ -11,6 +11,10 @@ export function canViewRecipes(role: FamilyRole): boolean {
   return true;
 }
 
+export function canViewRecipeAsset(role: FamilyRole): boolean {
+  return canViewRecipes(role);
+}
+
 export function canCreateRecipe(role: FamilyRole): boolean {
   return role !== 'viewer';
 }

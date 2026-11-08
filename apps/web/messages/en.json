@@ -314,7 +314,19 @@
       "cookMinutes": "Cook (min)",
       "sourceLanguage": "Source language",
       "category": "Category",
-      "step": "Step {position}"
+      "step": "Step {position}",
+      "media": {
+        "heading": "Photos and sources",
+        "photos": "Photos",
+        "documents": "Original documents",
+        "downloadPdf": "Download PDF",
+        "loadError": "This file could not be loaded.",
+        "loading": "Loading file…",
+        "imageAlt": "Recipe photo",
+        "documentFallback": "Recipe document",
+        "pdfDescription": "PDF opens as a download, not in the page.",
+        "stepPhotoAlt": "Step photo"
+      }
     },
     "history": {
       "viewHistory": "View history",

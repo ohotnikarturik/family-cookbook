@@ -149,3 +149,25 @@ export const finalizeRecipeUploadResultSchema = z.object({
 export type FinalizeRecipeUploadResult = z.infer<typeof finalizeRecipeUploadResultSchema>;
 
 export const RECIPE_UPLOAD_SIGNED_URL_TTL_SECONDS = 600;
+export const RECIPE_DOWNLOAD_SIGNED_URL_TTL_SECONDS = 600;
+
+export const recipeAssetDownloadDispositionSchema = z.enum(['inline', 'attachment']);
+
+export type RecipeAssetDownloadDisposition = z.infer<typeof recipeAssetDownloadDispositionSchema>;
+
+export const recipeAssetDownloadInputSchema = z.object({
+  familyId: familyIdSchema,
+  recipeId: recipeIdSchema,
+  assetId: recipeAssetIdSchema,
+});
+
+export type RecipeAssetDownloadInput = z.infer<typeof recipeAssetDownloadInputSchema>;
+
+export const recipeAssetDownloadResultSchema = z.object({
+  signedDownloadUrl: z.url(),
+  expiresAt: z.string(),
+  disposition: recipeAssetDownloadDispositionSchema,
+  detectedMimeType: recipeAssetMimeTypeSchema,
+});
+
+export type RecipeAssetDownloadResult = z.infer<typeof recipeAssetDownloadResultSchema>;

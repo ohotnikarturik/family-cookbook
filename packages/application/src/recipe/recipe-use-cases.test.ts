@@ -278,6 +278,7 @@ describe('getRecipe', () => {
         steps: [],
         tags: [],
         translations: [],
+        assets: [],
       },
     });
 

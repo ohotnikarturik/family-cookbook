@@ -1,5 +1,7 @@
 # T3.1 — Recipe media upload API (no UI)
 
+After finalize, open the recipe detail page to see gallery behavior — [`UI_TEST_T3_2.md`](UI_TEST_T3_2.md).
+
 Local stack only. Use **http://localhost:3003** for the web app and sign in so session cookies are set for API calls.
 
 ## Prep

@@ -7,6 +7,7 @@ import { recipeStepInputSchema } from './recipe-step.js';
 import { familyTagSummarySchema } from './recipe-tag.js';
 import { recipeTranslationInputSchema } from './recipe-translation.js';
 import { SEARCH_RECIPES_LIMIT_MAX } from './recipe-limits.js';
+import { recipeAssetSummarySchema } from './recipe-asset.js';
 
 export const recipeMutationResultSchema = z.object({
   recipe_id: z.uuid(),
@@ -46,6 +47,7 @@ export const recipeDetailSchema = recipeSummarySchema.extend({
       reviewStatus: z.enum(['unreviewed', 'reviewed']).optional(),
     }),
   ),
+  assets: z.array(recipeAssetSummarySchema),
 });
 
 export type RecipeDetail = z.infer<typeof recipeDetailSchema>;

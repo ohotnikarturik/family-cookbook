@@ -1,5 +1,7 @@
 import { recipeDetailSchema, type RecipeDetail } from '@family-cookbook/contracts';
 
+import { mapRecipeAssetRow, type RecipeAssetRow } from '../recipe-asset/map-recipe-asset-row.js';
+
 type IngredientRow = {
   position: number;
   name: string;
@@ -13,6 +15,7 @@ type StepRow = {
   position: number;
   instruction: string;
   duration_minutes: number | null;
+  media_asset_id?: string | null;
 };
 
 type FamilyTagRow = {
@@ -59,6 +62,7 @@ type RecipeRow = {
   recipe_steps: StepRow[] | null;
   recipe_tags: TagJoinRow[] | null;
   recipe_translations: TranslationRow[] | null;
+  recipe_assets: RecipeAssetRow[] | null;
 };
 
 function readNumeric(
@@ -126,7 +130,13 @@ export function mapRecipeDetailRow(row: RecipeRow): RecipeDetail | null {
         position: item.position,
         instruction: item.instruction,
         durationMinutes: item.duration_minutes,
+        ...(item.media_asset_id ? { mediaAssetId: item.media_asset_id } : {}),
       })),
+    assets: (row.recipe_assets ?? [])
+      .map((item) => mapRecipeAssetRow(item))
+      .filter((item): item is NonNullable<typeof item> => item !== null)
+      .filter((item) => item.processingStatus === 'available')
+      .sort((a, b) => a.createdAt.localeCompare(b.createdAt)),
     tags: (row.recipe_tags ?? [])
       .flatMap((join) => {
         if (!join.family_tags) {

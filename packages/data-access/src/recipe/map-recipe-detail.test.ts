@@ -39,6 +39,7 @@ describe('mapRecipeDetailRow', () => {
       recipe_steps: [],
       recipe_tags: [],
       recipe_translations: [],
+      recipe_assets: [],
     });
 
     expect(mapped?.servings).toBe(4.5);

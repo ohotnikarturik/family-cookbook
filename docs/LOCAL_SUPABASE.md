@@ -98,7 +98,7 @@ Family URLs use an explicit UUID segment (`/en/f/aaaaaaaa-…`). Opening another
 
 ## Recipe media uploads (T3.1)
 
-After `pnpm supabase:reset`, migration **`20251108100000_recipe_assets_and_storage.sql`** creates the private bucket **`family-recipe-media`** and `recipe_assets` RLS. Upload flow is **API-only** (no gallery UI until T3.2): see [`fixtures/API_TEST_T3_1.md`](fixtures/API_TEST_T3_1.md).
+After `pnpm supabase:reset`, migration **`20251108100000_recipe_assets_and_storage.sql`** creates the private bucket **`family-recipe-media`** and `recipe_assets` RLS. Upload: [`fixtures/API_TEST_T3_1.md`](fixtures/API_TEST_T3_1.md). Gallery on recipe detail: [`fixtures/UI_TEST_T3_2.md`](fixtures/UI_TEST_T3_2.md).
 
 ## Invitations (T1.5)
 
