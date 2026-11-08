@@ -316,6 +316,47 @@
       "category": "Kategoria",
       "step": "Vaihe {position}"
     },
+    "history": {
+      "viewHistory": "Näytä historia",
+      "title": "Reseptin historia",
+      "subtitle": "Tallennetut versiot: <recipeTitle>{title}</recipeTitle>",
+      "backToDetail": "Takaisin reseptiin",
+      "revisionsHeading": "Versiot",
+      "version": "Versio {version}",
+      "actorYou": "Teit tämän muutoksen",
+      "actorMember": "Perheen jäsen teki tämän muutoksen",
+      "changeSummaryLabel": "Yhteenveto",
+      "emptyTitle": "Ei versioita vielä",
+      "emptyDescription": "Versiot näkyvät täällä reseptin tallennuksen jälkeen.",
+      "forbiddenTitle": "Historia ei saatavilla",
+      "forbiddenDescription": "Roolisi ei salli tämän reseptin muutoshistorian katselua.",
+      "pagination": {
+        "label": "Versiosivut",
+        "first": "Ensimmäinen sivu",
+        "next": "Seuraava sivu",
+        "count": "Näytetään {count, plural, one {# versio tällä sivulla} other {# versiota tällä sivulla}}"
+      }
+    },
+    "audit": {
+      "heading": "Turvaloki",
+      "version": "Versio {version}",
+      "emptyTitle": "Ei lokimerkintöjä",
+      "emptyDescription": "Reseptiin liittyvät turvatapahtumat näkyvät täällä. Merkinnät eivät sisällä reseptitekstiä.",
+      "errorTitle": "Lokia ei voitu ladata",
+      "errorDescription": "Turvalokia ei voitu ladata. Yritä hetken kuluttua uudelleen.",
+      "pagination": {
+        "label": "Turvalokin sivut",
+        "first": "Ensimmäinen sivu",
+        "next": "Seuraava sivu",
+        "count": "Näytetään {count, plural, one {# tapahtuma tällä sivulla} other {# tapahtumaa tällä sivulla}}"
+      },
+      "events": {
+        "recipe_created": "Resepti luotu",
+        "recipe_updated": "Resepti päivitetty",
+        "recipe_archived": "Resepti arkistoitu",
+        "recipe_restored": "Resepti palautettu"
+      }
+    },
     "status": {
       "loading": "Ladataan reseptejä…",
       "emptyTitle": "Ei reseptejä",

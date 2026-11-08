@@ -121,14 +121,24 @@ export {
 } from './recipe-search.js';
 export {
   archiveRecipeInputSchema,
+  getRecipeAuditInputSchema,
   getRecipeHistoryInputSchema,
   getRecipeInputSchema,
   restoreRecipeInputSchema,
   type ArchiveRecipeInput,
+  type GetRecipeAuditInput,
   type GetRecipeHistoryInput,
   type GetRecipeInput,
   type RestoreRecipeInput,
 } from './recipe-lifecycle.js';
+export {
+  auditEventMetadataSchema,
+  auditEventSummarySchema,
+  recipeAuditResultSchema,
+  type AuditEventMetadata,
+  type AuditEventSummary,
+  type RecipeAuditResult,
+} from './recipe-audit-read.js';
 export {
   RECIPE_SEARCH_DEFAULT_LIMIT,
   RECIPE_SEARCH_MAX_LIMIT,

@@ -45,6 +45,10 @@ export function canManageRecipeTags(role: FamilyRole): boolean {
   return isEditorOrAbove(role);
 }
 
+export function canViewAuditEvents(role: FamilyRole): boolean {
+  return isEditorOrAbove(role);
+}
+
 export function canViewRecipeHistory(
   role: FamilyRole,
   actorUserId: string,

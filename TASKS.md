@@ -131,6 +131,8 @@ Work in order. A task is complete only when its acceptance criteria and relevant
 
 **Acceptance:** each successful recipe mutation creates exactly one revision and audit event; failed mutation creates neither.
 
+**Status:** Done (2026-11-08).
+
 ## EPIC 3 — Media, localization, and search
 
 ### T3.1 Private storage and upload workflow

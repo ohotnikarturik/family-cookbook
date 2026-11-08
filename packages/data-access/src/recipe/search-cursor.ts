@@ -100,3 +100,33 @@ export function decodeRevisionCursor(raw: string): { version: number; id: string
 export function revisionKeysetFilter(version: number, id: string): string {
   return `and(version.lt.${version}),and(version.eq.${version},id.lt.${quotePostgrestValue(id)})`;
 }
+
+export function encodeAuditCursor(createdAt: string, id: string): string {
+  return Buffer.from(JSON.stringify({ createdAt, id }), 'utf8').toString('base64url');
+}
+
+export function decodeAuditCursor(raw: string): { createdAt: string; id: string } | null {
+  try {
+    const json = JSON.parse(Buffer.from(raw, 'base64url').toString('utf8')) as unknown;
+    if (typeof json !== 'object' || json === null || !('createdAt' in json) || !('id' in json)) {
+      return null;
+    }
+    const createdAt = json.createdAt;
+    const id = json.id;
+    if (typeof createdAt !== 'string' || typeof id !== 'string') {
+      return null;
+    }
+    if (!ISO_TIMESTAMP_PATTERN.test(createdAt) || !isUuid(id)) {
+      return null;
+    }
+    return { createdAt, id };
+  } catch {
+    return null;
+  }
+}
+
+export function auditKeysetFilter(createdAt: string, id: string): string {
+  const value = quotePostgrestValue(createdAt);
+  const idQuoted = quotePostgrestValue(id);
+  return `and(created_at.lt.${value}),and(created_at.eq.${value},id.lt.${idQuoted})`;
+}

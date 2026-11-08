@@ -316,6 +316,47 @@
       "category": "Категорія",
       "step": "Крок {position}"
     },
+    "history": {
+      "viewHistory": "Історія змін",
+      "title": "Історія рецепта",
+      "subtitle": "Збережені версії: <recipeTitle>{title}</recipeTitle>",
+      "backToDetail": "Назад до рецепта",
+      "revisionsHeading": "Версії",
+      "version": "Версія {version}",
+      "actorYou": "Зміну зробили ви",
+      "actorMember": "Зміну зробив учасник родини",
+      "changeSummaryLabel": "Коротко",
+      "emptyTitle": "Ще немає версій",
+      "emptyDescription": "Версії з’являться тут після збереження рецепта.",
+      "forbiddenTitle": "Історія недоступна",
+      "forbiddenDescription": "Ваша роль не дозволяє переглядати історію змін цього рецепта.",
+      "pagination": {
+        "label": "Сторінки версій",
+        "first": "Перша сторінка",
+        "next": "Наступна сторінка",
+        "count": "На цій сторінці: {count, plural, one {# версія} few {# версії} many {# версій} other {# версії}}"
+      }
+    },
+    "audit": {
+      "heading": "Журнал безпеки",
+      "version": "Версія {version}",
+      "emptyTitle": "Немає записів",
+      "emptyDescription": "Тут показуються події безпеки для цього рецепта. Текст рецепта не зберігається в записах.",
+      "errorTitle": "Не вдалося завантажити журнал",
+      "errorDescription": "Не вдалося завантажити журнал. Спробуйте пізніше.",
+      "pagination": {
+        "label": "Сторінки журналу безпеки",
+        "first": "Перша сторінка",
+        "next": "Наступна сторінка",
+        "count": "На цій сторінці: {count, plural, one {# подія} few {# події} many {# подій} other {# події}}"
+      },
+      "events": {
+        "recipe_created": "Рецепт створено",
+        "recipe_updated": "Рецепт оновлено",
+        "recipe_archived": "Рецепт в архіві",
+        "recipe_restored": "Рецепт відновлено"
+      }
+    },
     "status": {
       "loading": "Завантажуємо рецепти…",
       "emptyTitle": "Рецептів ще немає",

@@ -1,6 +1,6 @@
 begin;
 
-select plan (11);
+select plan (12);
 
 -- Family A editor
 select tests.request_as_user ('11111111-1111-4111-8111-111111111102');
@@ -354,6 +354,23 @@ select
     $$,
     array[2],
     'repeating archive does not write another revision'
+  );
+
+select
+  results_eq (
+    $$
+      select
+        count(*)::bigint
+      from
+        public.audit_events ae
+        join public.recipes r on r.id = ae.entity_id
+        and r.family_id = ae.family_id
+      where
+        r.title = 'RPC test stew'
+        and ae.entity_type = 'recipe'
+    $$,
+    array[2::bigint],
+    'repeating archive does not write another audit event'
   );
 
 select

@@ -38,3 +38,7 @@ export const getRecipeHistoryInputSchema = z.object({
 });
 
 export type GetRecipeHistoryInput = z.infer<typeof getRecipeHistoryInputSchema>;
+
+export const getRecipeAuditInputSchema = getRecipeHistoryInputSchema;
+
+export type GetRecipeAuditInput = z.infer<typeof getRecipeAuditInputSchema>;

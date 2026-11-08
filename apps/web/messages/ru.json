@@ -316,6 +316,47 @@
       "category": "Категория",
       "step": "Шаг {position}"
     },
+    "history": {
+      "viewHistory": "История изменений",
+      "title": "История рецепта",
+      "subtitle": "Сохранённые версии: <recipeTitle>{title}</recipeTitle>",
+      "backToDetail": "Назад к рецепту",
+      "revisionsHeading": "Версии",
+      "version": "Версия {version}",
+      "actorYou": "Изменение внесли вы",
+      "actorMember": "Изменение внёс участник семьи",
+      "changeSummaryLabel": "Кратко",
+      "emptyTitle": "Пока нет версий",
+      "emptyDescription": "Версии появятся здесь после сохранения рецепта.",
+      "forbiddenTitle": "История недоступна",
+      "forbiddenDescription": "Ваша роль не позволяет просматривать историю изменений этого рецепта.",
+      "pagination": {
+        "label": "Страницы версий",
+        "first": "Первая страница",
+        "next": "Следующая страница",
+        "count": "На этой странице: {count, plural, one {# версия} few {# версии} many {# версий} other {# версии}}"
+      }
+    },
+    "audit": {
+      "heading": "Журнал безопасности",
+      "version": "Версия {version}",
+      "emptyTitle": "Нет записей",
+      "emptyDescription": "Здесь отображаются события безопасности для этого рецепта. Текст рецепта не включается.",
+      "errorTitle": "Не удалось загрузить журнал",
+      "errorDescription": "Не удалось загрузить журнал. Попробуйте позже.",
+      "pagination": {
+        "label": "Страницы журнала безопасности",
+        "first": "Первая страница",
+        "next": "Следующая страница",
+        "count": "На этой странице: {count, plural, one {# событие} few {# события} many {# событий} other {# события}}"
+      },
+      "events": {
+        "recipe_created": "Рецепт создан",
+        "recipe_updated": "Рецепт обновлён",
+        "recipe_archived": "Рецепт в архиве",
+        "recipe_restored": "Рецепт восстановлен"
+      }
+    },
     "status": {
       "loading": "Загружаем рецепты…",
       "emptyTitle": "Рецептов пока нет",

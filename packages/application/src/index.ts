@@ -53,6 +53,7 @@ export { archiveRecipe, type ArchiveRecipeResult } from './recipe/archive-recipe
 export { createRecipe, type CreateRecipeResult } from './recipe/create-recipe.js';
 export { getRecipe, type GetRecipeResult } from './recipe/get-recipe.js';
 export { getRecipeHistory, type GetRecipeHistoryResult } from './recipe/get-recipe-history.js';
+export { getRecipeAuditLog, type GetRecipeAuditLogResult } from './recipe/get-recipe-audit-log.js';
 export { restoreRecipe, type RestoreRecipeResult } from './recipe/restore-recipe.js';
 export { searchRecipes, type SearchRecipesResult } from './recipe/search-recipes.js';
 export { updateRecipe, type UpdateRecipeResult } from './recipe/update-recipe.js';

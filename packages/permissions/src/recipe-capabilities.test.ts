@@ -6,6 +6,7 @@ import {
   canEditRecipe,
   canManageRecipeTags,
   canRestoreRecipe,
+  canViewAuditEvents,
   canViewRecipeHistory,
   canViewRecipes,
 } from './recipe-capabilities.js';
@@ -51,5 +52,13 @@ describe('recipe capability matrix', () => {
     expect(canManageRecipeTags('editor')).toBe(true);
     expect(canManageRecipeTags('contributor')).toBe(false);
     expect(canManageRecipeTags('viewer')).toBe(false);
+  });
+
+  it('restricts audit log visibility to editor-and-above', () => {
+    expect(canViewAuditEvents('owner')).toBe(true);
+    expect(canViewAuditEvents('admin')).toBe(true);
+    expect(canViewAuditEvents('editor')).toBe(true);
+    expect(canViewAuditEvents('contributor')).toBe(false);
+    expect(canViewAuditEvents('viewer')).toBe(false);
   });
 });

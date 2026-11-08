@@ -1,7 +1,7 @@
 import { getRecipe, resolveAccessibleFamily } from '@family-cookbook/application';
 import { getSessionUser } from '@family-cookbook/data-access';
 import { createServerSupabaseClient } from '@family-cookbook/data-access/supabase/server';
-import { canEditRecipe } from '@family-cookbook/permissions';
+import { canEditRecipe, canViewRecipeHistory } from '@family-cookbook/permissions';
 import { getFormatter, getTranslations } from 'next-intl/server';
 import { connection } from 'next/server';
 import { notFound, redirect } from 'next/navigation';
@@ -85,6 +85,10 @@ async function RecipeDetailContent({ params }: Props) {
     sessionUser !== null &&
     workspace.status === 'ok' &&
     canEditRecipe(workspace.workspace.role, sessionUser.id, recipe.createdBy);
+  const showHistory =
+    sessionUser !== null &&
+    workspace.status === 'ok' &&
+    canViewRecipeHistory(workspace.workspace.role, sessionUser.id, recipe.createdBy);
   const contentLang = recipeContentLang(recipe, locale);
   const format = await getFormatter({ locale });
   const facts: { label: string; value: string; valueLang?: string }[] = [
@@ -115,11 +119,20 @@ async function RecipeDetailContent({ params }: Props) {
     <section className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <BackLink familyId={familyId} label={t('detail.backToList')} />
-        {showEdit ? (
-          <Button type="button" variant="outline" className="min-h-11 w-full sm:w-auto" asChild>
-            <Link href={`/f/${familyId}/recipes/${recipeId}/edit`}>{t('editor.editRecipe')}</Link>
-          </Button>
-        ) : null}
+        <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+          {showHistory ? (
+            <Button type="button" variant="outline" className="min-h-11 w-full sm:w-auto" asChild>
+              <Link href={`/f/${familyId}/recipes/${recipeId}/history`}>
+                {t('history.viewHistory')}
+              </Link>
+            </Button>
+          ) : null}
+          {showEdit ? (
+            <Button type="button" variant="outline" className="min-h-11 w-full sm:w-auto" asChild>
+              <Link href={`/f/${familyId}/recipes/${recipeId}/edit`}>{t('editor.editRecipe')}</Link>
+            </Button>
+          ) : null}
+        </div>
       </div>
       <RecipeDetailView
         recipe={recipe}

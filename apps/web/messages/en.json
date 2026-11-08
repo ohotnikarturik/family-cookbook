@@ -316,6 +316,47 @@
       "category": "Category",
       "step": "Step {position}"
     },
+    "history": {
+      "viewHistory": "View history",
+      "title": "Recipe history",
+      "subtitle": "Saved versions for <recipeTitle>{title}</recipeTitle>",
+      "backToDetail": "Back to recipe",
+      "revisionsHeading": "Revisions",
+      "version": "Version {version}",
+      "actorYou": "You made this change",
+      "actorMember": "A family member made this change",
+      "changeSummaryLabel": "Summary",
+      "emptyTitle": "No revisions yet",
+      "emptyDescription": "Revisions appear here after the recipe is saved.",
+      "forbiddenTitle": "History not available",
+      "forbiddenDescription": "Your role does not allow viewing this recipe’s change history.",
+      "pagination": {
+        "label": "Revision pages",
+        "first": "First page",
+        "next": "Next page",
+        "count": "Showing {count, plural, one {# revision on this page} other {# revisions on this page}}"
+      }
+    },
+    "audit": {
+      "heading": "Security log",
+      "version": "Version {version}",
+      "emptyTitle": "No log entries",
+      "emptyDescription": "Security-relevant events for this recipe appear here. Entries never include recipe text.",
+      "errorTitle": "Could not load log",
+      "errorDescription": "We could not load the security log. Try again in a moment.",
+      "pagination": {
+        "label": "Security log pages",
+        "first": "First page",
+        "next": "Next page",
+        "count": "Showing {count, plural, one {# event on this page} other {# events on this page}}"
+      },
+      "events": {
+        "recipe_created": "Recipe created",
+        "recipe_updated": "Recipe updated",
+        "recipe_archived": "Recipe archived",
+        "recipe_restored": "Recipe restored"
+      }
+    },
     "status": {
       "loading": "Loading recipes…",
       "emptyTitle": "No recipes yet",

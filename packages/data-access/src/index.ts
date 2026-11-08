@@ -26,6 +26,7 @@ export { createBrowserSupabaseClient } from './supabase/browser.js';
 export { copySessionCookies, updateSession } from './supabase/middleware.js';
 export { createServerSupabaseClient } from './supabase/server.js';
 export type { AppSupabaseClient } from './supabase/server.js';
+export { listRecipeAuditEvents } from './audit/list-recipe-audit-events.js';
 export { createFamilyBootstrap } from './family/create-family-bootstrap.js';
 export { getFamilyWorkspaceForMember } from './family/get-family-workspace.js';
 export {
