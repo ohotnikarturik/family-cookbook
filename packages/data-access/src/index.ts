@@ -27,6 +27,12 @@ export { copySessionCookies, updateSession } from './supabase/middleware.js';
 export { createServerSupabaseClient } from './supabase/server.js';
 export type { AppSupabaseClient } from './supabase/server.js';
 export { listRecipeAuditEvents } from './audit/list-recipe-audit-events.js';
+export { countRecipeAssets } from './recipe-asset/count-recipe-assets.js';
+export { createRecipeSignedUploadUrl } from './recipe-asset/create-signed-upload-url.js';
+export { fetchStorageObjectForValidation } from './recipe-asset/fetch-object-for-validation.js';
+export { getPendingRecipeAsset } from './recipe-asset/get-pending-asset.js';
+export { insertPendingRecipeAsset } from './recipe-asset/insert-pending-asset.js';
+export { updateRecipeAssetAfterValidation } from './recipe-asset/update-asset-after-validation.js';
 export { createFamilyBootstrap } from './family/create-family-bootstrap.js';
 export { getFamilyWorkspaceForMember } from './family/get-family-workspace.js';
 export {

@@ -25,6 +25,14 @@ export function canEditRecipe(role: FamilyRole, actorUserId: string, createdBy: 
   return false;
 }
 
+export function canAttachRecipeAsset(
+  role: FamilyRole,
+  actorUserId: string,
+  createdBy: string,
+): boolean {
+  return canEditRecipe(role, actorUserId, createdBy);
+}
+
 export function canArchiveRecipe(
   role: FamilyRole,
   actorUserId: string,

@@ -96,6 +96,10 @@ After sign-in, the app sends you to **`/{locale}/onboarding`** when you have no 
 
 Family URLs use an explicit UUID segment (`/en/f/aaaaaaaa-…`). Opening another family’s id without membership returns **404** (RLS + layout guard).
 
+## Recipe media uploads (T3.1)
+
+After `pnpm supabase:reset`, migration **`20251108100000_recipe_assets_and_storage.sql`** creates the private bucket **`family-recipe-media`** and `recipe_assets` RLS. Upload flow is **API-only** (no gallery UI until T3.2): see [`fixtures/API_TEST_T3_1.md`](fixtures/API_TEST_T3_1.md).
+
 ## Invitations (T1.5)
 
 **SMTP (invite emails):** Local stack exposes Mailpit SMTP on **`127.0.0.1:54325`** (`smtp_port` in [`supabase/config.toml`](../supabase/config.toml)). After enabling or changing SMTP, restart the stack (`pnpm supabase:stop` → `pnpm supabase:start`). Run **`pnpm supabase:sync-env`** so [`apps/web/.env.local`](../apps/web/.env.local) gets `INVITATION_SMTP_*` defaults.

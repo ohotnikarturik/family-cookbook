@@ -20,3 +20,13 @@ export type {
   UserId,
 } from './recipe-types.js';
 export { isRecipeVersionConflict, recipeVersionMatches } from './recipe-version.js';
+export {
+  ALLOWED_UPLOAD_MIME_TYPES,
+  detectFileSignature,
+  UPLOAD_IMAGE_MAX_BYTES,
+  UPLOAD_PDF_MAX_BYTES,
+  validateUploadedBytes,
+  type AllowedUploadMimeType,
+  type ValidateUploadedBytesInput,
+  type ValidateUploadedBytesResult,
+} from './file-signature.js';

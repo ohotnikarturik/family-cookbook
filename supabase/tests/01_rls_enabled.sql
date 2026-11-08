@@ -1,6 +1,6 @@
 begin;
 
-select plan (13);
+select plan (14);
 
 select
   ok (
@@ -195,6 +195,21 @@ select
         and c.relname = 'audit_events'
     ),
     'audit_events has RLS enabled'
+  );
+
+select
+  ok (
+    (
+      select
+        relrowsecurity
+      from
+        pg_class c
+        join pg_namespace n on n.oid = c.relnamespace
+      where
+        n.nspname = 'public'
+        and c.relname = 'recipe_assets'
+    ),
+    'recipe_assets has RLS enabled'
   );
 
 select

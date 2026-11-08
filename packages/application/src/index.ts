@@ -49,6 +49,14 @@ export {
 } from './invitations/list-family-invitations.js';
 export { resolveInvitationEmailSender } from './invitations/resolve-email-sender.js';
 export { revokeInvitation, type RevokeInvitationResult } from './invitations/revoke-invitation.js';
+export {
+  createRecipeUploadSlot,
+  type CreateRecipeUploadSlotUseCaseResult,
+} from './recipe-asset/create-recipe-upload-slot.js';
+export {
+  finalizeRecipeUpload,
+  type FinalizeRecipeUploadUseCaseResult,
+} from './recipe-asset/finalize-recipe-upload.js';
 export { archiveRecipe, type ArchiveRecipeResult } from './recipe/archive-recipe.js';
 export { createRecipe, type CreateRecipeResult } from './recipe/create-recipe.js';
 export { getRecipe, type GetRecipeResult } from './recipe/get-recipe.js';

@@ -6,6 +6,7 @@ export const permissionsBootstrapMarker = domainVersion;
 
 export {
   canArchiveRecipe,
+  canAttachRecipeAsset,
   canCreateRecipe,
   canEditRecipe,
   canManageRecipeTags,

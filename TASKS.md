@@ -142,6 +142,8 @@ Work in order. A task is complete only when its acceptance criteria and relevant
 
 **Acceptance:** unsupported, oversized, spoofed, or unauthorized uploads fail; asset reads require family membership and available asset record.
 
+**Status:** Done (2026-11-08).
+
 ### T3.2 Media display
 - Add recipe photo/source gallery and authorized short-lived signed URLs.
 - Serve PDF as attachment by default; do not render arbitrary content inline.

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   canArchiveRecipe,
+  canAttachRecipeAsset,
   canCreateRecipe,
   canEditRecipe,
   canManageRecipeTags,
@@ -32,6 +33,8 @@ describe('recipe capability matrix', () => {
     expect(canEditRecipe('contributor', CONTRIBUTOR_A, CONTRIBUTOR_B)).toBe(false);
     expect(canEditRecipe('editor', CONTRIBUTOR_A, CONTRIBUTOR_B)).toBe(true);
     expect(canEditRecipe('viewer', CONTRIBUTOR_A, CONTRIBUTOR_A)).toBe(false);
+    expect(canAttachRecipeAsset('contributor', CONTRIBUTOR_A, CONTRIBUTOR_B)).toBe(false);
+    expect(canAttachRecipeAsset('viewer', CONTRIBUTOR_A, CONTRIBUTOR_A)).toBe(false);
   });
 
   it('restricts recipe history for viewers and foreign contributors', () => {
