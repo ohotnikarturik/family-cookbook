@@ -1,11 +1,14 @@
-import { getRecipe } from '@family-cookbook/application';
+import { getRecipe, resolveAccessibleFamily } from '@family-cookbook/application';
+import { getSessionUser } from '@family-cookbook/data-access';
 import { createServerSupabaseClient } from '@family-cookbook/data-access/supabase/server';
+import { canEditRecipe } from '@family-cookbook/permissions';
 import { getFormatter, getTranslations } from 'next-intl/server';
 import { connection } from 'next/server';
 import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
 import { RecipeBrowseStates } from '@/components/recipe/recipe-browse-states';
+import { Button } from '@/components/ui/button';
 import { RecipeDetailView } from '@/components/recipe/recipe-detail-view';
 import { UnavailablePage } from '@/components/product/unavailable-page';
 import { RecipeLoading } from '@/components/recipe/recipe-loading';
@@ -16,6 +19,9 @@ import { locales, type AppLocale } from '@/i18n/routing';
 type Props = Readonly<{
   params: Promise<{ locale: string; familyId: string; recipeId: string }>;
 }>;
+
+// Session-backed reads cannot be instant. Without this, dev logs that the segment was dropped.
+export const instant = false;
 
 export default function RecipeDetailPage(props: Props) {
   return (
@@ -39,6 +45,8 @@ async function RecipeDetailContent({ params }: Props) {
   const t = await getTranslations({ locale, namespace: 'recipes' });
 
   const supabase = await createServerSupabaseClient();
+  const sessionUser = await getSessionUser(supabase);
+  const workspace = await resolveAccessibleFamily(supabase, familyId);
   const result = await getRecipe(supabase, { familyId, recipeId });
 
   if (result.status === 'auth_required') {
@@ -73,6 +81,10 @@ async function RecipeDetailContent({ params }: Props) {
   }
 
   const { recipe } = result;
+  const showEdit =
+    sessionUser !== null &&
+    workspace.status === 'ok' &&
+    canEditRecipe(workspace.workspace.role, sessionUser.id, recipe.createdBy);
   const contentLang = recipeContentLang(recipe, locale);
   const format = await getFormatter({ locale });
   const facts: { label: string; value: string; valueLang?: string }[] = [
@@ -101,7 +113,14 @@ async function RecipeDetailContent({ params }: Props) {
 
   return (
     <section className="space-y-6">
-      <BackLink familyId={familyId} label={t('detail.backToList')} />
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <BackLink familyId={familyId} label={t('detail.backToList')} />
+        {showEdit ? (
+          <Button type="button" variant="outline" className="min-h-11 w-full sm:w-auto" asChild>
+            <Link href={`/f/${familyId}/recipes/${recipeId}/edit`}>{t('editor.editRecipe')}</Link>
+          </Button>
+        ) : null}
+      </div>
       <RecipeDetailView
         recipe={recipe}
         facts={facts}

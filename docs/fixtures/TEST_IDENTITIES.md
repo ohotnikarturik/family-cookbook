@@ -47,4 +47,4 @@ Seeded from [`supabase/seed-recipes.sql`](../../supabase/seed-recipes.sql). Fami
 | `eeeeeeee-eeee-4eee-8eee-eeeeeeee0201` | B | Contributor's pancakes | `ru`, Contributor B |
 | `eeeeeeee-eeee-4eee-8eee-eeeeeeee0202` | B | Owner B house bread | Baking |
 
-UI steps: [`UI_TEST_T2_4.md`](./UI_TEST_T2_4.md).
+UI steps: [`UI_TEST_T2_4.md`](./UI_TEST_T2_4.md) (browse), [`UI_TEST_T2_5.md`](./UI_TEST_T2_5.md) (editor).

@@ -123,6 +123,8 @@ Work in order. A task is complete only when its acceptance criteria and relevant
 
 **Acceptance:** authorized member can create and update; Viewer cannot; Contributor cannot update another person's recipe; stale update returns conflict; form is keyboard accessible and usable at 320px/360px/200% zoom.
 
+**Status:** Done (2026-11-08).
+
 ### T2.6 Revision history and audit UI
 - Show revision list and change metadata to authorized roles.
 - Ensure audit events omit sensitive content.

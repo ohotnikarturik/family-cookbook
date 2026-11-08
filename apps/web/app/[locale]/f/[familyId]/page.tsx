@@ -1,4 +1,5 @@
 import { resolveAccessibleFamily, searchRecipes } from '@family-cookbook/application';
+import { canCreateRecipe } from '@family-cookbook/permissions';
 import { createServerSupabaseClient } from '@family-cookbook/data-access/supabase/server';
 import { getFormatter, getTranslations } from 'next-intl/server';
 import { connection } from 'next/server';
@@ -79,9 +80,16 @@ async function DashboardContent({ params }: Props) {
             <dd className="text-foreground">{t('dashboard.scopeProof', { name: family.name })}</dd>
           </div>
         </dl>
-        <Button type="button" className="min-h-11 w-full sm:w-auto" asChild>
-          <Link href={`/f/${familyId}/recipes`}>{t('dashboard.browseRecipes')}</Link>
-        </Button>
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <Button type="button" className="min-h-11 w-full sm:w-auto" asChild>
+            <Link href={`/f/${familyId}/recipes`}>{t('dashboard.browseRecipes')}</Link>
+          </Button>
+          {canCreateRecipe(family.role) ? (
+            <Button type="button" variant="outline" className="min-h-11 w-full sm:w-auto" asChild>
+              <Link href={`/f/${familyId}/recipes/new`}>{t('dashboard.addRecipe')}</Link>
+            </Button>
+          ) : null}
+        </div>
       </section>
 
       <section aria-labelledby="recent-recipes-heading" className="space-y-4">

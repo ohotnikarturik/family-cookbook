@@ -121,6 +121,7 @@
       "scopeNote": "Tenant scope",
       "scopeProof": "Counts and details below are loaded only for {name} using an explicit family context.",
       "browseRecipes": "Browse all recipes",
+      "addRecipe": "Add recipe",
       "recentRecipes": "Recently updated",
       "loading": "Loading this family…"
     },
@@ -318,13 +319,100 @@
     "status": {
       "loading": "Loading recipes…",
       "emptyTitle": "No recipes yet",
-      "empty": "No recipes match your filters yet. Clear filters or add recipes when editing is available.",
+      "empty": "No recipes match your filters yet. Clear filters or add a new recipe.",
       "errorTitle": "Could not load recipes",
       "error": "We could not load recipes. Check your connection and try again.",
       "forbiddenTitle": "Not available",
       "forbidden": "You do not have access to this recipe in this family context.",
       "invalidFiltersTitle": "Check your filters",
       "invalidFilters": "One or more filters are invalid. Clear filters and try again."
+    },
+    "editor": {
+      "addRecipe": "Add recipe",
+      "editRecipe": "Edit recipe",
+      "createTitle": "Add a recipe",
+      "createSubtitle": "Enter the recipe in its original language. You can add translations later.",
+      "editTitle": "Edit recipe",
+      "editSubtitle": "Updating {title}",
+      "forbiddenTitle": "Editing not available",
+      "forbiddenDescription": "Your role in this family does not allow adding or editing this recipe.",
+      "backToList": "Back to recipes",
+      "backToDetail": "Back to recipe",
+      "loadErrorTitle": "Could not load recipe",
+      "loadErrorDescription": "We could not load this recipe for editing. Try again in a moment.",
+      "submit": "Save recipe",
+      "cancel": "Cancel",
+      "saving": "Saving…",
+      "sections": {
+        "basics": "Basics",
+        "timing": "Timing and servings",
+        "meta": "Category and notes",
+        "tags": "Tags",
+        "ingredients": "Ingredients",
+        "steps": "Steps"
+      },
+      "fields": {
+        "title": "Recipe title",
+        "description": "Description",
+        "sourceLanguage": "Source language",
+        "sourceLanguageOther": "Other language",
+        "sourceLanguageOtherPlaceholder": "e.g. sv or en-US",
+        "servings": "Servings",
+        "prepMinutes": "Prep time (minutes)",
+        "cookMinutes": "Cook time (minutes)",
+        "category": "Category",
+        "notes": "Notes"
+      },
+      "hints": {
+        "title": "A clear name helps everyone find this recipe later.",
+        "sourceLanguage": "The language you are writing in — separate from your interface language.",
+        "quantityText": "Use this for amounts like “to taste” when a number does not fit.",
+        "tagsEditor": "New tag names are added to this family’s shared tag list.",
+        "tagsContributor": "You can attach existing family tags by name. Creating new tags requires an editor role.",
+        "stepDuration": "Optional time for this step, in minutes.",
+        "translationsPreserved": "Existing translations for this recipe are kept when you save. Translation editing comes in a later release."
+      },
+      "tags": {
+        "add": "Add tag",
+        "remove": "Remove {name}",
+        "unnamed": "tag",
+        "name": "Tag name"
+      },
+      "ingredients": {
+        "name": "Ingredient",
+        "quantity": "Amount (number)",
+        "quantityText": "Amount (text)",
+        "unit": "Unit",
+        "notes": "Notes",
+        "add": "Add ingredient",
+        "remove": "Remove {name}",
+        "row": "Ingredient {index}"
+      },
+      "steps": {
+        "instruction": "Instruction",
+        "durationMinutes": "Step time (minutes)",
+        "add": "Add step",
+        "remove": "Remove step {index}",
+        "row": "Step {index}"
+      },
+      "actions": {
+        "moveUp": "Move up",
+        "moveDown": "Move down"
+      },
+      "errors": {
+        "validation": "Check the highlighted fields and try again.",
+        "title": "Check the recipe title.",
+        "sourceLanguage": "Enter a language tag such as sv or en-US.",
+        "ingredientName": "Check this ingredient name.",
+        "stepInstruction": "Check this step instruction.",
+        "required": "Fill in this field or clear the row.",
+        "field": "Check this field.",
+        "invalidNumber": "Enter a valid number or leave the field empty.",
+        "forbidden": "You do not have permission to save this recipe.",
+        "saveFailed": "We could not save the recipe. Check your connection and try again.",
+        "versionConflict": "Someone else saved a newer version. Reload the editor before saving again.",
+        "reloadEdit": "Reload editor"
+      }
     }
   }
 }

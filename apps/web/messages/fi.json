@@ -121,6 +121,7 @@
       "scopeNote": "Vuokraajan rajaus",
       "scopeProof": "Alla olevat luvut haetaan vain kohteelle {name} eksplisiittisellä perhe kontekstilla.",
       "browseRecipes": "Selaa kaikkia reseptejä",
+      "addRecipe": "Lisää resepti",
       "recentRecipes": "Viimeksi päivitetty",
       "loading": "Ladataan perhettä…"
     },
@@ -318,13 +319,100 @@
     "status": {
       "loading": "Ladataan reseptejä…",
       "emptyTitle": "Ei reseptejä",
-      "empty": "Mikään resepti ei vastaa suodattimia. Tyhjennä suodattimet tai lisää reseptejä, kun muokkaus on käytössä.",
+      "empty": "Mikään resepti ei vastaa suodattimia. Tyhjennä suodattimet tai lisää uusi resepti.",
       "errorTitle": "Reseptejä ei voitu ladata",
       "error": "Reseptejä ei voitu ladata. Tarkista yhteys ja yritä uudelleen.",
       "forbiddenTitle": "Ei saatavilla",
       "forbidden": "Sinulla ei ole oikeutta tähän reseptiin tässä perhekontekstissa.",
       "invalidFiltersTitle": "Tarkista suodattimet",
       "invalidFilters": "Yksi tai useampi suodatin on virheellinen. Tyhjennä suodattimet ja yritä uudelleen."
+    },
+    "editor": {
+      "addRecipe": "Lisää resepti",
+      "editRecipe": "Muokkaa reseptiä",
+      "createTitle": "Lisää resepti",
+      "createSubtitle": "Kirjoita resepti alkuperäiskielellään. Käännökset voi lisätä myöhemmin.",
+      "editTitle": "Muokkaa reseptiä",
+      "editSubtitle": "Päivitetään: {title}",
+      "forbiddenTitle": "Muokkaus ei ole käytettävissä",
+      "forbiddenDescription": "Roolisi tässä perheessä ei salli tämän reseptin lisäämistä tai muokkausta.",
+      "backToList": "Takaisin resepteihin",
+      "backToDetail": "Takaisin reseptiin",
+      "loadErrorTitle": "Reseptiä ei voitu ladata",
+      "loadErrorDescription": "Reseptiä ei voitu avata muokattavaksi. Yritä hetken kuluttua uudelleen.",
+      "submit": "Tallenna resepti",
+      "cancel": "Peruuta",
+      "saving": "Tallennetaan…",
+      "sections": {
+        "basics": "Perustiedot",
+        "timing": "Ajat ja annokset",
+        "meta": "Kategoria ja muistiinpanot",
+        "tags": "Tunnisteet",
+        "ingredients": "Ainekset",
+        "steps": "Vaiheet"
+      },
+      "fields": {
+        "title": "Reseptin nimi",
+        "description": "Kuvaus",
+        "sourceLanguage": "Lähdekieli",
+        "sourceLanguageOther": "Muu kieli",
+        "sourceLanguageOtherPlaceholder": "esim. sv tai en-US",
+        "servings": "Annoksia",
+        "prepMinutes": "Esivalmistelu (min)",
+        "cookMinutes": "Kypsennys (min)",
+        "category": "Kategoria",
+        "notes": "Muistiinpanot"
+      },
+      "hints": {
+        "title": "Selkeä nimi auttaa löytämään reseptin myöhemmin.",
+        "sourceLanguage": "Kieli, jolla kirjoitat — erillinen käyttöliittymän kielestä.",
+        "quantityText": "Käytä esim. „maun mukaan”, kun numero ei sovi.",
+        "tagsEditor": "Uudet tunnistenimet lisätään perheen yhteiseen listaan.",
+        "tagsContributor": "Voit liittää olemassa olevia tunnisteita nimellä. Uusien luonti vaatii muokkaajan roolin.",
+        "stepDuration": "Valinnainen aika tälle vaiheelle minuutteina.",
+        "translationsPreserved": "Olemassa olevat käännökset säilyvät tallennuksessa. Käännösten muokkaus tulee myöhemmin."
+      },
+      "tags": {
+        "add": "Lisää tunniste",
+        "remove": "Poista {name}",
+        "unnamed": "tunniste",
+        "name": "Tunnisteen nimi"
+      },
+      "ingredients": {
+        "name": "Aines",
+        "quantity": "Määrä (luku)",
+        "quantityText": "Määrä (teksti)",
+        "unit": "Yksikkö",
+        "notes": "Muistiinpanot",
+        "add": "Lisää aines",
+        "remove": "Poista {name}",
+        "row": "Aines {index}"
+      },
+      "steps": {
+        "instruction": "Ohje",
+        "durationMinutes": "Vaiheen aika (min)",
+        "add": "Lisää vaihe",
+        "remove": "Poista vaihe {index}",
+        "row": "Vaihe {index}"
+      },
+      "actions": {
+        "moveUp": "Siirrä ylös",
+        "moveDown": "Siirrä alas"
+      },
+      "errors": {
+        "validation": "Tarkista korostetut kentät ja yritä uudelleen.",
+        "title": "Tarkista reseptin nimi.",
+        "sourceLanguage": "Anna kielitunnus, esimerkiksi sv tai en-US.",
+        "ingredientName": "Tarkista ainesosan nimi.",
+        "stepInstruction": "Tarkista ohjeen teksti.",
+        "required": "Täytä kenttä tai tyhjennä rivi.",
+        "field": "Tarkista tämä kenttä.",
+        "invalidNumber": "Anna kelvollinen luku tai jätä kenttä tyhjäksi.",
+        "forbidden": "Sinulla ei ole oikeutta tallentaa tätä reseptiä.",
+        "saveFailed": "Reseptiä ei voitu tallentaa. Tarkista yhteys ja yritä uudelleen.",
+        "versionConflict": "Joku muu tallensi uudemman version. Lataa editori uudelleen ennen tallennusta.",
+        "reloadEdit": "Lataa editori uudelleen"
+      }
     }
   }
 }

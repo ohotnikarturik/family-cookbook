@@ -1,4 +1,5 @@
-import { searchRecipes } from '@family-cookbook/application';
+import { resolveAccessibleFamily, searchRecipes } from '@family-cookbook/application';
+import { canCreateRecipe } from '@family-cookbook/permissions';
 import { createServerSupabaseClient } from '@family-cookbook/data-access/supabase/server';
 import { getFormatter, getTranslations } from 'next-intl/server';
 import { connection } from 'next/server';
@@ -49,7 +50,13 @@ async function RecipesContent({ params, searchParams }: Props) {
   if (parsed.input === null) {
     return (
       <section className="space-y-4" aria-labelledby="recipes-heading">
-        <RecipesHeader title={t('list.title')} subtitle={t('list.subtitle')} />
+        <RecipesHeader
+          title={t('list.title')}
+          subtitle={t('list.subtitle')}
+          familyId={familyId}
+          addRecipeLabel={t('editor.addRecipe')}
+          showAddRecipe={false}
+        />
         <RecipeBrowseStates
           variant="invalidFilters"
           title={t('status.invalidFiltersTitle')}
@@ -63,6 +70,8 @@ async function RecipesContent({ params, searchParams }: Props) {
   }
 
   const supabase = await createServerSupabaseClient();
+  const workspace = await resolveAccessibleFamily(supabase, familyId);
+  const canAdd = workspace.status === 'ok' ? canCreateRecipe(workspace.workspace.role) : false;
   const result = await searchRecipes(supabase, parsed.input);
 
   if (result.status === 'auth_required') {
@@ -74,7 +83,13 @@ async function RecipesContent({ params, searchParams }: Props) {
   if (result.status === 'validation_error') {
     return (
       <section className="space-y-4" aria-labelledby="recipes-heading">
-        <RecipesHeader title={t('list.title')} subtitle={t('list.subtitle')} />
+        <RecipesHeader
+          title={t('list.title')}
+          subtitle={t('list.subtitle')}
+          familyId={familyId}
+          addRecipeLabel={t('editor.addRecipe')}
+          showAddRecipe={canAdd}
+        />
         <RecipeBrowseStates
           variant="invalidFilters"
           title={t('status.invalidFiltersTitle')}
@@ -89,7 +104,13 @@ async function RecipesContent({ params, searchParams }: Props) {
   if (result.status === 'query_failed') {
     return (
       <section className="space-y-4" aria-labelledby="recipes-heading">
-        <RecipesHeader title={t('list.title')} subtitle={t('list.subtitle')} />
+        <RecipesHeader
+          title={t('list.title')}
+          subtitle={t('list.subtitle')}
+          familyId={familyId}
+          addRecipeLabel={t('editor.addRecipe')}
+          showAddRecipe={canAdd}
+        />
         <RecipeBrowseStates
           variant="error"
           title={t('status.errorTitle')}
@@ -103,7 +124,13 @@ async function RecipesContent({ params, searchParams }: Props) {
 
   return (
     <section className="space-y-6" aria-labelledby="recipes-heading">
-      <RecipesHeader title={t('list.title')} subtitle={t('list.subtitle')} />
+      <RecipesHeader
+        title={t('list.title')}
+        subtitle={t('list.subtitle')}
+        familyId={familyId}
+        addRecipeLabel={t('editor.addRecipe')}
+        showAddRecipe={canAdd}
+      />
       <RecipeSearchForm
         key={buildRecipeSearchQuery(parsed.input) || 'all'}
         familyId={familyId}
@@ -156,13 +183,32 @@ async function RecipesContent({ params, searchParams }: Props) {
   );
 }
 
-function RecipesHeader({ title, subtitle }: Readonly<{ title: string; subtitle: string }>) {
+function RecipesHeader({
+  title,
+  subtitle,
+  familyId,
+  addRecipeLabel,
+  showAddRecipe,
+}: Readonly<{
+  title: string;
+  subtitle: string;
+  familyId: string;
+  addRecipeLabel: string;
+  showAddRecipe: boolean;
+}>) {
   return (
-    <header className="space-y-1">
-      <h2 id="recipes-heading" className="text-xl font-semibold text-foreground">
-        {title}
-      </h2>
-      <p className="text-sm text-muted-foreground">{subtitle}</p>
+    <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <div className="space-y-1">
+        <h2 id="recipes-heading" className="text-xl font-semibold text-foreground">
+          {title}
+        </h2>
+        <p className="text-sm text-muted-foreground">{subtitle}</p>
+      </div>
+      {showAddRecipe ? (
+        <Button type="button" className="min-h-11 w-full sm:w-auto" asChild>
+          <Link href={`/f/${familyId}/recipes/new`}>{addRecipeLabel}</Link>
+        </Button>
+      ) : null}
     </header>
   );
 }

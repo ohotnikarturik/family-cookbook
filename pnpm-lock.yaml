@@ -215,6 +215,9 @@ importers:
       '@family-cookbook/data-access':
         specifier: workspace:*
         version: link:../../packages/data-access
+      '@family-cookbook/permissions':
+        specifier: workspace:*
+        version: link:../../packages/permissions
       '@radix-ui/react-dialog':
         specifier: 1.1.15
         version: 1.1.15(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -282,6 +285,9 @@ importers:
       typescript:
         specifier: 5.9.3
         version: 5.9.3
+      vitest:
+        specifier: 5.1.0
+        version: 5.1.0(@types/node@22.15.32)(vite@8.3.5(@types/node@22.15.32)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
 
   packages/application:
     dependencies:
