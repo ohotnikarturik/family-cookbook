@@ -9,6 +9,8 @@ export {
   canAdministrateTargetMember,
   canAssignMemberRole,
   canManageFamilyMembers,
+  canReceiveFamilyOwnership,
+  canTransferFamilyOwnership,
 } from './member-capabilities.js';
 export {
   canArchiveRecipe,

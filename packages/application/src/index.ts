@@ -27,6 +27,10 @@ export {
   type SetFamilyMemberStatusResult,
 } from './family/set-family-member-status.js';
 export {
+  transferFamilyOwnership,
+  type TransferFamilyOwnershipResult,
+} from './family/transfer-family-ownership.js';
+export {
   resolveAccessibleFamily,
   type ResolveAccessibleFamilyResult,
 } from './family/resolve-accessible-family.js';

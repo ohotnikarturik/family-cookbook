@@ -6,6 +6,8 @@ import {
   assignableMemberRolesForActor,
   canAdministrateTargetMember,
   canManageFamilyMembers,
+  canReceiveFamilyOwnership,
+  canTransferFamilyOwnership,
 } from '@family-cookbook/permissions';
 import { getTranslations } from 'next-intl/server';
 import { connection } from 'next/server';
@@ -14,6 +16,7 @@ import { Suspense } from 'react';
 
 import { FamilyMemberAdminSection } from '@/components/family/family-member-directory';
 import { FamilyMemberList } from '@/components/family/family-member-list';
+import { FamilyOwnershipTransferSection } from '@/components/family/family-ownership-transfer';
 import { Link } from '@/i18n/navigation';
 import { locales, type AppLocale } from '@/i18n/routing';
 
@@ -37,6 +40,7 @@ async function MembersContent({ params }: Props) {
   const t = await getTranslations({ locale, namespace: 'family.members' });
   const tRoles = await getTranslations({ locale, namespace: 'family.roles' });
   const tAdmin = await getTranslations({ locale, namespace: 'family.members.admin' });
+  const tTransfer = await getTranslations({ locale, namespace: 'family.members.transfer' });
 
   const supabase = await createServerSupabaseClient();
   const sessionUser = await getSessionUser(supabase);
@@ -82,6 +86,20 @@ async function MembersContent({ params }: Props) {
   const manageableMembers = canManageFamilyMembers(actorRole)
     ? memberRows.filter((member) => canAdministrateTargetMember(actorRole, sessionUser.id, member))
     : [];
+  const transferCandidates = canTransferFamilyOwnership(actorRole)
+    ? memberRows
+        .filter((member) =>
+          canReceiveFamilyOwnership(sessionUser.id, {
+            userId: member.userId,
+            role: member.role,
+            status: member.status,
+          }),
+        )
+        .map((member) => ({ userId: member.userId, label: member.label }))
+    : [];
+  const formerOwnerRoles = assignableMemberRolesForActor('owner').filter(
+    (role): role is 'admin' | 'editor' | 'contributor' | 'viewer' => role !== 'owner',
+  );
 
   return (
     <div className="space-y-6">
@@ -94,6 +112,33 @@ async function MembersContent({ params }: Props) {
         emptyLabel={t('empty')}
         suspendedLabel={t('suspendedBadge')}
       />
+      {transferCandidates.length > 0 ? (
+        <FamilyOwnershipTransferSection
+          familyId={familyId}
+          candidates={transferCandidates}
+          formerOwnerRoles={formerOwnerRoles}
+          labels={{
+            sectionTitle: tTransfer('sectionTitle'),
+            sectionDescription: tTransfer('sectionDescription'),
+            openDialog: tTransfer('openDialog'),
+            dialogTitle: tTransfer('dialogTitle'),
+            dialogDescription: tTransfer('dialogDescription'),
+            newOwnerField: tTransfer('newOwnerField'),
+            formerRoleField: tTransfer('formerRoleField'),
+            confirmLabel: tTransfer('confirmLabel'),
+            chooseMember: tTransfer('chooseMember'),
+            submit: tTransfer('submit'),
+            submitting: tTransfer('submitting'),
+            cancel: tTransfer('cancel'),
+            roleLabels: {
+              admin: tRoles('admin'),
+              editor: tRoles('editor'),
+              contributor: tRoles('contributor'),
+              viewer: tRoles('viewer'),
+            },
+          }}
+        />
+      ) : null}
       {manageableMembers.length > 0 ? (
         <FamilyMemberAdminSection
           familyId={familyId}

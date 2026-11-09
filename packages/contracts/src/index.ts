@@ -44,10 +44,14 @@ export {
   type MembershipStatus,
 } from './family-member.js';
 export {
+  formerOwnerRoleSchema,
   setFamilyMemberRoleInputSchema,
   setFamilyMemberStatusInputSchema,
+  transferFamilyOwnershipInputSchema,
+  type FormerOwnerRole,
   type SetFamilyMemberRoleInput,
   type SetFamilyMemberStatusInput,
+  type TransferFamilyOwnershipInput,
 } from './family-member-admin.js';
 export {
   INVITATION_EXPIRY_DAYS,

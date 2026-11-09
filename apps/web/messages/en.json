@@ -141,6 +141,26 @@
           "notFound": "Member not found.",
           "failed": "Could not save the change. Try again."
         }
+      },
+      "transfer": {
+        "sectionTitle": "Transfer ownership",
+        "sectionDescription": "Make another active member the family owner. You keep access with the role you choose when you confirm.",
+        "openDialog": "Transfer ownership…",
+        "dialogTitle": "Transfer family ownership",
+        "dialogDescription": "This updates who can manage membership, invitations, and ownership. It cannot be undone from here—you would need the new owner to transfer back.",
+        "newOwnerField": "New owner",
+        "chooseMember": "Choose a member",
+        "formerRoleField": "Your role after transfer",
+        "confirmLabel": "I understand that I will no longer be the owner.",
+        "submit": "Transfer ownership",
+        "submitting": "Transferring…",
+        "cancel": "Cancel",
+        "errors": {
+          "validation": "Select a member and confirm before continuing.",
+          "forbidden": "You cannot transfer ownership right now.",
+          "notFound": "Member not found.",
+          "failed": "Transfer failed. Try again."
+        }
       }
     },
     "dashboard": {

@@ -141,6 +141,26 @@
           "notFound": "Jäsentä ei löytynyt.",
           "failed": "Muutosta ei voitu tallentaa. Yritä uudelleen."
         }
+      },
+      "transfer": {
+        "sectionTitle": "Siirrä omistajuus",
+        "sectionDescription": "Valitse toinen aktiivinen jäsen perheen omistajaksi. Säilytät pääsyn valitsemallasi roolilla.",
+        "openDialog": "Siirrä omistajuus…",
+        "dialogTitle": "Siirrä perheen omistajuus",
+        "dialogDescription": "Tämä muuttaa, kuka voi hallita jäsenyyksiä, kutsuja ja omistajuutta. Toimintoa ei voi perua tästä—uuden omistajan on siirrettävä takaisin.",
+        "newOwnerField": "Uusi omistaja",
+        "chooseMember": "Valitse jäsen",
+        "formerRoleField": "Roolisi siirron jälkeen",
+        "confirmLabel": "Ymmärrän, etten ole enää omistaja.",
+        "submit": "Siirrä omistajuus",
+        "submitting": "Siirretään…",
+        "cancel": "Peruuta",
+        "errors": {
+          "validation": "Valitse jäsen ja vahvista ennen jatkamista.",
+          "forbidden": "Et voi siirtää omistajuutta nyt.",
+          "notFound": "Jäsentä ei löytynyt.",
+          "failed": "Siirto epäonnistui. Yritä uudelleen."
+        }
       }
     },
     "dashboard": {

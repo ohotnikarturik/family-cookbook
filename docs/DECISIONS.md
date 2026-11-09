@@ -218,6 +218,12 @@ Approved for implementation without re-confirmation:
 3. **Labels:** `resolveMemberDisplayLabel` in `packages/domain` — You / display name / translated neutral fallback. Display names are trimmed and capped at 80 characters before they reach the page.
 4. **Contributor filter:** recipe browse uses this directory as a member picker. Translation-language search stays deferred.
 
+## W35.6 — Owner transfer (2026-11-09)
+
+1. **RPC** [`transfer_family_ownership`](../supabase/migrations/20251109200000_transfer_family_ownership.sql): caller must be active **owner**; demotes current owner to `p_former_owner_role` (default `admin`), then promotes target; demote-first ordering respects the partial unique owner index; audit `family_member.ownership_transferred`.
+2. **UI:** Owner-only section on members settings with confirm checkbox, new-owner picker, and optional former-owner role (non-owner roles only).
+3. **Application:** `confirm: true` at the contract boundary. An unknown former-owner role is rejected. Permissions `canTransferFamilyOwnership` / `canReceiveFamilyOwnership` run before the RPC. Confirmation errors stay in the dialog.
+
 ## W35.3 — Contributor search filter (2026-11-09)
 
 1. **UI:** Recipe browse uses a family member `<select>` (`createdBy` query param) fed by `listFamilyMembers` + `resolveMemberDisplayLabel`. No free-text UUID entry.

@@ -219,6 +219,8 @@ Complete the family-facing web application per approved product decisions (membe
 
 **Tests:** pgTAP owner invariants; negative cases (non-owner, suspended target).
 
+**Status:** Done (2026-11-09).
+
 ### W35.7 — Family settings
 - Edit family name, default recipe language, and related settings per spec; owner/admin gates.
 

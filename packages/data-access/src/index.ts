@@ -45,6 +45,7 @@ export { listMyActiveFamilies } from './family/list-my-families.js';
 export { listFamilyMemberDirectory } from './family/list-family-member-directory.js';
 export { setFamilyMemberRole } from './family/set-family-member-role.js';
 export { setFamilyMemberStatus } from './family/set-family-member-status.js';
+export { transferFamilyOwnership } from './family/transfer-family-ownership.js';
 export { hashInvitationToken } from './invitations/hash-token.js';
 export { findPendingInvitationByEmail } from './invitations/find-pending-by-email.js';
 export { insertFamilyInvitation } from './invitations/insert-invitation.js';
