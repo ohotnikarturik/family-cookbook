@@ -107,8 +107,8 @@ describe('ownership transfer', () => {
         status: 'suspended',
       }),
     ).toBe(false);
-    expect(
-      canReceiveFamilyOwnership('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaa0001', targetViewer),
-    ).toBe(true);
+    expect(canReceiveFamilyOwnership('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaa0001', targetViewer)).toBe(
+      true,
+    );
   });
 });

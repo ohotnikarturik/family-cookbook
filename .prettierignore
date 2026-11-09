@@ -4,6 +4,7 @@ dist
 out
 pnpm-lock.yaml
 coverage
+**/test-results
 *.md
 next-env.d.ts
 .gitleaks.toml
