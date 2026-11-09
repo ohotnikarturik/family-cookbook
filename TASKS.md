@@ -233,6 +233,8 @@ Complete the family-facing web application per approved product decisions (membe
 
 **Tests:** Vitest; persistence across session refresh.
 
+**Status:** Done (2026-11-09).
+
 ### W35.9 — Signed-in language/theme controls
 - Accessible theme (system/light/dark) and language (en/fi/ru/uk) on auth screens, app shell, and account settings; no route loss on locale change; no theme flash.
 

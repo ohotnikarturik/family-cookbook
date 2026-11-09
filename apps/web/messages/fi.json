@@ -45,8 +45,28 @@
     "displayName": "Näyttönimi",
     "email": "Sähköposti",
     "unknownMember": "Jäsen",
+    "preferencesLink": "Kieli ja ulkoasu",
     "signOut": "Kirjaudu ulos",
-    "backHome": "Takaisin etusivulle"
+    "backHome": "Takaisin etusivulle",
+    "preferences": {
+      "title": "Kieli ja ulkoasu",
+      "subtitle": "Nämä asetukset ovat samat kaikissa perhetyötiloissa.",
+      "displayNameLabel": "Näyttönimi",
+      "displayNameHint": "Näkyy perheen jäsenille sähköpostisi sijaan.",
+      "languageLabel": "Sovelluksen kieli",
+      "languageHint": "Vaihtaa käyttöliittymän kielen kaikilla laitteilla, joihin olet kirjautunut.",
+      "themeLabel": "Ulkoasu",
+      "themeHint": "Valitse vaalea, tumma tai seuraa laitettasi.",
+      "save": "Tallenna asetukset",
+      "saving": "Tallennetaan…",
+      "saved": "Asetukset tallennettu.",
+      "backAccount": "Takaisin tiliin",
+      "errors": {
+        "validation": "Tarkista kentät ja yritä uudelleen.",
+        "notFound": "Profiilia ei voitu ladata.",
+        "failed": "Asetuksia ei voitu tallentaa. Yritä uudelleen."
+      }
+    }
   },
   "validation": {
     "tooShort": "Kirjoita vähintään kaksi merkkiä.",

@@ -47,10 +47,7 @@ async function AccountContent({ params }: Props) {
   }
 
   const jar = await cookies();
-  const ensured = await ensureProfileForCurrentUser(
-    supabase,
-    profileBootstrapHintsFromCookies(jar),
-  );
+  const ensured = await ensureProfileForCurrentUser(supabase, profileBootstrapHintsFromCookies(jar));
   if (ensured.status === 'auth_required') {
     redirect(`/${locale}/auth/sign-in?next=/${locale}/account`);
   }
@@ -92,6 +89,15 @@ async function AccountContent({ params }: Props) {
           ) : null}
         </dl>
       </section>
+
+      <p>
+        <Link
+          href="/account/preferences"
+          className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          {t('preferencesLink')}
+        </Link>
+      </p>
 
       <form action={signOutAction}>
         <input type="hidden" name="returnTo" value={`/${locale}/auth/sign-in`} />

@@ -2,6 +2,7 @@
 
 import { cookies } from 'next/headers';
 
+import { persistSignedInUiPreferences } from '@/app/actions/account-profile';
 import { locales, type AppLocale } from '@/i18n/routing';
 import { LOCALE_COOKIE } from '@/lib/locale';
 
@@ -20,6 +21,8 @@ export async function setLocalePreferenceAction(locale: string) {
     secure: process.env['NODE_ENV'] === 'production',
     httpOnly: false,
   });
+
+  await persistSignedInUiPreferences({ preferredLanguage: locale as AppLocale });
 
   return { ok: true as const };
 }

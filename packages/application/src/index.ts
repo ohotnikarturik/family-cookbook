@@ -15,6 +15,13 @@ export {
   loadVerifiedAuthUser,
   type EnsureProfileForUserResult,
 } from './profile/ensure-profile-for-user.js';
+export {
+  getOwnProfile,
+  updateOwnProfile,
+  updateOwnProfileFields,
+  type GetOwnProfileResult,
+  type UpdateOwnProfileResult,
+} from './profile/get-own-profile.js';
 export { createFamily, type CreateFamilyResult } from './family/create-family.js';
 export { updateFamily, type UpdateFamilyResult } from './family/update-family.js';
 export { listMyFamilies, type ListMyFamiliesResult } from './family/list-my-families.js';

@@ -218,6 +218,13 @@ Approved for implementation without re-confirmation:
 3. **Labels:** `resolveMemberDisplayLabel` in `packages/domain` — You / display name / translated neutral fallback. Display names are trimmed and capped at 80 characters before they reach the page.
 4. **Contributor filter:** recipe browse uses this directory as a member picker. Translation-language search stays deferred.
 
+## W35.8 — Account settings and profile preferences (2026-11-09)
+
+1. **Route:** `/{locale}/account/preferences` — display name, `profiles.preferred_language`, `profiles.theme_preference`; linked from `/{locale}/account`.
+2. **Stack:** `updateProfileInputSchema`, data-access `getOwnProfile` / `updateOwnProfile`, application `getOwnProfile` / `updateOwnProfile`; existing `profiles_update_own` RLS.
+3. **Cookie sync:** On sign-in only (`ensureProfileForSession` in the auth callback and OTP Server Action — not in Server Components), existing profiles push DB values onto `fc-locale` and `fc-theme`. New profiles still seed from cookies. Account save and signed-in language/theme switchers update both DB and cookies.
+4. **Tests:** Vitest for schema bounds, application use cases, and cookie writer; no new pgTAP (own-row policies unchanged).
+
 ## W35.7 — Family settings (2026-11-09)
 
 1. **Fields:** `families.name` (1–120) and `default_language` (`en`/`fi`/`ru`/`uk`). `created_by` stays fixed via existing RLS `with check`.

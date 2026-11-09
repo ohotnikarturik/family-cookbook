@@ -45,8 +45,28 @@
     "displayName": "Display name",
     "email": "Email",
     "unknownMember": "Member",
+    "preferencesLink": "Language and appearance",
     "signOut": "Sign out",
-    "backHome": "Back to home"
+    "backHome": "Back to home",
+    "preferences": {
+      "title": "Language and appearance",
+      "subtitle": "These settings follow you across every family workspace.",
+      "displayNameLabel": "Display name",
+      "displayNameHint": "Shown to family members instead of your email.",
+      "languageLabel": "App language",
+      "languageHint": "Changes the interface language on every device where you are signed in.",
+      "themeLabel": "Appearance",
+      "themeHint": "Choose light, dark, or match your device.",
+      "save": "Save preferences",
+      "saving": "Saving…",
+      "saved": "Preferences saved.",
+      "backAccount": "Back to account",
+      "errors": {
+        "validation": "Check the fields and try again.",
+        "notFound": "We could not load your profile.",
+        "failed": "We could not save your preferences. Try again."
+      }
+    }
   },
   "validation": {
     "tooShort": "Enter at least two characters.",

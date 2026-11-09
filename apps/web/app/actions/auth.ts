@@ -1,6 +1,5 @@
 'use server';
 
-import { ensureProfileForCurrentUser } from '@family-cookbook/application';
 import { authEmailOtpSchema, authEmailSchema } from '@family-cookbook/contracts';
 import {
   buildAuthCallbackUrl,
@@ -13,6 +12,7 @@ import { getTranslations } from 'next-intl/server';
 import { redirect } from 'next/navigation';
 
 import { profileBootstrapHintsFromCookies } from '@/lib/auth-hints';
+import { ensureProfileForSession } from '@/lib/ensure-profile-session';
 import { LOCALE_COOKIE, parseAppLocale } from '@/lib/locale';
 import { resolveSignedInLandingPath } from '@/lib/post-auth-path';
 import type { AppLocale } from '@/i18n/routing';
@@ -104,7 +104,7 @@ export async function verifyEmailOtpAction(
   }
 
   const jar = await cookies();
-  await ensureProfileForCurrentUser(supabase, profileBootstrapHintsFromCookies(jar));
+  await ensureProfileForSession(supabase, profileBootstrapHintsFromCookies(jar));
 
   const nextPath = optionalNextPath(formData.get('next'));
   if (nextPath) {

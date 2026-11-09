@@ -19,6 +19,8 @@ type ThemeContextValue = {
   /** False until the cookie has been read. The inline script owns the class until then. */
   ready: boolean;
   setPreference: (value: ThemePreference) => void;
+  /** Apply preference when the server already persisted it (e.g. account settings save). */
+  syncPreference: (value: ThemePreference) => void;
   resolved: 'light' | 'dark';
 };
 
@@ -68,15 +70,26 @@ export function ThemeProvider({ children }: Readonly<{ children: ReactNode }>) {
     return () => mq.removeEventListener('change', onChange);
   }, [preference, applyDom, ready]);
 
+  const applyPreference = useCallback((value: ThemePreference) => {
+    userChose.current = true;
+    setPreferenceState(value);
+    setReady(true);
+    applyDom(value);
+  }, [applyDom]);
+
+  const syncPreference = useCallback(
+    (value: ThemePreference) => {
+      applyPreference(value);
+    },
+    [applyPreference],
+  );
+
   const setPreference = useCallback(
     (value: ThemePreference) => {
-      userChose.current = true;
-      setPreferenceState(value);
-      setReady(true);
-      applyDom(value);
+      applyPreference(value);
       void setThemePreferenceAction(value);
     },
-    [applyDom],
+    [applyPreference],
   );
 
   const resolved: 'light' | 'dark' = resolveDark(preference) ? 'dark' : 'light';
@@ -86,9 +99,10 @@ export function ThemeProvider({ children }: Readonly<{ children: ReactNode }>) {
       preference,
       ready,
       setPreference,
+      syncPreference,
       resolved,
     }),
-    [preference, ready, setPreference, resolved],
+    [preference, ready, setPreference, syncPreference, resolved],
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

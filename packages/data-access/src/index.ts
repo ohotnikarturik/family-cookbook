@@ -15,6 +15,10 @@ export { sanitizeAuthRedirect } from './auth/redirect.js';
 export { ensureProfile } from './profile/ensure-profile.js';
 export type { EnsureProfileResult } from './profile/ensure-profile.js';
 export { defaultProfileDisplayName } from './profile/display-name.js';
+export { getOwnProfile } from './profile/get-own-profile.js';
+export type { GetOwnProfileResult } from './profile/get-own-profile.js';
+export { updateOwnProfile } from './profile/update-own-profile.js';
+export type { UpdateOwnProfileResult } from './profile/update-own-profile.js';
 export {
   buildAuthCallbackUrl,
   getAppUrl,

@@ -22,6 +22,14 @@ export {
   profileThemePreferenceSchema,
   type ProfileBootstrapHints,
 } from './profile-bootstrap.js';
+export {
+  PROFILE_DISPLAY_NAME_MAX,
+  ownProfileSchema,
+  profileDisplayNameSchema,
+  updateProfileInputSchema,
+  type OwnProfile,
+  type UpdateProfileInput,
+} from './profile.js';
 export { sampleDisplayNameSchema, type SampleDisplayNameInput } from './sample-profile.js';
 export {
   createFamilyInputSchema,

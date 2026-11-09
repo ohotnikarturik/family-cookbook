@@ -1,10 +1,10 @@
-import { ensureProfileForCurrentUser } from '@family-cookbook/application';
 import { sanitizeAuthRedirect } from '@family-cookbook/data-access';
 import { createServerSupabaseClient } from '@family-cookbook/data-access/supabase/server';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 import { profileBootstrapHintsFromCookies } from '@/lib/auth-hints';
+import { ensureProfileForSession } from '@/lib/ensure-profile-session';
 import { LOCALE_COOKIE, parseAppLocale } from '@/lib/locale';
 import { resolveSignedInLandingPath } from '@/lib/post-auth-path';
 import type { AppLocale } from '@/i18n/routing';
@@ -34,7 +34,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     return redirectAuth(`${requestUrl.origin}/${locale}/auth/sign-in?error=callback`);
   }
 
-  await ensureProfileForCurrentUser(supabase, profileBootstrapHintsFromCookies(jar));
+  await ensureProfileForSession(supabase, profileBootstrapHintsFromCookies(jar));
 
   const fallback = await resolveSignedInLandingPath(supabase, locale);
   const path = sanitizeAuthRedirect(next, fallback);
