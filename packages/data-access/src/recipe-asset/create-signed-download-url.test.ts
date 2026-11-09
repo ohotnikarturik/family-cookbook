@@ -5,7 +5,7 @@ import { createRecipeSignedDownloadUrl } from './create-signed-download-url.js';
 describe('createRecipeSignedDownloadUrl', () => {
   it('passes attachment filename to storage', async () => {
     const createSignedUrl = vi.fn().mockResolvedValue({
-      data: { signedUrl: 'https://example.test/object?token=eyJleHAiOjE3MDAwMDAwMDB9' },
+      data: { signedUrl: 'https://example.test/object' },
       error: null,
     });
     const client = {

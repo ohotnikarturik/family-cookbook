@@ -14,3 +14,9 @@ paths = [
   '''\.env\.example$''',
   '''scripts/verify-no-secrets-in-client-bundle\.mjs''',
 ]
+
+# Synthetic expiry claim from a09b9b7 (`{"exp":1700000000}`), not a credential.
+# Removed from the test; kept here so full-history scans of that commit stay quiet.
+regexes = [
+  '''eyJleHAiOjE3MDAwMDAwMDB9''',
+]
