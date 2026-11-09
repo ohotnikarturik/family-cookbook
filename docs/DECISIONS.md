@@ -239,6 +239,12 @@ Approved for implementation without re-confirmation:
 3. **CI fix:** Playwright job `runs-on: ubuntu-24.04` — Playwright 1.56.1 does not ship Chromium for Ubuntu 26.04 (`ubuntu-latest` on GHA).
 4. **Next:** W35.14–W35.17 and EPIC 4 (MCP) for §19.3 staging release.
 
+## W35.16 — Backup and restoration verification (2026-11-10)
+
+1. **Ops guide:** [`docs/BACKUP_AND_RESTORE.md`](BACKUP_AND_RESTORE.md) — hosted Supabase backup schedule/PITR expectations, Storage co-dependence, staging restore steps.
+2. **Local drill:** `pnpm supabase:backup-restore-drill` ([`scripts/local-backup-restore-drill.mjs`](../scripts/local-backup-restore-drill.mjs)) — dump recipe aggregate tables (not `audit_events`) → wipe `recipes` → restore in FK-safe table order → count check → `pnpm supabase:test`. Artifacts under gitignored `var/backup-drill/`. `--disable-triggers` is omitted (Supabase rejects disabling system RI triggers).
+3. **Records:** [`docs/fixtures/records/BACKUP_RESTORE_RECORD_TEMPLATE.md`](fixtures/records/BACKUP_RESTORE_RECORD_TEMPLATE.md); completed local run [`BACKUP_RESTORE_LOCAL_2026-11-10.md`](fixtures/records/BACKUP_RESTORE_LOCAL_2026-11-10.md).
+
 ## W35.15 — Deployment and environment documentation (2026-11-10)
 
 1. **Guide:** [`docs/DEPLOYMENT.md`](DEPLOYMENT.md) — local vs staging vs production isolation; hosted Supabase Auth URLs + `db push`; web monorepo `pnpm build` / `next start`; env table; no `service_role` on the web host; MCP not deployed.

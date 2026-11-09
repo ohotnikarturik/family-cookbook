@@ -104,5 +104,5 @@ Repeatable checklist: [`fixtures/STAGING_SMOKE.md`](fixtures/STAGING_SMOKE.md). 
 
 - Create cloud accounts, DNS, or paid SMTP.
 - Deploy from CI (no production deploy workflow yet).
-- Back up or restore hosted databases — [`TASKS.md`](../TASKS.md) **W35.16**.
+- Automated backup jobs in CI — see [`BACKUP_AND_RESTORE.md`](BACKUP_AND_RESTORE.md) (W35.16).
 - Ship MCP or OAuth 2.1 — **EPIC 4**.

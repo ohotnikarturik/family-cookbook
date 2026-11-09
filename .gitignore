@@ -25,6 +25,9 @@ pnpm-debug.log*
 # Test / coverage
 coverage/
 
+# Local backup drill artifacts (W35.16)
+var/
+
 # Vercel
 .vercel
 

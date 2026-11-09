@@ -291,6 +291,8 @@ Complete the family-facing web application per approved product decisions (membe
 
 **Tests:** Recorded restore verification.
 
+**Status:** Done (2026-11-10).
+
 ### W35.17 — Accessibility release review
 - axe + manual keyboard/screen-reader pass on critical flows; WCAG 2.2 AA exceptions documented.
 

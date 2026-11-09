@@ -29,6 +29,7 @@
     "supabase:reset": "supabase db reset --yes",
     "supabase:migrate": "supabase migration up",
     "supabase:test": "node scripts/supabase-test.mjs",
+    "supabase:backup-restore-drill": "node scripts/local-backup-restore-drill.mjs",
     "test:e2e": "pnpm --filter @family-cookbook/web test:e2e"
   },
   "devDependencies": {

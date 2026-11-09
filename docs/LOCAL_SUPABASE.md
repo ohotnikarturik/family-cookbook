@@ -126,6 +126,8 @@ pnpm supabase:test    # uses docker exec when CLI pg_prove mount fails (macOS De
 
 The **`pgTAP / RLS`** job in [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) runs `supabase:db:start` (Postgres only), `supabase:reset`, and `supabase:test` on every push/PR. Playwright E2E still starts the core API stack (`supabase:start:core`).
 
+**Backup/restore drill (W35.16):** after reset, run `pnpm supabase:backup-restore-drill` — see [`BACKUP_AND_RESTORE.md`](BACKUP_AND_RESTORE.md).
+
 ## Studio on macOS
 
 Studio mounts [`supabase/snippets/`](../supabase/snippets/) into a Docker container. If macOS blocks Docker from reading the repo (often when the path is under **`~/Desktop`**), `pnpm supabase:start:full` fails with:
