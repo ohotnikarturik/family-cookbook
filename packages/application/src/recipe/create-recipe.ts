@@ -46,6 +46,9 @@ export async function createRecipe(
     if (created.error === 'forbidden') {
       return { status: 'forbidden' };
     }
+    if (created.error === 'invalid_payload') {
+      return { status: 'validation_error' };
+    }
     return { status: 'mutation_failed' };
   }
 

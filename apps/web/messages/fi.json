@@ -509,6 +509,74 @@
         "versionConflict": "Joku muu tallensi uudemman version. Lataa editori uudelleen ennen tallennusta.",
         "reloadEdit": "Lataa editori uudelleen"
       }
+    },
+    "lifecycle": {
+      "archive": "Arkistoi resepti",
+      "archiving": "Arkistoidaan…",
+      "archiveSubmit": "Arkistoi",
+      "archiveDialogTitle": "Arkistoidaanko resepti?",
+      "archiveDialogDescription": "Arkistoidut reseptit säilyvät perheen historiassa mutta piilotetaan oletuslistalta, kunnes ne palautetaan.",
+      "archiveConfirmLabel": "Ymmärrän, että resepti piilotetaan oletuslistalta.",
+      "cancel": "Peruuta",
+      "restore": "Palauta resepti",
+      "restoring": "Palautetaan…",
+      "errors": {
+        "validation": "Toimintoa ei voitu suorittaa. Päivitä sivu ja yritä uudelleen.",
+        "confirmRequired": "Vahvista ennen arkistointia.",
+        "forbidden": "Sinulla ei ole oikeutta muuttaa tämän reseptin tilaa.",
+        "versionConflict": "Joku muu päivitti reseptin. Lataa sivu uudelleen ja yritä uudelleen.",
+        "reloadHint": "Päivitä sivu nähdäksesi uusimman version.",
+        "reload": "Päivitä tämä sivu",
+        "notFound": "Reseptiä ei löytynyt.",
+        "failed": "Reseptin tilaa ei voitu päivittää. Yritä uudelleen."
+      }
+    },
+    "mediaUpload": {
+      "heading": "Lisää kuvia tai lähteitä",
+      "count": "{count} / {max} tiedostoa liitetty",
+      "limitsHint": "JPEG, PNG tai WebP enintään 15 MB; PDF enintään 25 MB. Enintään 10 tiedostoa reseptiä kohden.",
+      "limitReached": "Reseptissä on jo suurin sallittu määrä tiedostoja.",
+      "createDeferred": "Tallenna resepti ensin, sitten voit lisätä kuvia ja skannattuja lähteitä.",
+      "kindLabel": "Tiedostotyyppi",
+      "fileLabel": "Valitse tiedosto",
+      "upload": "Lähetä tiedosto",
+      "uploading": "Lähetetään…",
+      "success": "Tiedosto lähetetty.",
+      "kinds": {
+        "recipe_photo": "Reseptikuva",
+        "original_document": "Alkuperäinen asiakirja (PDF)",
+        "original_photo": "Skannattu sivu (kuva)"
+      },
+      "kindHints": {
+        "recipe_photo": "Valmis annos tai esillepano.",
+        "original_document": "PDF-skannaus tai alkuperäisen lähteen vienti.",
+        "original_photo": "Kuva käsinkirjoitetusta tai painetusta sivusta."
+      },
+      "errors": {
+        "unsupported_type": "Tiedostotyyppiä ei tueta. Käytä JPEG-, PNG-, WebP- tai PDF-tiedostoa.",
+        "too_large": "Tiedosto on liian suuri.",
+        "empty_file": "Tiedosto on tyhjä.",
+        "file_required": "Valitse tiedosto ennen lähettämistä.",
+        "auth_required": "Kirjaudu sisään lähettääksesi tiedostoja.",
+        "forbidden": "Et voi lähettää tiedostoja tälle reseptille.",
+        "not_found": "Reseptiä ei löytynyt.",
+        "limit_reached": "Reseptissä on jo suurin sallittu määrä tiedostoja.",
+        "rejected": "Tiedostoa ei voitu tarkistaa. Kokeile toista tiedostoa.",
+        "slot_failed": "Lähetystä ei voitu aloittaa. Yritä uudelleen.",
+        "finalize_failed": "Lähetystä ei voitu viimeistellä. Yritä uudelleen.",
+        "network": "Lähetys epäonnistui. Tarkista yhteys ja yritä uudelleen."
+      },
+      "step": {
+        "legend": "Vaihekuva",
+        "hint": "Valinnainen kuva, joka näytetään tässä vaiheessa reseptin tallennuksen jälkeen.",
+        "fileLabel": "Valitse vaihekuva",
+        "previewAlt": "Kuva vaiheelle {step}",
+        "remove": "Poista vaihekuva",
+        "removeHint": "Tämä irrottaa kuvan vaiheesta. Tiedosto jää reseptiin ja lasketaan yhä rajaan.",
+        "saveReminder": "Tallenna resepti, jotta vaihekuva pysyy linkitettynä.",
+        "uploading": "Lähetetään vaihekuvaa…",
+        "limitReached": "Reseptissä on jo suurin sallittu määrä tiedostoja."
+      }
     }
   }
 }

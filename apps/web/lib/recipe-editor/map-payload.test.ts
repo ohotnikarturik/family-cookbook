@@ -37,6 +37,61 @@ describe('draftToCreatePayload', () => {
     expect(mapped.payload.steps[0]?.position).toBe(1);
   });
 
+  it('includes mediaAssetId on steps when set', () => {
+    const assetId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaa0001';
+    const draft = {
+      ...emptyRecipeEditorDraft('en'),
+      title: 'With photo',
+      steps: [
+        {
+          clientKey: 's1',
+          instruction: 'Mix.',
+          durationMinutes: '',
+          mediaAssetId: assetId,
+        },
+      ],
+    };
+    const mapped = draftToCreatePayload(draft);
+    expect(mapped.fieldErrors).toEqual({});
+    expect(mapped.payload.steps[0]?.mediaAssetId).toBe(assetId);
+  });
+
+  it('keeps a photo-only step and asks for the instruction', () => {
+    const draft = {
+      ...emptyRecipeEditorDraft('en'),
+      title: 'Photo only',
+      steps: [
+        {
+          clientKey: 's1',
+          instruction: '',
+          durationMinutes: '',
+          mediaAssetId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaa0001',
+        },
+      ],
+    };
+    const mapped = draftToCreatePayload(draft);
+    expect(mapped.payload.steps).toHaveLength(0);
+    expect(mapped.fieldErrors['steps.0.instruction']).toBe('required');
+  });
+
+  it('omits a cleared step photo so the save unlinks it', () => {
+    const draft = {
+      ...emptyRecipeEditorDraft('en'),
+      title: 'Unlink',
+      steps: [
+        {
+          clientKey: 's1',
+          instruction: 'Mix.',
+          durationMinutes: '',
+          mediaAssetId: null,
+        },
+      ],
+    };
+    const mapped = draftToCreatePayload(draft);
+    expect(mapped.fieldErrors).toEqual({});
+    expect(mapped.payload.steps[0]).not.toHaveProperty('mediaAssetId');
+  });
+
   it('keeps a row that has an amount but no name and accepts a decimal comma', () => {
     const draft = {
       ...emptyRecipeEditorDraft('fi'),

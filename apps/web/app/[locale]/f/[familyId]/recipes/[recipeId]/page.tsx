@@ -13,6 +13,8 @@ import { RecipeBrowseStates } from '@/components/recipe/recipe-browse-states';
 import { RecipeLanguageSelector } from '@/components/recipe/recipe-language-selector';
 import { Button } from '@/components/ui/button';
 import { RecipeDetailView } from '@/components/recipe/recipe-detail-view';
+import { RecipeLifecycleControls } from '@/components/recipe/recipe-lifecycle-controls';
+import { RecipeMediaUploadPanel } from '@/components/recipe/recipe-media-upload-panel';
 import { UnavailablePage } from '@/components/product/unavailable-page';
 import { RecipeLoading } from '@/components/recipe/recipe-loading';
 import { Link } from '@/i18n/navigation';
@@ -139,6 +141,12 @@ async function RecipeDetailContent({ params, searchParams }: Props) {
           ) : null}
           {showEdit ? (
             <>
+              <RecipeLifecycleControls
+                familyId={familyId}
+                recipeId={recipeId}
+                expectedVersion={recipe.version}
+                status={recipe.status}
+              />
               <Button type="button" variant="outline" className="min-h-11 w-full sm:w-auto" asChild>
                 <Link href={`/f/${familyId}/recipes/${recipeId}/translations`}>
                   {t('detail.translation.manage')}
@@ -153,6 +161,9 @@ async function RecipeDetailContent({ params, searchParams }: Props) {
           ) : null}
         </div>
       </div>
+      {showEdit ? (
+        <RecipeMediaUploadPanel familyId={familyId} recipeId={recipeId} assets={recipe.assets} />
+      ) : null}
       <RecipeDetailView
         recipe={recipe}
         familyId={familyId}

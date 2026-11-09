@@ -2,7 +2,10 @@
 
 import { cloneElement, isValidElement, type ReactElement } from 'react';
 
-import type { RecipeEditorStepDraft } from '@/lib/recipe-editor';
+import type { RecipeEditorMediaContext, RecipeEditorStepDraft } from '@/lib/recipe-editor';
+import { RECIPE_ASSETS_PER_RECIPE_MAX } from '@family-cookbook/contracts';
+
+import { RecipeStepPhotoUpload } from './recipe-step-photo-upload';
 import { emptyStepRow } from '@/lib/recipe-editor';
 
 import { Button } from '@/components/ui/button';
@@ -28,9 +31,19 @@ type Props = Readonly<{
   labels: StepEditorLabels;
   disabled?: boolean;
   fieldErrors?: Record<string, string> | undefined;
+  mediaContext?: RecipeEditorMediaContext | undefined;
 }>;
 
-export function StepListEditor({ steps, onChange, labels, disabled, fieldErrors }: Props) {
+export function StepListEditor({
+  steps,
+  onChange,
+  labels,
+  disabled,
+  fieldErrors,
+  mediaContext,
+}: Props) {
+  const atAssetLimit =
+    mediaContext !== undefined && mediaContext.assetCount >= RECIPE_ASSETS_PER_RECIPE_MAX;
   function updateRow(index: number, patch: Partial<RecipeEditorStepDraft>) {
     onChange(steps.map((row, i) => (i === index ? { ...row, ...patch } : row)));
   }
@@ -132,6 +145,21 @@ export function StepListEditor({ steps, onChange, labels, disabled, fieldErrors 
                 autoComplete="off"
               />
             </EditorField>
+            {mediaContext ? (
+              <RecipeStepPhotoUpload
+                familyId={mediaContext.familyId}
+                recipeId={mediaContext.recipeId}
+                stepIndex={index}
+                mediaAssetId={row.mediaAssetId}
+                atAssetLimit={atAssetLimit}
+                disabled={disabled === true}
+                onLinked={(assetId) => {
+                  updateRow(index, { mediaAssetId: assetId });
+                  mediaContext.onAssetUploaded(assetId);
+                }}
+                onClear={() => updateRow(index, { mediaAssetId: null })}
+              />
+            ) : null}
           </li>
         ))}
       </ol>

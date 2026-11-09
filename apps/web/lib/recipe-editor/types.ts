@@ -17,6 +17,14 @@ export type RecipeEditorStepDraft = Readonly<{
   clientKey: string;
   instruction: string;
   durationMinutes: string;
+  mediaAssetId?: string | null;
+}>;
+
+export type RecipeEditorMediaContext = Readonly<{
+  familyId: string;
+  recipeId: string;
+  assetCount: number;
+  onAssetUploaded: (assetId: string) => void;
 }>;
 
 export type RecipeEditorTagDraft = Readonly<{

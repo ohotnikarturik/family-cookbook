@@ -213,6 +213,57 @@ describe('updateRecipe', () => {
 
     expect(result).toEqual({ status: 'version_conflict', currentVersion: 3 });
   });
+
+  it('maps an invalid step photo link to a validation error', async () => {
+    vi.mocked(loadVerifiedAuthUser).mockResolvedValue({
+      status: 'ok',
+      userId: '11111111-1111-4111-8111-111111111102',
+      email: 'editor@test.test',
+    });
+    vi.mocked(getFamilyWorkspaceForMember).mockResolvedValue({
+      ok: true,
+      workspace: {
+        id: FAMILY_A,
+        name: 'A',
+        defaultLanguage: 'en',
+        role: 'editor',
+        memberCount: 3,
+      },
+    });
+    vi.mocked(getRecipeHeader).mockResolvedValue({
+      ok: true,
+      header: {
+        id: RECIPE_A,
+        familyId: FAMILY_A,
+        createdBy: OWNER_B,
+        sourceLanguage: 'en',
+        version: 2,
+        status: 'active',
+      },
+    });
+    vi.mocked(updateRecipeAggregate).mockResolvedValue({
+      ok: false,
+      error: 'invalid_payload',
+    });
+
+    const result = await updateRecipe(mockClient, {
+      familyId: FAMILY_A,
+      recipeId: RECIPE_A,
+      expectedVersion: 2,
+      recipe: {
+        title: 'Photo',
+        sourceLanguage: 'en',
+        ingredients: [],
+        steps: [],
+        tags: [],
+        translations: [],
+        ingredientTranslations: [],
+        stepTranslations: [],
+      },
+    });
+
+    expect(result).toEqual({ status: 'validation_error' });
+  });
 });
 
 describe('getRecipe', () => {

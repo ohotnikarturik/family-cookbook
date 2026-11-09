@@ -27,7 +27,10 @@ function isBlankIngredient(row: RecipeEditorDraft['ingredients'][number]): boole
 }
 
 function isBlankStep(row: RecipeEditorDraft['steps'][number]): boolean {
-  return row.instruction.trim().length === 0 && row.durationMinutes.trim().length === 0;
+  const hasPhoto = typeof row.mediaAssetId === 'string' && row.mediaAssetId.length > 0;
+  return (
+    !hasPhoto && row.instruction.trim().length === 0 && row.durationMinutes.trim().length === 0
+  );
 }
 
 function mapIngredients(draft: RecipeEditorDraft): {
@@ -100,6 +103,7 @@ function mapSteps(draft: RecipeEditorDraft): {
       position: rows.length + 1,
       instruction: row.instruction.trim(),
       durationMinutes: duration ?? undefined,
+      ...(row.mediaAssetId ? { mediaAssetId: row.mediaAssetId } : {}),
     });
     indexes.push(index);
   }

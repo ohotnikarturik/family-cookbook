@@ -70,6 +70,9 @@ export async function updateRecipe(
     if (updated.error === 'forbidden') {
       return { status: 'forbidden' };
     }
+    if (updated.error === 'invalid_payload') {
+      return { status: 'validation_error' };
+    }
     return { status: 'mutation_failed' };
   }
 

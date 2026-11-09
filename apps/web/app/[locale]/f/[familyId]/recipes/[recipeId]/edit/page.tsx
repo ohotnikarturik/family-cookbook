@@ -121,6 +121,7 @@ async function EditRecipeContent({ params }: Props) {
         initialDraft={draftFromRecipeDetail(recipe)}
         canManageRecipeTags={canManageRecipeTags(workspace.workspace.role)}
         cancelHref={`/f/${familyId}/recipes/${recipeId}`}
+        recipeAssets={recipe.assets}
       />
     </section>
   );

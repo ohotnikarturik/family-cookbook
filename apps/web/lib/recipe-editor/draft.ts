@@ -127,6 +127,7 @@ export function draftFromRecipeDetail(recipe: RecipeDetail): RecipeEditorDraft {
             clientKey: newClientKey(),
             instruction: item.instruction,
             durationMinutes: formatOptionalNumber(item.durationMinutes ?? null),
+            ...(item.mediaAssetId ? { mediaAssetId: item.mediaAssetId } : {}),
           }))
         : [emptyStepRow()],
     tags: recipe.tags.map((tag) => ({
@@ -232,11 +233,15 @@ function coerceSteps(value: unknown): RecipeEditorStepDraft[] {
         return null;
       }
       const row = item as Record<string, unknown>;
-      return {
+      const step: RecipeEditorStepDraft = {
         clientKey: typeof row.clientKey === 'string' ? row.clientKey : newClientKey(),
         instruction: typeof row.instruction === 'string' ? row.instruction : '',
         durationMinutes: typeof row.durationMinutes === 'string' ? row.durationMinutes : '',
       };
+      if (typeof row.mediaAssetId === 'string' && row.mediaAssetId.length > 0) {
+        return { ...step, mediaAssetId: row.mediaAssetId };
+      }
+      return step;
     })
     .filter((item): item is RecipeEditorStepDraft => item !== null);
   return rows.length > 0 ? rows : [emptyStepRow()];

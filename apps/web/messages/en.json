@@ -509,6 +509,74 @@
         "versionConflict": "Someone else saved a newer version. Reload the editor before saving again.",
         "reloadEdit": "Reload editor"
       }
+    },
+    "lifecycle": {
+      "archive": "Archive recipe",
+      "archiving": "Archiving…",
+      "archiveSubmit": "Archive",
+      "archiveDialogTitle": "Archive this recipe?",
+      "archiveDialogDescription": "Archived recipes stay in the family history but are hidden from normal browsing until restored.",
+      "archiveConfirmLabel": "I understand this recipe will be hidden from the default list.",
+      "cancel": "Cancel",
+      "restore": "Restore recipe",
+      "restoring": "Restoring…",
+      "errors": {
+        "validation": "Could not complete this action. Refresh the page and try again.",
+        "confirmRequired": "Confirm before archiving.",
+        "forbidden": "You do not have permission to change this recipe’s status.",
+        "versionConflict": "Someone else updated this recipe. Reload the page and try again.",
+        "reloadHint": "Refresh this page to load the latest version.",
+        "reload": "Reload this page",
+        "notFound": "This recipe could not be found.",
+        "failed": "Could not update the recipe status. Try again."
+      }
+    },
+    "mediaUpload": {
+      "heading": "Add photos or sources",
+      "count": "{count} of {max} files attached",
+      "limitsHint": "JPEG, PNG, or WebP up to 15 MB; PDF up to 25 MB. Up to 10 files per recipe.",
+      "limitReached": "This recipe already has the maximum number of files.",
+      "createDeferred": "Save the recipe first, then you can add photos and scanned sources.",
+      "kindLabel": "File type",
+      "fileLabel": "Choose file",
+      "upload": "Upload file",
+      "uploading": "Uploading…",
+      "success": "File uploaded.",
+      "kinds": {
+        "recipe_photo": "Recipe photo",
+        "original_document": "Original document (PDF)",
+        "original_photo": "Scanned page (photo)"
+      },
+      "kindHints": {
+        "recipe_photo": "A finished dish or plating photo.",
+        "original_document": "A PDF scan or export of the original source.",
+        "original_photo": "A photo of a handwritten or printed page."
+      },
+      "errors": {
+        "unsupported_type": "This file type is not supported. Use JPEG, PNG, WebP, or PDF.",
+        "too_large": "This file is too large for the allowed limit.",
+        "empty_file": "The file is empty.",
+        "file_required": "Choose a file before uploading.",
+        "auth_required": "Sign in to upload files.",
+        "forbidden": "You cannot upload files for this recipe.",
+        "not_found": "Recipe not found.",
+        "limit_reached": "This recipe already has the maximum number of files.",
+        "rejected": "The file could not be verified. Try another file.",
+        "slot_failed": "Could not start the upload. Try again.",
+        "finalize_failed": "Could not finish the upload. Try again.",
+        "network": "Upload failed. Check your connection and try again."
+      },
+      "step": {
+        "legend": "Step photo",
+        "hint": "Optional image shown on this step when you save the recipe.",
+        "fileLabel": "Choose step photo",
+        "previewAlt": "Photo for step {step}",
+        "remove": "Remove step photo",
+        "removeHint": "This unlinks the photo from the step. The file stays on the recipe and still counts toward the limit.",
+        "saveReminder": "Save the recipe to keep this step photo linked.",
+        "uploading": "Uploading step photo…",
+        "limitReached": "This recipe already has the maximum number of files."
+      }
     }
   }
 }

@@ -177,7 +177,7 @@
 1. **Read path:** `getRecipe` / `RecipeDetail` includes `assets[]` metadata only (`processing_status = available` in the mapper). Step rows expose optional `mediaAssetId` for inline step photos.
 2. **Download URL:** `GET /api/families/{familyId}/recipes/{recipeId}/assets/{assetId}/download-url` → `createRecipeAssetDownloadUrl`. TTL [`RECIPE_DOWNLOAD_SIGNED_URL_TTL_SECONDS`](../packages/contracts/src/recipe-asset.ts) (600s, same as upload). URLs are not logged or stored server-side.
 3. **Disposition:** Images use signed URLs without a forced download filename (inline display). PDFs pass [`safeRecipeAssetDownloadFilename`](../packages/domain/src/safe-download-filename.ts) into Supabase `createSignedUrl` as `attachment`. No in-page PDF preview. The download name is ASCII (`A–Z`, `a–z`, digits, space, `.`, `_`, `-`) with an extension that matches the detected type. storage-js runs the `download` query through `URLSearchParams` and then `encodeURI`, so other characters come back as literal `%XX` text. A name that is only those characters falls back to `recipe-source.pdf` or `recipe-photo.jpg`. The original filename stays on the page as text.
-4. **UI:** Recipe detail [`RecipeMediaGallery`](../apps/web/components/recipe/recipe-media-gallery.tsx) fetches URLs client-side and refreshes them before the 600s TTL. It uses native `<img>` (not `next/image`) only when the response is an inline image. PDF links are used only when the response is an attachment. The download route sends `Cache-Control: private, no-store`. A `step_photo` that is an available image renders on its step and is left out of the gallery; other available assets stay in the gallery. Object paths and checksums are not passed into the client components. Upload editor UI remains deferred.
+4. **UI:** Recipe detail [`RecipeMediaGallery`](../apps/web/components/recipe/recipe-media-gallery.tsx) fetches URLs client-side and refreshes them before the 600s TTL. It uses native `<img>` (not `next/image`) only when the response is an inline image. PDF links are used only when the response is an attachment. The download route sends `Cache-Control: private, no-store`. A `step_photo` that is an available image renders on its step and is left out of the gallery; other available assets stay in the gallery. Object paths and checksums are not passed into the client components. Upload UI shipped later in **W35.1**.
 5. **Derivatives / EXIF:** deferred; originals stay in the private bucket.
 6. **Manual UI playbook:** [`docs/fixtures/UI_TEST_T3_2.md`](fixtures/UI_TEST_T3_2.md).
 
@@ -189,3 +189,31 @@
 4. **UI:** [`RecipeLanguageSelector`](../apps/web/components/recipe/recipe-language-selector.tsx), translation list + per-language editor under `…/translations/`.
 5. **Seed:** Family A buns include reviewed `en` and unreviewed `uk` sample rows in [`seed-recipes.sql`](../supabase/seed-recipes.sql).
 6. **Manual UI playbook:** [`docs/fixtures/UI_TEST_T3_3.md`](fixtures/UI_TEST_T3_3.md).
+
+## EPIC 3.5 — Web MVP product decisions (2026-11-09)
+
+Approved for implementation without re-confirmation:
+
+1. **Membership:** Suspend/reactivate instead of permanent removal; preserve content and audit; never suspend the sole active owner; **owner transfer** in web MVP (transactional, one active owner, former owner → admin).
+2. **Member privacy:** Family members see display names and roles only; no cross-member auth email exposure; narrow family-scoped display-name read; neutral translated fallback when name missing.
+3. **Search:** Contributor filter via member picker (no UUIDs); translation-language search deferred and documented.
+4. **Global preferences (W35.8–W35.9):** Theme and UI locale controls on auth screens, signed-in shell, and account settings; cookie persistence before login; `profiles` sync after login; locale change keeps route; theme without flash.
+5. **MCP:** EPIC 4 out of scope until web MVP (W35.12) is complete.
+
+## W35.1 — Recipe media upload UI (2026-11-09)
+
+1. **Surfaces:** Upload panel on recipe **detail** and **edit** for people who can edit, including archived recipes. Create flow shows deferred copy until the recipe exists.
+2. **Client flow:** [`uploadRecipeAssetFile`](../apps/web/lib/recipe-asset-upload.ts) — slot POST → signed PUT → finalize POST; same APIs as T3.1.
+3. **Step photos:** Per-step upload in the editor (`step_photo` kind); `mediaAssetId` is part of the editor draft and persists on recipe save.
+4. **i18n:** `recipes.mediaUpload` in all four UI catalogs.
+5. **Step link persistence:** [`20251109120000_recipe_step_media_asset.sql`](../supabase/migrations/20251109120000_recipe_step_media_asset.sql) updates `private.recipe_insert_children` so `mediaAssetId` is stored on `recipe_steps.media_asset_id`. The id must be an available `step_photo` image on that same recipe. Anything else raises SQLSTATE `22023`, which the update use case maps to a validation error, and the version does not change. Leaving the field off the next save clears the link. The revision snapshot already stores the step row, so the id is included.
+6. **Failed signed PUT:** the browser calls finalize after a failed upload so the pending row is rejected and does not keep one of the 10 slots. The displayed name is the file’s base name with control characters removed; a name the schema would reject is omitted.
+7. **Shared limit:** the editor counts assets already on the recipe together with ids uploaded in the current session, including step photos, so the limit is enforced before the route refresh returns.
+8. **Unlink:** Removing a step photo clears `mediaAssetId` on the next save. The file stays on the recipe and still counts toward the limit.
+
+## W35.2 — Archive and restore UI (2026-11-09)
+
+1. **Where:** recipe detail, for the same people who can edit that recipe. The list keeps the archived badge and the include-archived filter. Archive is not a list-row action, so the confirmation stays on the recipe page.
+2. **Archive** sends `confirm: true` and `expectedVersion`. **Restore** sends `expectedVersion` only. Both call the existing use cases.
+3. **Conflict:** the message stays inside the archive dialog (or beside restore). The reload control is a full page load, because a client navigation does not refetch `expectedVersion`.
+4. A missing recipe is its own message. It is not shown as a generic save failure.

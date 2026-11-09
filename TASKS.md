@@ -167,6 +167,105 @@ Work in order. A task is complete only when its acceptance criteria and relevant
 
 **Acceptance:** supported filters work with representative fixtures; result set never leaks across families; max page size enforced.
 
+## EPIC 3.5 — Web MVP completion (before MCP)
+
+Complete the family-facing web application per approved product decisions (member suspension, owner transfer, contributor search picker, global theme/locale). **MCP (EPIC 4) is out of scope** until W35.12 passes.
+
+### W35.1 — Recipe media upload UI
+- Recipe edit and detail surfaces for authorized editors: upload recipe photos, original scans (PDF), and step photos; client flow uses existing slot → signed PUT → finalize APIs.
+- Show limits (10 assets/recipe, MIME/size allowlist), progress/status, and errors in all four UI locales.
+- Step photo upload sets `mediaAssetId` on the step draft; saving the recipe persists the link.
+- Create-recipe flow explains that media is added after the first save.
+
+**Tests:** Vitest for client upload helpers, filename cleanup, and step-link mapping; pgTAP that a save stores `media_asset_id` and rejects another recipe’s asset; manual/API parity with `docs/fixtures/API_TEST_T3_1.md`; forbidden role cannot upload.
+
+**Status:** Done (2026-11-09).
+
+### W35.2 — Archive and restore UI
+- Archive/restore actions on recipe detail (and list where appropriate) with `confirm: true` / version checks per existing use cases.
+- Archived badge and list filter behavior unchanged; restore returns recipe to active browsing.
+
+**Tests:** Vitest form mapping for confirm and version; pgTAP role rules unchanged; Playwright journey (W35.10).
+
+**Status:** Done (2026-11-09).
+
+### W35.3 — Search filters and integration tests
+- Family member picker for **contributor** filter (no UUID entry); wire to existing search API.
+- Document translation-language search as deferred.
+
+**Tests:** Application/data-access integration tests with local Supabase; UI filter e2e in W35.10.
+
+### W35.4 — Family member listing
+- Family-scoped member list with display name (or neutral fallback) and role; never expose auth emails to other members.
+
+**Tests:** RLS/pgTAP for member visibility; Vitest for display-name resolver.
+
+### W35.5 — Role management, suspension and reactivation
+- Owner/Admin change roles within matrix; suspend/reactivate members; block suspending the sole active owner.
+- Preserve history and authorship.
+
+**Tests:** Transactional DB functions + pgTAP for suspension access loss and reactivation; concurrent role-change cases.
+
+### W35.6 — Owner transfer
+- Owner-only transfer UI; atomic transfer (exactly one active owner; former owner → admin).
+
+**Tests:** pgTAP owner invariants; negative cases (non-owner, suspended target).
+
+### W35.7 — Family settings
+- Edit family name, default recipe language, and related settings per spec; owner/admin gates.
+
+**Tests:** Vitest + pgTAP for family update policies.
+
+### W35.8 — Account settings and profile preference persistence
+- Profile display name, `preferred_language`, `theme_preference`; sync cookies ↔ profile after auth.
+
+**Tests:** Vitest; persistence across session refresh.
+
+### W35.9 — Signed-in language/theme controls
+- Accessible theme (system/light/dark) and language (en/fi/ru/uk) on auth screens, app shell, and account settings; no route loss on locale change; no theme flash.
+
+**Tests:** Component/integration tests; four locales and both themes on critical routes.
+
+### W35.10 — Playwright critical journeys
+- Auth, family switch, recipe CRUD, upload, archive/restore, members, invitations, settings, search, mobile viewport; fix Chromium install in CI.
+
+**Tests:** Playwright suite green in GHA.
+
+### W35.11 — pgTAP in GitHub Actions
+- Run `pnpm supabase:test` (or equivalent) in CI with local Supabase/Docker.
+
+**Tests:** Workflow job passes on clean branch.
+
+### W35.12 — Complete web MVP and reconcile backlog
+- Mark EPIC 3.5 tasks done only when acceptance criteria verified; update `PROJECT_SPEC` §19 alignment; defer MCP.
+
+**Tests:** Full CI (lint, typecheck, unit, build, pgTAP, Playwright smoke).
+
+### W35.13 — Rate limiting and secure headers
+- Rate limits for login, invitation, upload, search; secure headers, CORS, log redaction per T5.1 scope.
+
+**Tests:** Automated security cases from spec §17.3 where applicable.
+
+### W35.14 — Production invitation email
+- Production-safe email adapter (no local SMTP assumptions).
+
+**Tests:** Staging send with test inbox; no secrets in logs.
+
+### W35.15 — Deployment and environment documentation
+- Staging/production Supabase, secrets, web deploy, env examples.
+
+**Tests:** Staging smoke documented and repeatable.
+
+### W35.16 — Backup and restoration verification
+- Backup schedule and documented restore drill.
+
+**Tests:** Recorded restore verification.
+
+### W35.17 — Accessibility release review
+- axe + manual keyboard/screen-reader pass on critical flows; WCAG 2.2 AA exceptions documented.
+
+**Tests:** Automated axe in CI; checklist in release notes.
+
 ## EPIC 4 — MCP service and OAuth
 
 ### T4.1 MCP service bootstrap
