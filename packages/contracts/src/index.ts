@@ -95,6 +95,12 @@ export {
   type TranslationReviewStatus,
 } from './recipe-translation.js';
 export {
+  upsertRecipeTranslationInputSchema,
+  upsertRecipeTranslationPayloadSchema,
+  type UpsertRecipeTranslationInput,
+  type UpsertRecipeTranslationPayload,
+} from './recipe-translation-upsert.js';
+export {
   recipeCoreFieldsSchema,
   recipeIdSchema,
   recipeStatusSchema,

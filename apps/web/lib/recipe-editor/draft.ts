@@ -84,8 +84,17 @@ export function preservedTranslationsFromDetail(
       description: item.description ?? null,
       notes: item.notes ?? null,
     })),
-    ingredientTranslations: [],
-    stepTranslations: [],
+    ingredientTranslations: recipe.ingredientTranslations.map((item) => ({
+      ingredientPosition: item.ingredientPosition,
+      languageTag: item.languageTag,
+      name: item.name,
+      notes: item.notes ?? null,
+    })),
+    stepTranslations: recipe.stepTranslations.map((item) => ({
+      stepPosition: item.stepPosition,
+      languageTag: item.languageTag,
+      instruction: item.instruction,
+    })),
   };
 }
 

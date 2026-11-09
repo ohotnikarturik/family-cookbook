@@ -234,4 +234,87 @@ begin
       v_family_b,
       'dddddddd-dddd-4ddd-8ddd-dddddddd0201'::uuid
     );
+
+  insert into public.recipe_translations (
+    recipe_id,
+    family_id,
+    language_tag,
+    title,
+    description,
+    notes,
+    created_by,
+    review_status,
+    reviewed_by,
+    reviewed_at
+  )
+  values
+    (
+      'eeeeeeee-eeee-4eee-8eee-eeeeeeee0101'::uuid,
+      v_family_a,
+      'en',
+      'Grandma''s cardamom buns',
+      'Soft pulla-style buns with cardamom and pearl sugar (English).',
+      null,
+      v_owner_a,
+      'reviewed',
+      v_owner_a,
+      now()
+    ),
+    (
+      'eeeeeeee-eeee-4eee-8eee-eeeeeeee0101'::uuid,
+      v_family_a,
+      'uk',
+      'Булочки бабусі з кардамоном',
+      'М''які булочки з кардамоном.',
+      null,
+      v_owner_a,
+      'unreviewed',
+      null,
+      null
+    );
+
+  insert into public.recipe_ingredient_translations (ingredient_id, family_id, language_tag, name, notes)
+  values
+    (
+      'cccccccc-cccc-4ccc-8ccc-cccccccc0101'::uuid,
+      v_family_a,
+      'en',
+      'All-purpose flour',
+      null
+    ),
+    (
+      'cccccccc-cccc-4ccc-8ccc-cccccccc0102'::uuid,
+      v_family_a,
+      'en',
+      'Cardamom',
+      null
+    ),
+    (
+      'cccccccc-cccc-4ccc-8ccc-cccccccc0101'::uuid,
+      v_family_a,
+      'uk',
+      'Пшеничне борошно',
+      null
+    );
+
+  insert into public.recipe_step_translations (step_id, family_id, language_tag, instruction)
+  values
+    (
+      'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbb0101'::uuid,
+      v_family_a,
+      'en',
+      'Warm the milk and dissolve the yeast.'
+    ),
+    (
+      'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbb0102'::uuid,
+      v_family_a,
+      'en',
+      'Knead until smooth, rise until doubled, shape buns.'
+    ),
+    (
+      'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbb0101'::uuid,
+      v_family_a,
+      'uk',
+      'Підігрійте молоко та розчиніть дріжджі.'
+    );
 end $$;

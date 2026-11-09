@@ -6,6 +6,7 @@ const recipeHeaderRowSchema = z.object({
   id: z.uuid(),
   family_id: z.uuid(),
   created_by: z.uuid(),
+  source_language: z.string(),
   version: z.number().int().min(1),
   status: z.enum(['active', 'archived']),
 });
@@ -14,6 +15,7 @@ export type RecipeHeader = {
   id: string;
   familyId: string;
   createdBy: string;
+  sourceLanguage: string;
   version: number;
   status: 'active' | 'archived';
 };
@@ -28,7 +30,7 @@ export async function getRecipeHeader(
 > {
   const { data, error } = await client
     .from('recipes')
-    .select('id, family_id, created_by, version, status')
+    .select('id, family_id, created_by, source_language, version, status')
     .eq('family_id', familyId)
     .eq('id', recipeId)
     .maybeSingle();
@@ -51,6 +53,7 @@ export async function getRecipeHeader(
       id: parsed.data.id,
       familyId: parsed.data.family_id,
       createdBy: parsed.data.created_by,
+      sourceLanguage: parsed.data.source_language,
       version: parsed.data.version,
       status: parsed.data.status,
     },

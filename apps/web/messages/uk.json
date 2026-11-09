@@ -326,6 +326,48 @@
         "documentFallback": "Документ рецепта",
         "pdfDescription": "PDF відкривається як завантаження, а не на сторінці.",
         "stepPhotoAlt": "Фото кроку"
+      },
+      "translation": {
+        "selectorLabel": "Мова перегляду",
+        "originalOption": "Оригінал ({language})",
+        "unreviewedBadge": "Не перевірено",
+        "partialFallback": "Для цього рядка показано оригінал.",
+        "manage": "Переклади"
+      }
+    },
+    "translationEditor": {
+      "indexTitle": "Переклади рецепта",
+      "indexSubtitle": "Додайте або змініть переклади для <recipeTitle>{title}</recipeTitle>. Оригінал не змінюється.",
+      "empty": "Перекладів ще немає.",
+      "addHeading": "Додати мову",
+      "addLanguage": "Додати {language}",
+      "editLanguage": "Редагувати {language}",
+      "backToRecipe": "До рецепта",
+      "backToList": "До списку перекладів",
+      "pageTitle": "Переклад · {language}",
+      "pageSubtitle": "Оригінал: <recipeTitle>{title}</recipeTitle>",
+      "originalLabel": "Оригінал",
+      "save": "Зберегти переклад",
+      "saved": "Переклад збережено.",
+      "saving": "Збереження…",
+      "markReviewed": "Позначити перевіреним",
+      "reviewHelp": "Лише редактори й вище можуть позначати переклад перевіреним.",
+      "fields": {
+        "title": "Перекладена назва",
+        "description": "Перекладений опис",
+        "notes": "Перекладені нотатки",
+        "ingredients": "Інгредієнти",
+        "steps": "Кроки",
+        "ingredient": "Інгредієнт {position}",
+        "ingredientNotes": "Примітка до інгредієнта {position}",
+        "step": "Крок {position}"
+      },
+      "errors": {
+        "validation": "Перевірте поля й спробуйте знову.",
+        "forbidden": "Ви не можете редагувати переклади цього рецепта.",
+        "versionConflict": "Хтось уже зберіг рецепт. Оновіть сторінку.",
+        "saveFailed": "Не вдалося зберегти переклад.",
+        "auth": "Увійдіть, щоб зберігати переклади."
       }
     },
     "history": {
@@ -365,6 +407,7 @@
       "events": {
         "recipe_created": "Рецепт створено",
         "recipe_updated": "Рецепт оновлено",
+        "recipe_translation_updated": "Переклад збережено",
         "recipe_archived": "Рецепт в архіві",
         "recipe_restored": "Рецепт відновлено"
       }
@@ -423,7 +466,7 @@
         "tagsEditor": "Нові мітки додаються до спільного списку сім’ї.",
         "tagsContributor": "Можна вказати існуючі мітки за назвою. Нові мітки можуть створювати редактори.",
         "stepDuration": "Необов’язковий час кроку в хвилинах.",
-        "translationsPreserved": "Наявні переклади зберігаються під час збереження. Редагування перекладів — у наступному випуску."
+        "translationsPreserved": "Переклади редагуються окремо. Скористайтеся «Переклади» на сторінці рецепта."
       },
       "tags": {
         "add": "Додати мітку",

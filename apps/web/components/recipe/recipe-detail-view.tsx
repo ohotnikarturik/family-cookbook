@@ -1,4 +1,6 @@
 import type { RecipeAssetSummary, RecipeDetail } from '@family-cookbook/contracts';
+import type { ResolvedRecipeDisplay } from '@family-cookbook/domain';
+import type { ReactNode } from 'react';
 
 import { RecipeMediaGallery, type RecipeMediaCard } from '@/components/recipe/recipe-media-gallery';
 import { RecipeStepPhoto } from '@/components/recipe/recipe-step-photo';
@@ -24,6 +26,7 @@ type Labels = Readonly<{
   notesHeading: string;
   archived: string;
   stepLabel: (position: number) => string;
+  partialFallback: string;
 }>;
 
 type MediaLabels = Readonly<{
@@ -42,7 +45,8 @@ type MediaLabels = Readonly<{
 type Props = Readonly<{
   recipe: RecipeDetail;
   familyId: string;
-  titleLang?: string;
+  display: ResolvedRecipeDisplay;
+  languageSelector?: ReactNode;
   facts: Fact[];
   ingredients: IngredientLine[];
   labels: Labels;
@@ -52,13 +56,14 @@ type Props = Readonly<{
 export function RecipeDetailView({
   recipe,
   familyId,
-  titleLang,
+  display,
+  languageSelector,
   facts,
   ingredients,
   labels,
   mediaLabels,
 }: Props) {
-  const bodyLang = titleLang;
+  const bodyLang = display.contentLang;
   const inlineStepAssetIds = new Set(
     recipe.steps.flatMap((step) => {
       if (!step.mediaAssetId) {
@@ -74,24 +79,29 @@ export function RecipeDetailView({
   const galleryAssets = recipe.assets
     .filter((asset) => !inlineStepAssetIds.has(asset.id))
     .map(toMediaCard);
+  const amountByPosition = new Map(ingredients.map((item) => [item.position, item.amount]));
 
   return (
     <article className="space-y-8">
       <header className="space-y-3 border-b border-border pb-6">
         <ArchivedBadge recipe={recipe} archivedLabel={labels.archived} />
+        {languageSelector}
         <h2
           className="font-serif-display text-3xl font-semibold tracking-tight text-foreground"
-          lang={titleLang}
+          lang={bodyLang}
         >
-          {recipe.title}
+          {display.title}
         </h2>
-        {recipe.description ? (
+        {display.description ? (
           <section aria-labelledby="recipe-description-heading">
             <h3 id="recipe-description-heading" className="sr-only">
               {labels.descriptionHeading}
             </h3>
-            <p className="text-base leading-relaxed text-foreground" lang={bodyLang}>
-              {recipe.description}
+            <p
+              className="text-base leading-relaxed text-foreground"
+              lang={display.descriptionFallback ? recipe.sourceLanguage : bodyLang}
+            >
+              {display.description}
             </p>
           </section>
         ) : null}
@@ -123,59 +133,77 @@ export function RecipeDetailView({
             {labels.ingredientsHeading}
           </h3>
           <ul className="list-none space-y-2 p-0">
-            {ingredients.map((ingredient) => (
-              <li
-                key={ingredient.position}
-                className="rounded-lg border border-border bg-card px-4 py-3 text-foreground"
-                lang={bodyLang}
-              >
-                <p>
-                  <span className="font-medium">{ingredient.name}</span>
-                  {ingredient.amount ? (
-                    <span className="text-muted-foreground"> {ingredient.amount}</span>
+            {display.ingredients.map((ingredient) => {
+              const amount = amountByPosition.get(ingredient.position);
+              const lineLang = ingredient.usedFallback ? recipe.sourceLanguage : bodyLang;
+              return (
+                <li
+                  key={ingredient.position}
+                  className="rounded-lg border border-border bg-card px-4 py-3 text-foreground"
+                >
+                  {ingredient.usedFallback ? (
+                    <p className="mb-1 text-xs text-muted-foreground">{labels.partialFallback}</p>
                   ) : null}
-                </p>
-                {ingredient.notes ? (
-                  <p className="mt-1 text-sm text-muted-foreground">{ingredient.notes}</p>
-                ) : null}
-              </li>
-            ))}
+                  <p lang={lineLang}>
+                    <span className="font-medium">{ingredient.name}</span>
+                    {amount ? <span className="text-muted-foreground"> {amount}</span> : null}
+                  </p>
+                  {ingredient.notes ? (
+                    <p
+                      className="mt-1 text-sm text-muted-foreground"
+                      lang={ingredient.notesFallback ? recipe.sourceLanguage : lineLang}
+                    >
+                      {ingredient.notes}
+                    </p>
+                  ) : null}
+                </li>
+              );
+            })}
           </ul>
         </section>
       ) : null}
 
-      {recipe.steps.length > 0 ? (
+      {display.steps.length > 0 ? (
         <section aria-labelledby="recipe-steps-heading">
           <h3 id="recipe-steps-heading" className="mb-3 text-lg font-semibold text-foreground">
             {labels.stepsHeading}
           </h3>
           <ol className="list-none space-y-4 p-0">
-            {recipe.steps.map((step) => (
-              <li key={step.position} className="flex gap-3">
-                <span
-                  className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/12 text-sm font-semibold text-primary"
-                  aria-hidden
-                >
-                  {step.position}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="pt-1 leading-relaxed text-foreground" lang={bodyLang}>
-                    <span className="sr-only">{labels.stepLabel(step.position)}. </span>
-                    {step.instruction}
-                  </p>
-                  {step.mediaAssetId && inlineStepAssetIds.has(step.mediaAssetId) ? (
-                    <RecipeStepPhoto
-                      familyId={familyId}
-                      recipeId={recipe.id}
-                      assetId={step.mediaAssetId}
-                      alt={mediaLabels.stepPhotoAlt}
-                      loadErrorLabel={mediaLabels.loadError}
-                      loadingLabel={mediaLabels.loading}
-                    />
-                  ) : null}
-                </div>
-              </li>
-            ))}
+            {display.steps.map((step) => {
+              const sourceStep = recipe.steps.find((item) => item.position === step.position);
+              return (
+                <li key={step.position} className="flex gap-3">
+                  <span
+                    className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/12 text-sm font-semibold text-primary"
+                    aria-hidden
+                  >
+                    {step.position}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    {step.usedFallback ? (
+                      <p className="text-xs text-muted-foreground">{labels.partialFallback}</p>
+                    ) : null}
+                    <p
+                      className="pt-1 leading-relaxed text-foreground"
+                      lang={step.usedFallback ? recipe.sourceLanguage : bodyLang}
+                    >
+                      <span className="sr-only">{labels.stepLabel(step.position)}. </span>
+                      {step.instruction}
+                    </p>
+                    {sourceStep?.mediaAssetId && inlineStepAssetIds.has(sourceStep.mediaAssetId) ? (
+                      <RecipeStepPhoto
+                        familyId={familyId}
+                        recipeId={recipe.id}
+                        assetId={sourceStep.mediaAssetId}
+                        alt={mediaLabels.stepPhotoAlt}
+                        loadErrorLabel={mediaLabels.loadError}
+                        loadingLabel={mediaLabels.loading}
+                      />
+                    ) : null}
+                  </div>
+                </li>
+              );
+            })}
           </ol>
         </section>
       ) : null}
@@ -198,13 +226,16 @@ export function RecipeDetailView({
         </section>
       ) : null}
 
-      {recipe.notes ? (
+      {display.notes ? (
         <section aria-labelledby="recipe-notes-heading">
           <h3 id="recipe-notes-heading" className="mb-2 text-lg font-semibold text-foreground">
             {labels.notesHeading}
           </h3>
-          <p className="leading-relaxed text-foreground" lang={bodyLang}>
-            {recipe.notes}
+          <p
+            className="leading-relaxed text-foreground"
+            lang={display.notesFallback ? recipe.sourceLanguage : bodyLang}
+          >
+            {display.notes}
           </p>
         </section>
       ) : null}

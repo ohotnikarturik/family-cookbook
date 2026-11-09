@@ -42,6 +42,9 @@ describe('mapRecipeDetailRow', () => {
       recipe_assets: [],
     });
 
+    expect(mapped?.ingredientTranslations).toEqual([]);
+    expect(mapped?.stepTranslations).toEqual([]);
+
     expect(mapped?.servings).toBe(4.5);
     expect(mapped?.ingredients[0]?.quantity).toBe(1.25);
   });

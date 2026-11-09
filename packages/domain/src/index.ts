@@ -31,3 +31,10 @@ export {
   type ValidateUploadedBytesResult,
 } from './file-signature.js';
 export { safeRecipeAssetDownloadFilename } from './safe-download-filename.js';
+export {
+  resolveRecipeDisplay,
+  type RecipeDisplayIngredient,
+  type RecipeDisplayStep,
+  type RecipeForDisplay,
+  type ResolvedRecipeDisplay,
+} from './resolve-recipe-display.js';

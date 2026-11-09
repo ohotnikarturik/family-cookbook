@@ -38,13 +38,22 @@ export async function getRecipeById(
         quantity,
         quantity_text,
         unit,
-        notes
+        notes,
+        recipe_ingredient_translations!recipe_ingredient_translations_ingredient_id_fkey (
+          language_tag,
+          name,
+          notes
+        )
       ),
       recipe_steps (
         position,
         instruction,
         duration_minutes,
-        media_asset_id
+        media_asset_id,
+        recipe_step_translations!recipe_step_translations_step_id_fkey (
+          language_tag,
+          instruction
+        )
       ),
       recipe_assets (
         id,

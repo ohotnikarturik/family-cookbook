@@ -180,3 +180,12 @@
 4. **UI:** Recipe detail [`RecipeMediaGallery`](../apps/web/components/recipe/recipe-media-gallery.tsx) fetches URLs client-side and refreshes them before the 600s TTL. It uses native `<img>` (not `next/image`) only when the response is an inline image. PDF links are used only when the response is an attachment. The download route sends `Cache-Control: private, no-store`. A `step_photo` that is an available image renders on its step and is left out of the gallery; other available assets stay in the gallery. Object paths and checksums are not passed into the client components. Upload editor UI remains deferred.
 5. **Derivatives / EXIF:** deferred; originals stay in the private bucket.
 6. **Manual UI playbook:** [`docs/fixtures/UI_TEST_T3_2.md`](fixtures/UI_TEST_T3_2.md).
+
+## T3.3 — Manual translations (2026-11-09)
+
+1. **Writes:** [`public.upsert_recipe_translations`](supabase/migrations/20251109100000_upsert_recipe_translations.sql) updates translation tables only, bumps `recipes.version`, and writes revision/audit — it does **not** change `recipes.title`, ingredients, or steps.
+2. **Reads:** `RecipeDetail` includes `ingredientTranslations` and `stepTranslations`. Display overlay uses [`resolveRecipeDisplay`](../packages/domain/src/resolve-recipe-display.ts); detail URL uses `?viewLang=`.
+3. **Review:** Contributors may save translations as `unreviewed` only; owner/admin/editor may set `reviewed` via RPC `reviewStatus` in payload. Language tags are stored lowercase. `EN` updates the `en` row, and a tag that matches the source language in any case is rejected. [`20251109110000_translation_language_case.sql`](../supabase/migrations/20251109110000_translation_language_case.sql).
+4. **UI:** [`RecipeLanguageSelector`](../apps/web/components/recipe/recipe-language-selector.tsx), translation list + per-language editor under `…/translations/`.
+5. **Seed:** Family A buns include reviewed `en` and unreviewed `uk` sample rows in [`seed-recipes.sql`](../supabase/seed-recipes.sql).
+6. **Manual UI playbook:** [`docs/fixtures/UI_TEST_T3_3.md`](fixtures/UI_TEST_T3_3.md).

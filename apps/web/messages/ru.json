@@ -326,6 +326,48 @@
         "documentFallback": "Документ рецепта",
         "pdfDescription": "PDF открывается как загрузка, а не на странице.",
         "stepPhotoAlt": "Фото шага"
+      },
+      "translation": {
+        "selectorLabel": "Язык просмотра",
+        "originalOption": "Оригинал ({language})",
+        "unreviewedBadge": "Не проверен",
+        "partialFallback": "Для этой строки показан оригинал.",
+        "manage": "Переводы"
+      }
+    },
+    "translationEditor": {
+      "indexTitle": "Переводы рецепта",
+      "indexSubtitle": "Добавьте или измените переводы для <recipeTitle>{title}</recipeTitle>. Оригинальный текст не меняется.",
+      "empty": "Переводов пока нет.",
+      "addHeading": "Добавить язык",
+      "addLanguage": "Добавить {language}",
+      "editLanguage": "Редактировать {language}",
+      "backToRecipe": "К рецепту",
+      "backToList": "К списку переводов",
+      "pageTitle": "Перевод · {language}",
+      "pageSubtitle": "Оригинал: <recipeTitle>{title}</recipeTitle>",
+      "originalLabel": "Оригинал",
+      "save": "Сохранить перевод",
+      "saved": "Перевод сохранён.",
+      "saving": "Сохранение…",
+      "markReviewed": "Отметить как проверенный",
+      "reviewHelp": "Только редакторы и выше могут отмечать перевод проверенным.",
+      "fields": {
+        "title": "Переведённое название",
+        "description": "Переведённое описание",
+        "notes": "Переведённые заметки",
+        "ingredients": "Ингредиенты",
+        "steps": "Шаги",
+        "ingredient": "Ингредиент {position}",
+        "ingredientNotes": "Примечание к ингредиенту {position}",
+        "step": "Шаг {position}"
+      },
+      "errors": {
+        "validation": "Проверьте поля и попробуйте снова.",
+        "forbidden": "Нельзя редактировать переводы этого рецепта.",
+        "versionConflict": "Кто-то уже сохранил рецепт. Обновите страницу.",
+        "saveFailed": "Не удалось сохранить перевод.",
+        "auth": "Войдите, чтобы сохранять переводы."
       }
     },
     "history": {
@@ -365,6 +407,7 @@
       "events": {
         "recipe_created": "Рецепт создан",
         "recipe_updated": "Рецепт обновлён",
+        "recipe_translation_updated": "Перевод сохранён",
         "recipe_archived": "Рецепт в архиве",
         "recipe_restored": "Рецепт восстановлен"
       }
@@ -423,7 +466,7 @@
         "tagsEditor": "Новые метки добавляются в общий список семьи.",
         "tagsContributor": "Можно указать существующие метки по имени. Новые метки могут создавать редакторы.",
         "stepDuration": "Необязательное время шага в минутах.",
-        "translationsPreserved": "Существующие переводы сохраняются при сохранении. Редактирование переводов — в следующей версии."
+        "translationsPreserved": "Переводы редактируются отдельно. Используйте «Переводы» на странице рецепта."
       },
       "tags": {
         "add": "Добавить метку",

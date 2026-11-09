@@ -215,6 +215,9 @@ importers:
       '@family-cookbook/data-access':
         specifier: workspace:*
         version: link:../../packages/data-access
+      '@family-cookbook/domain':
+        specifier: workspace:*
+        version: link:../../packages/domain
       '@family-cookbook/permissions':
         specifier: workspace:*
         version: link:../../packages/permissions

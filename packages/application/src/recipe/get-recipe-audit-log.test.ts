@@ -82,6 +82,7 @@ describe('getRecipeAuditLog', () => {
         id: RECIPE_A,
         familyId: FAMILY_A,
         createdBy: CONTRIBUTOR_A,
+        sourceLanguage: 'en',
         version: 1,
         status: 'active',
       },

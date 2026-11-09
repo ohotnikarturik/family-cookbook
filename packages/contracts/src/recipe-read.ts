@@ -5,7 +5,11 @@ import { recipeIdSchema, recipeStatusSchema } from './recipe-core.js';
 import { recipeIngredientInputSchema } from './recipe-ingredient.js';
 import { recipeStepInputSchema } from './recipe-step.js';
 import { familyTagSummarySchema } from './recipe-tag.js';
-import { recipeTranslationInputSchema } from './recipe-translation.js';
+import {
+  recipeIngredientTranslationInputSchema,
+  recipeStepTranslationInputSchema,
+  recipeTranslationInputSchema,
+} from './recipe-translation.js';
 import { SEARCH_RECIPES_LIMIT_MAX } from './recipe-limits.js';
 import { recipeAssetSummarySchema } from './recipe-asset.js';
 
@@ -48,6 +52,8 @@ export const recipeDetailSchema = recipeSummarySchema.extend({
     }),
   ),
   assets: z.array(recipeAssetSummarySchema),
+  ingredientTranslations: z.array(recipeIngredientTranslationInputSchema),
+  stepTranslations: z.array(recipeStepTranslationInputSchema),
 });
 
 export type RecipeDetail = z.infer<typeof recipeDetailSchema>;

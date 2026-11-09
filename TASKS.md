@@ -159,6 +159,8 @@ Work in order. A task is complete only when its acceptance criteria and relevant
 
 **Acceptance:** original recipe never changes when translation is added; translations can be reviewed/edited independently.
 
+**Status:** Done (2026-11-09).
+
 ### T3.4 Search improvements
 - Implement indexed title/description and ingredient search, categories, tags, language, contributor filters.
 - Add stable pagination and query bounds.

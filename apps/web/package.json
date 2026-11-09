@@ -14,6 +14,7 @@
   "dependencies": {
     "@family-cookbook/application": "workspace:*",
     "@family-cookbook/contracts": "workspace:*",
+    "@family-cookbook/domain": "workspace:*",
     "@family-cookbook/data-access": "workspace:*",
     "@family-cookbook/permissions": "workspace:*",
     "@radix-ui/react-dialog": "1.1.15",

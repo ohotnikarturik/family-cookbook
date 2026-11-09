@@ -111,6 +111,8 @@ describe('draftFromRecipeDetail', () => {
       ],
       translations: [],
       assets: [],
+      ingredientTranslations: [],
+      stepTranslations: [],
     };
     const draft = draftFromRecipeDetail(detail);
     expect(draft.tags[0]?.tagId).toBe('22222222-2222-4222-8222-222222222201');

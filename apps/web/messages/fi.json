@@ -326,6 +326,48 @@
         "documentFallback": "Reseptin asiakirja",
         "pdfDescription": "PDF avataan latauksena, ei sivulla.",
         "stepPhotoAlt": "Vaihekuva"
+      },
+      "translation": {
+        "selectorLabel": "Luettava kieli",
+        "originalOption": "Alkuperäinen ({language})",
+        "unreviewedBadge": "Tarkistamaton",
+        "partialFallback": "Alkuperäisteksti tälle riville.",
+        "manage": "Käännökset"
+      }
+    },
+    "translationEditor": {
+      "indexTitle": "Reseptin käännökset",
+      "indexSubtitle": "Lisää tai muokkaa käännöksiä: <recipeTitle>{title}</recipeTitle>. Alkuperäinen resepti ei muutu.",
+      "empty": "Ei käännöksiä vielä.",
+      "addHeading": "Lisää kieli",
+      "addLanguage": "Lisää {language}",
+      "editLanguage": "Muokkaa {language}",
+      "backToRecipe": "Takaisin reseptiin",
+      "backToList": "Takaisin käännöslistaan",
+      "pageTitle": "Käännös · {language}",
+      "pageSubtitle": "Alkuperäinen resepti: <recipeTitle>{title}</recipeTitle>",
+      "originalLabel": "Alkuperäinen",
+      "save": "Tallenna käännös",
+      "saved": "Käännös tallennettu.",
+      "saving": "Tallennetaan…",
+      "markReviewed": "Merkitse tarkistetuksi",
+      "reviewHelp": "Vain editorit ja ylläpitäjät voivat merkitä käännöksen tarkistetuksi.",
+      "fields": {
+        "title": "Käännetty otsikko",
+        "description": "Käännetty kuvaus",
+        "notes": "Käännetty huomautus",
+        "ingredients": "Ainekset",
+        "steps": "Vaiheet",
+        "ingredient": "Aines {position}",
+        "ingredientNotes": "Aineksen {position} huomautus",
+        "step": "Vaihe {position}"
+      },
+      "errors": {
+        "validation": "Tarkista kentät ja yritä uudelleen.",
+        "forbidden": "Et voi muokata tämän reseptin käännöksiä.",
+        "versionConflict": "Joku muu tallensi reseptin. Päivitä ja yritä uudelleen.",
+        "saveFailed": "Käännöstä ei voitu tallentaa.",
+        "auth": "Kirjaudu sisään tallentaaksesi käännöksiä."
       }
     },
     "history": {
@@ -365,6 +407,7 @@
       "events": {
         "recipe_created": "Resepti luotu",
         "recipe_updated": "Resepti päivitetty",
+        "recipe_translation_updated": "Käännös tallennettu",
         "recipe_archived": "Resepti arkistoitu",
         "recipe_restored": "Resepti palautettu"
       }
@@ -423,7 +466,7 @@
         "tagsEditor": "Uudet tunnistenimet lisätään perheen yhteiseen listaan.",
         "tagsContributor": "Voit liittää olemassa olevia tunnisteita nimellä. Uusien luonti vaatii muokkaajan roolin.",
         "stepDuration": "Valinnainen aika tälle vaiheelle minuutteina.",
-        "translationsPreserved": "Olemassa olevat käännökset säilyvät tallennuksessa. Käännösten muokkaus tulee myöhemmin."
+        "translationsPreserved": "Reseptin käännöksiä muokataan erikseen. Käytä Käännökset-linkkiä reseptisivulla."
       },
       "tags": {
         "add": "Lisää tunniste",

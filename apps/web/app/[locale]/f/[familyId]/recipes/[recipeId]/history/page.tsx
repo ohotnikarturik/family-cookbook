@@ -181,6 +181,8 @@ async function RecipeHistoryContent({ params, searchParams }: Props) {
         return t('audit.events.recipe_created');
       case 'recipe.updated':
         return t('audit.events.recipe_updated');
+      case 'recipe.translation_updated':
+        return t('audit.events.recipe_translation_updated');
       case 'recipe.archived':
         return t('audit.events.recipe_archived');
       case 'recipe.restored':

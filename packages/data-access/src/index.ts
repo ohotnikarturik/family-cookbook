@@ -55,3 +55,4 @@ export { listRecipeRevisions } from './recipe/list-recipe-revisions.js';
 export { searchRecipes } from './recipe/search-recipes.js';
 export { setRecipeStatus } from './recipe/set-recipe-status.js';
 export { updateRecipeAggregate } from './recipe/update-recipe-aggregate.js';
+export { upsertRecipeTranslationsRpc } from './recipe/upsert-recipe-translations.js';

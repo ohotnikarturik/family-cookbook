@@ -2,6 +2,12 @@ import { recipeDetailSchema, type RecipeDetail } from '@family-cookbook/contract
 
 import { mapRecipeAssetRow, type RecipeAssetRow } from '../recipe-asset/map-recipe-asset-row.js';
 
+type IngredientTranslationRow = {
+  language_tag: string;
+  name: string;
+  notes: string | null;
+};
+
 type IngredientRow = {
   position: number;
   name: string;
@@ -9,6 +15,12 @@ type IngredientRow = {
   quantity_text: string | null;
   unit: string | null;
   notes: string | null;
+  recipe_ingredient_translations?: IngredientTranslationRow[] | null;
+};
+
+type StepTranslationRow = {
+  language_tag: string;
+  instruction: string;
 };
 
 type StepRow = {
@@ -16,6 +28,7 @@ type StepRow = {
   instruction: string;
   duration_minutes: number | null;
   media_asset_id?: string | null;
+  recipe_step_translations?: StepTranslationRow[] | null;
 };
 
 type FamilyTagRow = {
@@ -157,6 +170,21 @@ export function mapRecipeDetailRow(row: RecipeRow): RecipeDetail | null {
       notes: item.notes,
       reviewStatus: item.review_status,
     })),
+    ingredientTranslations: (row.recipe_ingredients ?? []).flatMap((ingredient) =>
+      (ingredient.recipe_ingredient_translations ?? []).map((item) => ({
+        ingredientPosition: ingredient.position,
+        languageTag: item.language_tag,
+        name: item.name,
+        notes: item.notes,
+      })),
+    ),
+    stepTranslations: (row.recipe_steps ?? []).flatMap((step) =>
+      (step.recipe_step_translations ?? []).map((item) => ({
+        stepPosition: step.position,
+        languageTag: item.language_tag,
+        instruction: item.instruction,
+      })),
+    ),
   };
 
   const parsed = recipeDetailSchema.safeParse(candidate);

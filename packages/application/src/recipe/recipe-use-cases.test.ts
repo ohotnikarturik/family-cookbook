@@ -136,6 +136,7 @@ describe('updateRecipe', () => {
         id: RECIPE_A,
         familyId: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
         createdBy: OWNER_B,
+        sourceLanguage: 'en',
         version: 1,
         status: 'active',
       },
@@ -183,6 +184,7 @@ describe('updateRecipe', () => {
         id: RECIPE_A,
         familyId: FAMILY_A,
         createdBy: OWNER_B,
+        sourceLanguage: 'en',
         version: 3,
         status: 'active',
       },
@@ -279,6 +281,8 @@ describe('getRecipe', () => {
         tags: [],
         translations: [],
         assets: [],
+        ingredientTranslations: [],
+        stepTranslations: [],
       },
     });
 

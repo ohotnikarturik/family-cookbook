@@ -326,6 +326,48 @@
         "documentFallback": "Recipe document",
         "pdfDescription": "PDF opens as a download, not in the page.",
         "stepPhotoAlt": "Step photo"
+      },
+      "translation": {
+        "selectorLabel": "Reading language",
+        "originalOption": "Original ({language})",
+        "unreviewedBadge": "Unreviewed",
+        "partialFallback": "Showing original text for this line.",
+        "manage": "Translations"
+      }
+    },
+    "translationEditor": {
+      "indexTitle": "Recipe translations",
+      "indexSubtitle": "Add or edit translations for <recipeTitle>{title}</recipeTitle>. The original recipe text stays unchanged.",
+      "empty": "No translations yet.",
+      "addHeading": "Add a language",
+      "addLanguage": "Add {language}",
+      "editLanguage": "Edit {language}",
+      "backToRecipe": "Back to recipe",
+      "backToList": "Back to translation list",
+      "pageTitle": "Translation · {language}",
+      "pageSubtitle": "Original recipe: <recipeTitle>{title}</recipeTitle>",
+      "originalLabel": "Original",
+      "save": "Save translation",
+      "saved": "Translation saved.",
+      "saving": "Saving…",
+      "markReviewed": "Mark as reviewed",
+      "reviewHelp": "Only editors and above can mark a translation reviewed.",
+      "fields": {
+        "title": "Translated title",
+        "description": "Translated description",
+        "notes": "Translated notes",
+        "ingredients": "Ingredients",
+        "steps": "Steps",
+        "ingredient": "Ingredient {position}",
+        "ingredientNotes": "Ingredient {position} notes",
+        "step": "Step {position}"
+      },
+      "errors": {
+        "validation": "Check the translation fields and try again.",
+        "forbidden": "You cannot edit translations for this recipe.",
+        "versionConflict": "Someone else saved this recipe. Reload and try again.",
+        "saveFailed": "Could not save the translation.",
+        "auth": "Sign in to save translations."
       }
     },
     "history": {
@@ -365,6 +407,7 @@
       "events": {
         "recipe_created": "Recipe created",
         "recipe_updated": "Recipe updated",
+        "recipe_translation_updated": "Translation saved",
         "recipe_archived": "Recipe archived",
         "recipe_restored": "Recipe restored"
       }
@@ -423,7 +466,7 @@
         "tagsEditor": "New tag names are added to this family’s shared tag list.",
         "tagsContributor": "You can attach existing family tags by name. Creating new tags requires an editor role.",
         "stepDuration": "Optional time for this step, in minutes.",
-        "translationsPreserved": "Existing translations for this recipe are kept when you save. Translation editing comes in a later release."
+        "translationsPreserved": "Recipe translations are edited separately from this form. Use Translations on the recipe page."
       },
       "tags": {
         "add": "Add tag",

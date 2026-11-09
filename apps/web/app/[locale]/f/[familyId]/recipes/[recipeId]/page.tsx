@@ -1,4 +1,6 @@
 import { getRecipe, resolveAccessibleFamily } from '@family-cookbook/application';
+import { recipeLanguageTagSchema } from '@family-cookbook/contracts';
+import { resolveRecipeDisplay, type RecipeForDisplay } from '@family-cookbook/domain';
 import { getSessionUser } from '@family-cookbook/data-access';
 import { createServerSupabaseClient } from '@family-cookbook/data-access/supabase/server';
 import { canEditRecipe, canViewRecipeHistory } from '@family-cookbook/permissions';
@@ -8,25 +10,26 @@ import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
 import { RecipeBrowseStates } from '@/components/recipe/recipe-browse-states';
+import { RecipeLanguageSelector } from '@/components/recipe/recipe-language-selector';
 import { Button } from '@/components/ui/button';
 import { RecipeDetailView } from '@/components/recipe/recipe-detail-view';
 import { UnavailablePage } from '@/components/product/unavailable-page';
 import { RecipeLoading } from '@/components/recipe/recipe-loading';
 import { Link } from '@/i18n/navigation';
-import { formatIngredientAmount, recipeContentLang } from '@/lib/format-recipe-meta';
+import { formatIngredientAmount } from '@/lib/format-recipe-meta';
 import { locales, type AppLocale } from '@/i18n/routing';
 
 type Props = Readonly<{
   params: Promise<{ locale: string; familyId: string; recipeId: string }>;
+  searchParams: Promise<{ viewLang?: string }>;
 }>;
 
-// Session-backed reads cannot be instant. Without this, dev logs that the segment was dropped.
 export const instant = false;
 
 export default function RecipeDetailPage(props: Props) {
   return (
     <Suspense fallback={<DetailFallback />}>
-      <RecipeDetailContent params={props.params} />
+      <RecipeDetailContent params={props.params} searchParams={props.searchParams} />
     </Suspense>
   );
 }
@@ -35,9 +38,10 @@ function DetailFallback() {
   return <RecipeLoading />;
 }
 
-async function RecipeDetailContent({ params }: Props) {
+async function RecipeDetailContent({ params, searchParams }: Props) {
   await connection();
   const { locale: localeParam, familyId, recipeId } = await params;
+  const query = await searchParams;
   if (!(locales as readonly string[]).includes(localeParam)) {
     notFound();
   }
@@ -81,6 +85,13 @@ async function RecipeDetailContent({ params }: Props) {
   }
 
   const { recipe } = result;
+  const viewLangParsed = query.viewLang ? recipeLanguageTagSchema.safeParse(query.viewLang) : null;
+  const viewLanguage = canonicalViewLanguage(
+    recipe,
+    viewLangParsed?.success ? viewLangParsed.data : undefined,
+  );
+  const display = resolveRecipeDisplay(recipe as RecipeForDisplay, viewLanguage);
+
   const showEdit =
     sessionUser !== null &&
     workspace.status === 'ok' &&
@@ -89,7 +100,6 @@ async function RecipeDetailContent({ params }: Props) {
     sessionUser !== null &&
     workspace.status === 'ok' &&
     canViewRecipeHistory(workspace.workspace.role, sessionUser.id, recipe.createdBy);
-  const contentLang = recipeContentLang(recipe, locale);
   const format = await getFormatter({ locale });
   const facts: { label: string; value: string; valueLang?: string }[] = [
     {
@@ -99,11 +109,11 @@ async function RecipeDetailContent({ params }: Props) {
     },
   ];
   if (recipe.category) {
-    facts.push(
-      contentLang
-        ? { label: t('detail.category'), value: recipe.category, valueLang: contentLang }
-        : { label: t('detail.category'), value: recipe.category },
-    );
+    facts.push({
+      label: t('detail.category'),
+      value: recipe.category,
+      valueLang: recipe.sourceLanguage,
+    });
   }
   if (recipe.servings !== null) {
     facts.push({ label: t('detail.servings'), value: format.number(recipe.servings) });
@@ -128,15 +138,40 @@ async function RecipeDetailContent({ params }: Props) {
             </Button>
           ) : null}
           {showEdit ? (
-            <Button type="button" variant="outline" className="min-h-11 w-full sm:w-auto" asChild>
-              <Link href={`/f/${familyId}/recipes/${recipeId}/edit`}>{t('editor.editRecipe')}</Link>
-            </Button>
+            <>
+              <Button type="button" variant="outline" className="min-h-11 w-full sm:w-auto" asChild>
+                <Link href={`/f/${familyId}/recipes/${recipeId}/translations`}>
+                  {t('detail.translation.manage')}
+                </Link>
+              </Button>
+              <Button type="button" variant="outline" className="min-h-11 w-full sm:w-auto" asChild>
+                <Link href={`/f/${familyId}/recipes/${recipeId}/edit`}>
+                  {t('editor.editRecipe')}
+                </Link>
+              </Button>
+            </>
           ) : null}
         </div>
       </div>
       <RecipeDetailView
         recipe={recipe}
         familyId={familyId}
+        display={display}
+        languageSelector={
+          <Suspense fallback={null}>
+            <RecipeLanguageSelector
+              recipe={recipe}
+              viewLanguage={viewLanguage}
+              labels={{
+                label: t('detail.translation.selectorLabel'),
+                originalOptionLabel: t('detail.translation.originalOption', {
+                  language: recipe.sourceLanguage,
+                }),
+                unreviewedBadge: t('detail.translation.unreviewedBadge'),
+              }}
+            />
+          </Suspense>
+        }
         facts={facts}
         ingredients={recipe.ingredients.map((ingredient) => ({
           position: ingredient.position,
@@ -148,7 +183,6 @@ async function RecipeDetailContent({ params }: Props) {
           }),
           notes: ingredient.notes ?? null,
         }))}
-        {...(contentLang ? { titleLang: contentLang } : {})}
         labels={{
           descriptionHeading: t('detail.description'),
           ingredientsHeading: t('detail.ingredients'),
@@ -157,6 +191,7 @@ async function RecipeDetailContent({ params }: Props) {
           notesHeading: t('detail.notes'),
           archived: t('list.archivedBadge'),
           stepLabel: (position) => t('detail.step', { position }),
+          partialFallback: t('detail.translation.partialFallback'),
         }}
         mediaLabels={{
           sectionHeading: t('detail.media.heading'),
@@ -172,6 +207,23 @@ async function RecipeDetailContent({ params }: Props) {
         }}
       />
     </section>
+  );
+}
+
+function canonicalViewLanguage(
+  recipe: { sourceLanguage: string; translations: ReadonlyArray<{ languageTag: string }> },
+  requested: string | undefined,
+): string {
+  if (!requested) {
+    return recipe.sourceLanguage;
+  }
+  const normalized = requested.trim().toLowerCase();
+  if (recipe.sourceLanguage.trim().toLowerCase() === normalized) {
+    return recipe.sourceLanguage;
+  }
+  return (
+    recipe.translations.find((item) => item.languageTag.trim().toLowerCase() === normalized)
+      ?.languageTag ?? recipe.sourceLanguage
   );
 }
 
