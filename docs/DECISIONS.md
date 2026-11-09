@@ -239,6 +239,12 @@ Approved for implementation without re-confirmation:
 3. **CI fix:** Playwright job `runs-on: ubuntu-24.04` — Playwright 1.56.1 does not ship Chromium for Ubuntu 26.04 (`ubuntu-latest` on GHA).
 4. **Next:** W35.14–W35.17 and EPIC 4 (MCP) for §19.3 staging release.
 
+## W35.14 — Production invitation email (2026-11-10)
+
+1. **Config:** [`parseInvitationSmtpConfigFromEnv`](../packages/application/src/invitations/invitation-smtp-config.ts) reads `INVITATION_SMTP_*`. When `NODE_ENV=production`, loopback hosts and `@family-cookbook.test` senders are rejected; SMTP user + password are required; TLS certificate verification stays enabled for remote hosts ([`invitation-smtp-host.ts`](../packages/application/src/invitations/invitation-smtp-host.ts)).
+2. **Transport:** Nodemailer via [`mailpit-smtp-sender.ts`](../packages/application/src/invitations/mailpit-smtp-sender.ts) — local Mailpit keeps `rejectUnauthorized: false` only on loopback; 15s connection/greeting timeouts; optional AUTH for providers; send failures return `smtp_send_failed` without logging message bodies or credentials.
+3. **Staging gate:** manual checklist [`docs/fixtures/STAGING_INVITATION_EMAIL.md`](fixtures/STAGING_INVITATION_EMAIL.md).
+
 ## W35.13 — Rate limits, headers, CORS, log redaction (2026-11-10)
 
 1. **Package:** [`packages/security`](../packages/security) — in-memory sliding-window rate limits (MVP; edge/redis provider deferred per spec), `redactLogText` / `redactLogFields`, CSP + baseline secure headers, strict credentialed CORS helpers.

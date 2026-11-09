@@ -69,6 +69,11 @@ export {
   type ListFamilyInvitationsResult,
 } from './invitations/list-family-invitations.js';
 export { resolveInvitationEmailSender } from './invitations/resolve-email-sender.js';
+export {
+  parseInvitationSmtpConfigFromEnv,
+  type InvitationSmtpConfig,
+  type InvitationSmtpConfigErrorCode,
+} from './invitations/invitation-smtp-config.js';
 export { revokeInvitation, type RevokeInvitationResult } from './invitations/revoke-invitation.js';
 export {
   createRecipeUploadSlot,

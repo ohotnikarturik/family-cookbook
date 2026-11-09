@@ -103,7 +103,7 @@ After `pnpm supabase:reset`, migration **`20251108100000_recipe_assets_and_stora
 
 ## Invitations (T1.5)
 
-**SMTP (invite emails):** Local stack exposes Mailpit SMTP on **`127.0.0.1:54325`** (`smtp_port` in [`supabase/config.toml`](../supabase/config.toml)). After enabling or changing SMTP, restart the stack (`pnpm supabase:stop` → `pnpm supabase:start`). Run **`pnpm supabase:sync-env`** so [`apps/web/.env.local`](../apps/web/.env.local) gets `INVITATION_SMTP_*` defaults.
+**SMTP (invite emails):** Local stack exposes Mailpit SMTP on **`127.0.0.1:54325`** (`smtp_port` in [`supabase/config.toml`](../supabase/config.toml)). After enabling or changing SMTP, restart the stack (`pnpm supabase:stop` → `pnpm supabase:start`). Run **`pnpm supabase:sync-env`** so [`apps/web/.env.local`](../apps/web/.env.local) gets `INVITATION_SMTP_*` defaults (no user/password needed locally). Hosted/staging deploys must use a real SMTP relay with `INVITATION_SMTP_USER` / `INVITATION_SMTP_PASSWORD`; see [`fixtures/STAGING_INVITATION_EMAIL.md`](fixtures/STAGING_INVITATION_EMAIL.md).
 
 | Goal | Steps |
 | --- | --- |

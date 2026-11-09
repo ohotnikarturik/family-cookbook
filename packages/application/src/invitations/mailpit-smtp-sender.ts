@@ -1,46 +1,52 @@
 import nodemailer from 'nodemailer';
 
 import type { InvitationEmailPayload, InvitationEmailSender } from './email-sender.js';
+import type { InvitationSmtpAuth, InvitationSmtpConfig } from './invitation-smtp-config.js';
+import { isLocalInvitationSmtpHost } from './invitation-smtp-host.js';
 
-export type MailpitSmtpConfig = {
-  host: string;
-  port: number;
-  from: string;
-};
+export type MailpitSmtpConfig = InvitationSmtpConfig;
 
 export type InvitationSmtpTransportOptions = {
   host: string;
   port: number;
   secure: boolean;
+  connectionTimeout: number;
+  greetingTimeout: number;
+  auth?: InvitationSmtpAuth;
   tls?: { rejectUnauthorized: false };
 };
+
+const SMTP_TIMEOUT_MS = 15_000;
 
 export function invitationSmtpTransportOptions(
   host: string,
   port: number,
+  auth?: InvitationSmtpAuth,
 ): InvitationSmtpTransportOptions {
-  const normalized = host.trim().toLowerCase();
-  const local = normalized === 'localhost' || normalized === '127.0.0.1' || normalized === '::1';
-  if (!local) {
-    return {
-      host,
-      port,
-      secure: port === 465,
-    };
-  }
-  return {
+  const local = isLocalInvitationSmtpHost(host);
+  const base: InvitationSmtpTransportOptions = {
     host,
     port,
+    secure: port === 465,
+    connectionTimeout: SMTP_TIMEOUT_MS,
+    greetingTimeout: SMTP_TIMEOUT_MS,
+    ...(auth ? { auth } : {}),
+  };
+  if (!local) {
+    return base;
+  }
+  return {
+    ...base,
     secure: false,
     tls: { rejectUnauthorized: false },
   };
 }
 
 export function createMailpitInvitationEmailSender(
-  config: MailpitSmtpConfig,
+  config: InvitationSmtpConfig,
 ): InvitationEmailSender {
   const transport = nodemailer.createTransport(
-    invitationSmtpTransportOptions(config.host, config.port),
+    invitationSmtpTransportOptions(config.host, config.port, config.auth),
   );
 
   return {
@@ -55,6 +61,7 @@ export function createMailpitInvitationEmailSender(
         });
         return { ok: true };
       } catch {
+        // Do not log transport errors: they may include host credentials or message bodies.
         return { ok: false, error: 'smtp_send_failed' };
       }
     },

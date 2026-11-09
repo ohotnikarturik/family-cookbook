@@ -1,28 +1,20 @@
 import type { InvitationEmailSender } from './email-sender.js';
 import { createMailpitInvitationEmailSender } from './mailpit-smtp-sender.js';
+import { parseInvitationSmtpConfigFromEnv } from './invitation-smtp-config.js';
+
+function stubSender(error: string): InvitationEmailSender {
+  return {
+    async sendInvite() {
+      return { ok: false, error };
+    },
+  };
+}
 
 export function resolveInvitationEmailSender(): InvitationEmailSender {
-  const host = process.env['INVITATION_SMTP_HOST'];
-  const portRaw = process.env['INVITATION_SMTP_PORT'];
-  const from =
-    process.env['INVITATION_SMTP_FROM'] ?? 'Family Cookbook <invites@family-cookbook.test>';
-
-  if (!host || !portRaw) {
-    return {
-      async sendInvite() {
-        return { ok: false, error: 'smtp_not_configured' };
-      },
-    };
+  const parsed = parseInvitationSmtpConfigFromEnv();
+  if (!parsed.ok) {
+    return stubSender(parsed.code);
   }
 
-  const port = Number.parseInt(portRaw, 10);
-  if (!Number.isFinite(port) || port <= 0) {
-    return {
-      async sendInvite() {
-        return { ok: false, error: 'smtp_not_configured' };
-      },
-    };
-  }
-
-  return createMailpitInvitationEmailSender({ host, port, from });
+  return createMailpitInvitationEmailSender(parsed.config);
 }

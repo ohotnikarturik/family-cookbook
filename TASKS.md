@@ -277,6 +277,8 @@ Complete the family-facing web application per approved product decisions (membe
 
 **Tests:** Staging send with test inbox; no secrets in logs.
 
+**Status:** Done (2026-11-10).
+
 ### W35.15 — Deployment and environment documentation
 - Staging/production Supabase, secrets, web deploy, env examples.
 

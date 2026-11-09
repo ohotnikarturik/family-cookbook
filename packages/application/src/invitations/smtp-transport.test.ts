@@ -8,6 +8,8 @@ describe('invitationSmtpTransportOptions', () => {
       host: '127.0.0.1',
       port: 54325,
       secure: false,
+      connectionTimeout: 15_000,
+      greetingTimeout: 15_000,
       tls: { rejectUnauthorized: false },
     });
   });
@@ -17,7 +19,20 @@ describe('invitationSmtpTransportOptions', () => {
       host: 'smtp.example.com',
       port: 587,
       secure: false,
+      connectionTimeout: 15_000,
+      greetingTimeout: 15_000,
     });
     expect(invitationSmtpTransportOptions('smtp.example.com', 465).secure).toBe(true);
+  });
+
+  it('includes SMTP auth when provided', () => {
+    expect(
+      invitationSmtpTransportOptions('smtp.example.com', 587, {
+        user: 'apikey',
+        pass: 'secret',
+      }),
+    ).toMatchObject({
+      auth: { user: 'apikey', pass: 'secret' },
+    });
   });
 });
