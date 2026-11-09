@@ -8,6 +8,7 @@ import { Suspense } from 'react';
 
 import { signOutAction } from '@/app/actions/auth';
 import { AcceptInvitationForm } from '@/components/invitations/accept-invitation-form';
+import { UiPreferencesControls } from '@/components/preferences/ui-preferences-controls';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 import { locales, type AppLocale } from '@/i18n/routing';
@@ -50,6 +51,7 @@ async function AcceptContent({ params, searchParams }: Props) {
   if (!parsedToken.success) {
     return (
       <main className="mx-auto flex min-h-screen max-w-lg flex-col justify-center gap-6 px-6 py-16 font-sans">
+        <UiPreferencesControls />
         <div className="space-y-2">
           <h1 className="font-serif-display text-3xl font-semibold tracking-tight text-foreground">
             {t('title')}
@@ -76,6 +78,7 @@ async function AcceptContent({ params, searchParams }: Props) {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-lg flex-col justify-center gap-8 px-6 py-16 font-sans">
+      <UiPreferencesControls />
       <div className="space-y-2">
         <h1 className="font-serif-display text-3xl font-semibold tracking-tight text-foreground">
           {t('title')}

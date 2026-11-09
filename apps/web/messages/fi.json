@@ -8,6 +8,10 @@
       "uk": "Українська"
     }
   },
+  "uiPreferences": {
+    "legend": "Kieli ja ulkoasu",
+    "hint": "Kieli ja teema koskevat tätä laitetta. Sisäänkirjautuneena valinnat synkronoituvat myös tiliisi."
+  },
   "errors": {
     "authRequired": "Kirjaudu sisään jatkaaksesi."
   },

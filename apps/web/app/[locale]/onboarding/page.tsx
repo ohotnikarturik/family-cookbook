@@ -1,4 +1,5 @@
 import { CreateFamilyForm } from '@/components/family/create-family-form';
+import { UiPreferencesControls } from '@/components/preferences/ui-preferences-controls';
 import { Link } from '@/i18n/navigation';
 import { locales, type AppLocale } from '@/i18n/routing';
 import { listMyFamilies } from '@family-cookbook/application';
@@ -50,6 +51,7 @@ async function OnboardingContent({ params }: Props) {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-lg flex-col justify-center gap-8 px-6 py-16 font-sans">
+      <UiPreferencesControls />
       <div className="space-y-2">
         <h1 className="font-serif-display text-3xl font-semibold tracking-tight text-foreground">
           {t('title')}

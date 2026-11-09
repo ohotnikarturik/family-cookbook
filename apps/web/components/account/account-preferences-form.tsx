@@ -96,7 +96,11 @@ export function AccountPreferencesForm({ profile }: Props) {
                 disabled={pending}
                 className="size-5 shrink-0 accent-primary"
               />
-              {value === 'system' ? tTheme('system') : value === 'light' ? tTheme('light') : tTheme('dark')}
+              {value === 'system'
+                ? tTheme('system')
+                : value === 'light'
+                  ? tTheme('light')
+                  : tTheme('dark')}
             </Label>
           ))}
         </div>

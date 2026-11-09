@@ -11,7 +11,7 @@ import { resolveSignedInLandingPath } from '@/lib/post-auth-path';
 
 import { HomeAuthLinks } from '@/components/home/home-auth-links';
 import { SampleDisplayNameForm } from '@/components/home/sample-display-name-form';
-import { LanguageSwitcher } from '@/components/i18n/language-switcher';
+import { UiPreferencesControls } from '@/components/preferences/ui-preferences-controls';
 import { Link } from '@/i18n/navigation';
 import { type AppLocale, locales } from '@/i18n/routing';
 
@@ -66,7 +66,7 @@ async function HomeContent(props: Props) {
           {t('title')}
         </h1>
         <p className="text-muted-foreground">{t('subtitle')}</p>
-        <LanguageSwitcher />
+        <UiPreferencesControls />
         <Suspense fallback={null}>
           <HomeAuthLinks locale={locale} />
         </Suspense>

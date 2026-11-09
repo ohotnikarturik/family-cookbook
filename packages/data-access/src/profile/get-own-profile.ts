@@ -1,4 +1,8 @@
-import { ownProfileSchema, profilePreferredLanguageSchema, profileThemePreferenceSchema } from '@family-cookbook/contracts';
+import {
+  ownProfileSchema,
+  profilePreferredLanguageSchema,
+  profileThemePreferenceSchema,
+} from '@family-cookbook/contracts';
 import { z } from 'zod';
 
 import type { AppSupabaseClient } from '../supabase/server.js';

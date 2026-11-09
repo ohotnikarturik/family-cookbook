@@ -11,6 +11,7 @@ import { notFound, redirect } from 'next/navigation';
 import { Suspense, type ReactNode } from 'react';
 
 import { FamilySwitcher } from '@/components/family/family-switcher';
+import { UiPreferencesControls } from '@/components/preferences/ui-preferences-controls';
 import { UnavailablePage } from '@/components/product/unavailable-page';
 import { Link } from '@/i18n/navigation';
 import { locales, type AppLocale } from '@/i18n/routing';
@@ -115,6 +116,7 @@ async function FamilyLayoutShell({ children, params }: Props) {
             {t('shell.account')}
           </Link>
         </nav>
+        <UiPreferencesControls />
       </header>
       {children}
     </div>

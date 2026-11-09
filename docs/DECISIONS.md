@@ -225,6 +225,13 @@ Approved for implementation without re-confirmation:
 3. **Cookie sync:** On sign-in only (`ensureProfileForSession` in the auth callback and OTP Server Action — not in Server Components), existing profiles push DB values onto `fc-locale` and `fc-theme`. New profiles still seed from cookies. Account save and signed-in language/theme switchers update both DB and cookies.
 4. **Tests:** Vitest for schema bounds, application use cases, and cookie writer; no new pgTAP (own-row policies unchanged).
 
+## W35.9 — Signed-in language/theme controls (2026-11-09)
+
+1. **Component:** [`UiPreferencesControls`](../apps/web/components/preferences/ui-preferences-controls.tsx) composes `LanguageSwitcher` + `ThemeSwitcher` for auth screens, signed-in family shell, account hub, families/onboarding/invite flows, and the public home page. Account **preferences** form remains the detailed editor (no duplicate quick controls there).
+2. **Locale change:** `LanguageSwitcher` keeps the current pathname **and query string** when calling `next-intl` `router.replace` ([`localeSwitchTargetPath`](../apps/web/lib/locale-switch-path.ts)) so invitation tokens and other `searchParams` are not dropped.
+3. **Theme:** Existing inline `ThemeScript` + `ThemeProvider` handle flash-free appearance; switcher actions persist cookies and signed-in profile rows as in W35.8.
+4. **Tests:** Vitest for locale-switch path preservation and four-locale `uiPreferences` catalog completeness.
+
 ## W35.7 — Family settings (2026-11-09)
 
 1. **Fields:** `families.name` (1–120) and `default_language` (`en`/`fi`/`ru`/`uk`). `created_by` stays fixed via existing RLS `with check`.

@@ -240,6 +240,8 @@ Complete the family-facing web application per approved product decisions (membe
 
 **Tests:** Component/integration tests; four locales and both themes on critical routes.
 
+**Status:** Done (2026-11-09).
+
 ### W35.10 — Playwright critical journeys
 - Auth, family switch, recipe CRUD, upload, archive/restore, members, invitations, settings, search, mobile viewport; fix Chromium install in CI.
 

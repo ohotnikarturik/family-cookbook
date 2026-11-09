@@ -42,7 +42,9 @@ export async function updateAccountProfileAction(
   const parsed = updateProfileInputSchema.safeParse({
     displayName: typeof formData.get('displayName') === 'string' ? formData.get('displayName') : '',
     preferredLanguage:
-      typeof formData.get('preferredLanguage') === 'string' ? formData.get('preferredLanguage') : '',
+      typeof formData.get('preferredLanguage') === 'string'
+        ? formData.get('preferredLanguage')
+        : '',
     themePreference:
       typeof formData.get('themePreference') === 'string' ? formData.get('themePreference') : '',
   });

@@ -70,12 +70,15 @@ export function ThemeProvider({ children }: Readonly<{ children: ReactNode }>) {
     return () => mq.removeEventListener('change', onChange);
   }, [preference, applyDom, ready]);
 
-  const applyPreference = useCallback((value: ThemePreference) => {
-    userChose.current = true;
-    setPreferenceState(value);
-    setReady(true);
-    applyDom(value);
-  }, [applyDom]);
+  const applyPreference = useCallback(
+    (value: ThemePreference) => {
+      userChose.current = true;
+      setPreferenceState(value);
+      setReady(true);
+      applyDom(value);
+    },
+    [applyDom],
+  );
 
   const syncPreference = useCallback(
     (value: ThemePreference) => {

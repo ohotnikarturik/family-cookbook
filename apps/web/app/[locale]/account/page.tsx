@@ -1,4 +1,5 @@
 import { signOutAction } from '@/app/actions/auth';
+import { UiPreferencesControls } from '@/components/preferences/ui-preferences-controls';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 import { locales, type AppLocale } from '@/i18n/routing';
@@ -47,7 +48,10 @@ async function AccountContent({ params }: Props) {
   }
 
   const jar = await cookies();
-  const ensured = await ensureProfileForCurrentUser(supabase, profileBootstrapHintsFromCookies(jar));
+  const ensured = await ensureProfileForCurrentUser(
+    supabase,
+    profileBootstrapHintsFromCookies(jar),
+  );
   if (ensured.status === 'auth_required') {
     redirect(`/${locale}/auth/sign-in?next=/${locale}/account`);
   }
@@ -62,6 +66,7 @@ async function AccountContent({ params }: Props) {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-lg flex-col justify-center gap-8 px-6 py-16 font-sans">
+      <UiPreferencesControls />
       <div className="space-y-2">
         <h1 className="font-serif-display text-3xl font-semibold tracking-tight text-foreground">
           {t('title')}

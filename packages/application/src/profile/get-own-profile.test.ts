@@ -16,7 +16,10 @@ vi.mock('@family-cookbook/data-access', async (importOriginal) => {
   };
 });
 
-import { getOwnProfile as getOwnProfileRepo, updateOwnProfile as updateOwnProfileRepo } from '@family-cookbook/data-access';
+import {
+  getOwnProfile as getOwnProfileRepo,
+  updateOwnProfile as updateOwnProfileRepo,
+} from '@family-cookbook/data-access';
 import { loadVerifiedAuthUser } from './ensure-profile-for-user.js';
 
 describe('getOwnProfile use case', () => {
@@ -61,7 +64,11 @@ describe('updateOwnProfile use case', () => {
     });
     const client = {} as AppSupabaseClient;
     await expect(
-      updateOwnProfile(client, { displayName: '', preferredLanguage: 'en', themePreference: 'system' }),
+      updateOwnProfile(client, {
+        displayName: '',
+        preferredLanguage: 'en',
+        themePreference: 'system',
+      }),
     ).resolves.toEqual({ status: 'validation_error' });
   });
 

@@ -8,6 +8,10 @@
       "uk": "Ukrainian"
     }
   },
+  "uiPreferences": {
+    "legend": "Language and appearance",
+    "hint": "Language and theme apply on this device. When you are signed in, choices also sync to your account."
+  },
   "errors": {
     "authRequired": "Sign in to continue."
   },

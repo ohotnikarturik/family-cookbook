@@ -10,7 +10,7 @@ import { PrimaryNavSample } from '@/components/product/primary-nav-sample';
 import { RecipeCardSample } from '@/components/product/recipe-card-sample';
 import { SkipLink } from '@/components/product/skip-link';
 import { LoadingStrip, StatusRow } from '@/components/product/status-row';
-import { ThemeSwitcher } from '@/components/theme/ThemeSwitcher';
+import { UiPreferencesControls } from '@/components/preferences/ui-preferences-controls';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -77,7 +77,7 @@ async function DesignGallery({ params }: PageProps) {
 
       <main id="design-main" className="mx-auto max-w-3xl space-y-16 px-4 py-12 sm:px-6">
         <DesignSection slug="theme" title={t('sections.theme')} kicker={t('kickers.theme')}>
-          <ThemeSwitcher />
+          <UiPreferencesControls />
         </DesignSection>
 
         <DesignSection

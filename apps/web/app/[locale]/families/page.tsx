@@ -6,6 +6,7 @@ import { connection } from 'next/server';
 import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
+import { UiPreferencesControls } from '@/components/preferences/ui-preferences-controls';
 import { Link } from '@/i18n/navigation';
 import { locales, type AppLocale } from '@/i18n/routing';
 
@@ -55,6 +56,7 @@ async function FamiliesContent({ params }: Props) {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-lg flex-col gap-8 px-6 py-16 font-sans">
+      <UiPreferencesControls />
       <div className="space-y-2">
         <h1 className="font-serif-display text-3xl font-semibold tracking-tight text-foreground">
           {t('list.title')}

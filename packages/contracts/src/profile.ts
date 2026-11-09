@@ -7,11 +7,7 @@ import {
 
 export const PROFILE_DISPLAY_NAME_MAX = 80;
 
-export const profileDisplayNameSchema = z
-  .string()
-  .trim()
-  .min(1)
-  .max(PROFILE_DISPLAY_NAME_MAX);
+export const profileDisplayNameSchema = z.string().trim().min(1).max(PROFILE_DISPLAY_NAME_MAX);
 
 export const updateProfileInputSchema = z.object({
   displayName: profileDisplayNameSchema,
