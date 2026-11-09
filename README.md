@@ -44,12 +44,18 @@ GitHub Actions workflow **[CI](.github/workflows/ci.yml)** runs on every push to
 
 - **Quality:** `pnpm format:check`, `lint`, `typecheck`, `test`, `build`, then `verify:client-bundle` (heuristic scan of `apps/web/.next` static assets)
 - **Security:** Gitleaks (with [`.gitleaks.toml`](.gitleaks.toml)) and `pnpm audit --audit-level high`
+- **pgTAP / RLS:** Postgres-only Supabase start, `supabase:reset`, `supabase:test` (see [Local Supabase](docs/LOCAL_SUPABASE.md#pgtap))
+- **Playwright E2E:** Supabase core stack, reset, build, critical journeys (`ubuntu-24.04` runner)
+
+**Web MVP gate (EPIC 3.5):** complete per [`PROJECT_SPEC.md`](PROJECT_SPEC.md) §19.1 and [`TASKS.md`](TASKS.md) W35.12. MCP and staging release criteria are §19.2–§19.3.
 
 Local parity before pushing:
 
 ```bash
 pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm verify:client-bundle && pnpm audit --audit-level high
 ```
+
+With Docker: `pnpm supabase:db:start && pnpm supabase:reset && pnpm supabase:test`. E2E: start Supabase, `pnpm supabase:sync-env`, `pnpm build`, `pnpm test:e2e` (see [`docs/LOCAL_SUPABASE.md`](docs/LOCAL_SUPABASE.md)).
 
 ## Commands (repository root)
 

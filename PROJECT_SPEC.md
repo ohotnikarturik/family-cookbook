@@ -1,8 +1,9 @@
 # Family Cookbook — Product & Technical Implementation Specification
 
 **Status:** Approved direction for MVP implementation  
-**Version:** 1.1  
+**Version:** 1.2  
 **Prepared:** 5 November 2026  
+**Implementation (web gate):** EPIC 3.5 complete as of 10 November 2026 (`TASKS.md` W35.12). MCP (EPIC 4) and full staging release (§19.3) remain open.  
 **Product type:** Private, multi-tenant family recipe library with a mobile-first web app and remote MCP interface
 
 ---
@@ -882,22 +883,28 @@ Use separate test users and two families. Cover:
 
 ### 18.5 CI required checks
 
-A pull request cannot merge unless:
-- formatting/lint pass;
-- TypeScript strict typecheck passes;
-- unit tests pass;
-- database migrations apply from a clean local database;
-- pgTAP/RLS tests pass;
-- MCP contract/integration tests pass for touched MCP features;
-- Playwright critical flows pass;
-- production build succeeds;
-- dependency and secret scans pass or have documented reviewed exceptions.
+A pull request cannot merge unless the **CI** workflow (`.github/workflows/ci.yml`) passes:
+
+- **Quality:** formatting/lint, TypeScript strict typecheck, unit tests, production build, client-bundle secret scan;
+- **Security:** Gitleaks and `pnpm audit --audit-level high`;
+- **pgTAP / RLS:** local Supabase Postgres, `db reset`, and `supabase/tests/*.sql`;
+- **Playwright E2E:** Supabase core stack, reset, web build, critical journeys (`ubuntu-24.04` runner until Playwright supports newer Ubuntu images).
+
+When MCP (EPIC 4) is implemented, add MCP contract/integration tests for touched tools to the required checks.
+
+Database migrations must apply from a clean local database (enforced by the pgTAP job reset).
 
 ## 19. Acceptance criteria for MVP release
 
-The MVP is complete only when all criteria below pass in a staging environment:
+Release is split into a **web application gate** (EPIC 3.5, local/CI-verified), an **MCP gate** (EPIC 4), and a **full MVP release gate** (staging). Track implementation in [`TASKS.md`](TASKS.md).
 
-### Product
+### 19.1 Web application gate (EPIC 3.5)
+
+**Status:** Met as of 10 November 2026 (`TASKS.md` W35.12) via local Supabase, Vitest, pgTAP (20 files), and Playwright critical journeys in CI.
+
+The web gate is satisfied when the criteria below pass against the **local Supabase stack** or an equivalent isolated environment. Staging sign-off is required for §19.3 only.
+
+#### Product
 - A user can register/sign in and create a family.
 - The creator is the initial Owner.
 - Owner/Admin can invite a relative by email with an allowed role.
@@ -911,25 +918,40 @@ The MVP is complete only when all criteria below pass in a staging environment:
 - Recipe revision history is available to authorized roles.
 - UI supports English, Finnish, Russian, and Ukrainian, with a user-controlled language preference and locale-aware formatting.
 - UI supports system/light/dark appearance preference; all themes pass contrast checks and share a centralized token system.
-- Primary journeys are keyboard usable, work at 320px/360px widths and 200% zoom, and pass documented WCAG 2.2 AA verification checks.
+- Primary journeys are keyboard usable and work at 320px/360px widths and 200% zoom; automated axe on sign-in; formal WCAG 2.2 AA release review is [`TASKS.md`](TASKS.md) W35.17.
 - The visual identity is based on the custom Family Cookbook design system, not an unmodified shadcn/ui starter.
 
-### MCP
+Additional EPIC 3.5 product scope (member suspension/reactivation, owner transfer, contributor search picker, account/family settings, media upload UI) is implemented per [`docs/DECISIONS.md`](docs/DECISIONS.md) EPIC 3.5.
+
+#### Security and operations (web gate)
+
+- All tenant tables have reviewed RLS policies; storage bucket is private with pgTAP-tested policies.
+- Automated coverage for §17.3 items **1–8, 11–13** via pgTAP, Vitest, and Playwright (cross-family isolation, role matrix, invitations, storage/asset rules, optimistic concurrency). Items **9–10** require MCP (EPIC 4); **rate limiting and header hardening** are [`TASKS.md`](TASKS.md) W35.13 / T5.1.
+- No service-role secret is exposed to browser bundles (`verify:client-bundle` in CI).
+- Secrets are not committed; `.env.example` uses placeholders only.
+- CI runs the checks in §18.5 (Quality, Security, pgTAP, Playwright).
+
+### 19.2 MCP gate (EPIC 4) — deferred until web gate passes
+
+**Status:** Not started; `apps/mcp` is a health-check placeholder. Begin EPIC 4 after W35.12.
+
 - An MCP-compatible client can discover and connect to the remote endpoint using OAuth 2.1 authorization code + PKCE.
 - The consent UI identifies the client and requires explicit user approval.
 - `list_my_families`, `search_recipes`, `get_recipe`, `create_recipe`, `update_recipe`, `archive_recipe`, `restore_recipe`, and `get_recipe_history` work.
 - MCP tool authorization matches web authorization.
 - An AI client cannot access a family that the user does not belong to.
 - Writes produce the same revision and audit records as web writes.
+- §17.3 items **9–10** (forged MCP token, `family_id` tampering) pass automated tests.
 
-### Security and operations
-- All tenant tables have reviewed RLS policies; storage bucket is private with tested policies.
-- All critical security tests in section 17.3 pass.
-- No service-role secret is exposed to browser or MCP clients.
-- Secrets are managed outside the repository.
-- CI runs the required checks.
-- Staging/production environments are isolated.
-- Backup and restore procedure is documented and restoration tested.
+### 19.3 Full MVP release gate (staging)
+
+The **full** MVP is complete only when §19.1 and §19.2 criteria pass in a **staging** environment, plus:
+
+- Production-safe invitation email (W35.14).
+- Rate limits, secure headers, CORS, and log redaction per T5.1 / W35.13.
+- Staging/production Supabase and deploy environments are isolated (W35.15).
+- Backup and restore procedure is documented and restoration tested (W35.16).
+- Accessibility release review with documented WCAG 2.2 AA exceptions, if any (W35.17).
 
 ## 20. Five-day implementation order
 

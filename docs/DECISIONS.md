@@ -198,7 +198,7 @@ Approved for implementation without re-confirmation:
 2. **Member privacy:** Family members see display names and roles only; no cross-member auth email exposure; narrow family-scoped display-name read; neutral translated fallback when name missing.
 3. **Search:** Contributor filter via member picker (no UUIDs); translation-language search deferred and documented.
 4. **Global preferences (W35.8–W35.9):** Theme and UI locale controls on auth screens, signed-in shell, and account settings; cookie persistence before login; `profiles` sync after login; locale change keeps route; theme without flash.
-5. **MCP:** EPIC 4 out of scope until web MVP (W35.12) is complete.
+5. **MCP:** EPIC 4 was out of scope until W35.12; **web gate passed 2026-11-10** — EPIC 4 may proceed; full staging release remains §19.3 / W35.13–W35.17.
 
 ## W35.1 — Recipe media upload UI (2026-11-09)
 
@@ -232,6 +232,13 @@ Approved for implementation without re-confirmation:
 3. **Theme:** Existing inline `ThemeScript` + `ThemeProvider` handle flash-free appearance; switcher actions persist cookies and signed-in profile rows as in W35.8.
 4. **Tests:** Vitest for locale-switch path preservation and four-locale `uiPreferences` catalog completeness.
 
+## W35.12 — Web MVP gate and §19 alignment (2026-11-10)
+
+1. **Backlog:** W35.1–W35.11 acceptance verified; EPIC 3.5 marked complete in [`TASKS.md`](../TASKS.md).
+2. **Spec:** [`PROJECT_SPEC.md`](../PROJECT_SPEC.md) §19 split into **19.1 web gate** (met), **19.2 MCP** (EPIC 4), **19.3 full staging release**; §18.5 lists current CI jobs.
+3. **CI fix:** Playwright job `runs-on: ubuntu-24.04` — Playwright 1.56.1 does not ship Chromium for Ubuntu 26.04 (`ubuntu-latest` on GHA).
+4. **Next:** W35.13 (rate limits/headers) or EPIC 4 (MCP); both required for §19.3.
+
 ## W35.11 — pgTAP in GitHub Actions (2026-11-10)
 
 1. **CI job:** `pgTAP / RLS` in [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) — `pnpm supabase:db:start` (Postgres only), `pnpm supabase:reset` (`db reset --yes`), `pnpm supabase:test` (same [`supabase-test.mjs`](../scripts/supabase-test.mjs) docker-exec runner as local).
@@ -243,7 +250,7 @@ Approved for implementation without re-confirmation:
 
 1. **Auth fixture:** [`seedAuthSession`](../apps/web/e2e/fixtures/auth.ts) signs in seeded personas with `signInWithPassword` + `@supabase/ssr` cookie jars (local password in [`TEST_IDENTITIES.md`](fixtures/TEST_IDENTITIES.md)); tests skip when Supabase is unreachable.
 2. **Specs:** [`critical-journeys.spec.ts`](../apps/web/e2e/critical-journeys.spec.ts) covers recipe browse/filters, members/settings/invitations, create recipe, archive restore + upload panel, family switch, and a 360px-style mobile smoke; existing [`sign-in-a11y.spec.ts`](../apps/web/e2e/sign-in-a11y.spec.ts) stays in the suite.
-3. **CI:** `Playwright E2E` job — `playwright install --with-deps chromium`, `supabase:start:core`, `supabase:reset`, `supabase:sync-env`, `pnpm build`, `pnpm test:e2e` on port **3099**.
+3. **CI:** `Playwright E2E` job — `playwright install --with-deps chromium`, `supabase:start:core`, `supabase:reset`, `supabase:sync-env`, `pnpm build`, `pnpm test:e2e` on port **3099**. Runner is **`ubuntu-24.04`** (not `ubuntu-latest`): Playwright **1.56.1** cannot install Chromium on Ubuntu 26.04. Unpin or upgrade Playwright to **1.61+** when we want 26.04.
 4. **Local:** `pnpm test:e2e` runs `pretest:e2e` → `playwright install chromium` (first run downloads browsers). Start Supabase + `pnpm supabase:sync-env` for authenticated journeys; Playwright reuses an existing `pnpm dev:web` on port 3003 when present.
 
 ## W35.7 — Family settings (2026-11-09)

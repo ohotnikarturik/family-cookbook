@@ -173,6 +173,8 @@ Work in order. A task is complete only when its acceptance criteria and relevant
 
 Complete the family-facing web application per approved product decisions (member suspension, owner transfer, contributor search picker, global theme/locale). **MCP (EPIC 4) is out of scope** until W35.12 passes.
 
+**Status:** Web gate complete (2026-11-10). EPIC 4 may start; W35.13–W35.17 cover production hardening before §19.3 staging release.
+
 ### W35.1 — Recipe media upload UI
 - Recipe edit and detail surfaces for authorized editors: upload recipe photos, original scans (PDF), and step photos; client flow uses existing slot → signed PUT → finalize APIs.
 - Show limits (10 assets/recipe, MIME/size allowlist), progress/status, and errors in all four UI locales.
@@ -260,6 +262,8 @@ Complete the family-facing web application per approved product decisions (membe
 - Mark EPIC 3.5 tasks done only when acceptance criteria verified; update `PROJECT_SPEC` §19 alignment; defer MCP.
 
 **Tests:** Full CI (lint, typecheck, unit, build, pgTAP, Playwright smoke).
+
+**Status:** Done (2026-11-10).
 
 ### W35.13 — Rate limiting and secure headers
 - Rate limits for login, invitation, upload, search; secure headers, CORS, log redaction per T5.1 scope.
