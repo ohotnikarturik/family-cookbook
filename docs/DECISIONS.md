@@ -232,6 +232,13 @@ Approved for implementation without re-confirmation:
 3. **Theme:** Existing inline `ThemeScript` + `ThemeProvider` handle flash-free appearance; switcher actions persist cookies and signed-in profile rows as in W35.8.
 4. **Tests:** Vitest for locale-switch path preservation and four-locale `uiPreferences` catalog completeness.
 
+## W35.10 — Playwright critical journeys (2026-11-09)
+
+1. **Auth fixture:** [`seedAuthSession`](../apps/web/e2e/fixtures/auth.ts) signs in seeded personas with `signInWithPassword` + `@supabase/ssr` cookie jars (local password in [`TEST_IDENTITIES.md`](fixtures/TEST_IDENTITIES.md)); tests skip when Supabase is unreachable.
+2. **Specs:** [`critical-journeys.spec.ts`](../apps/web/e2e/critical-journeys.spec.ts) covers recipe browse/filters, members/settings/invitations, create recipe, archive restore + upload panel, family switch, and a 360px-style mobile smoke; existing [`sign-in-a11y.spec.ts`](../apps/web/e2e/sign-in-a11y.spec.ts) stays in the suite.
+3. **CI:** `Playwright E2E` job — `playwright install --with-deps chromium`, `supabase:start:core`, `supabase:reset`, `supabase:sync-env`, `pnpm build`, `pnpm test:e2e` on port **3099**.
+4. **Local:** `pnpm test:e2e` runs `pretest:e2e` → `playwright install chromium` (first run downloads browsers). Start Supabase + `pnpm supabase:sync-env` for authenticated journeys; Playwright reuses an existing `pnpm dev:web` on port 3003 when present.
+
 ## W35.7 — Family settings (2026-11-09)
 
 1. **Fields:** `families.name` (1–120) and `default_language` (`en`/`fi`/`ru`/`uk`). `created_by` stays fixed via existing RLS `with check`.

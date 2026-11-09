@@ -247,6 +247,8 @@ Complete the family-facing web application per approved product decisions (membe
 
 **Tests:** Playwright suite green in GHA.
 
+**Status:** Done (2026-11-09).
+
 ### W35.11 — pgTAP in GitHub Actions
 - Run `pnpm supabase:test` (or equivalent) in CI with local Supabase/Docker.
 

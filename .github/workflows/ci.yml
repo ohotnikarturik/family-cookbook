@@ -67,3 +67,43 @@ jobs:
 
       - name: Dependency audit (high and critical)
         run: pnpm audit --audit-level high
+
+  e2e:
+    name: Playwright E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      CI: true
+      NEXT_PUBLIC_APP_URL: http://127.0.0.1:3099
+      PLAYWRIGHT_BASE_URL: http://127.0.0.1:3099
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Chromium
+        working-directory: apps/web
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Start Supabase
+        run: pnpm supabase:start:core
+
+      - name: Reset database and sync web env
+        run: |
+          pnpm supabase:reset
+          pnpm supabase:sync-env
+
+      - name: Build
+        run: pnpm build
+
+      - name: Run Playwright
+        working-directory: apps/web
+        run: pnpm test:e2e

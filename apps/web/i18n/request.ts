@@ -10,6 +10,7 @@ import { appTimeZone, defaultLocale, locales, type AppLocale } from './routing';
  * Static imports keep every catalog in the module graph.
  * A dynamic JSON import could stay bound to an older evaluated module in a
  * long-running Turbopack process, so new keys rendered as their own paths.
+ * After editing `apps/web/messages/*.json`, restart `pnpm dev:web`.
  */
 const messagesByLocale = {
   en,

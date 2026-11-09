@@ -9,7 +9,9 @@
     "typecheck": "next typegen && tsc --noEmit",
     "lint": "eslint",
     "test": "vitest run",
-    "test:e2e": "playwright test"
+    "pretest:e2e": "playwright install chromium",
+    "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install --with-deps chromium"
   },
   "dependencies": {
     "@family-cookbook/application": "workspace:*",
@@ -30,6 +32,8 @@
     "tailwind-merge": "2.6.0"
   },
   "devDependencies": {
+    "@supabase/ssr": "0.12.7",
+    "@supabase/supabase-js": "2.119.0",
     "@axe-core/playwright": "4.11.0",
     "@family-cookbook/config": "workspace:*",
     "@playwright/test": "1.56.1",
