@@ -218,6 +218,13 @@ Approved for implementation without re-confirmation:
 3. **Labels:** `resolveMemberDisplayLabel` in `packages/domain` — You / display name / translated neutral fallback. Display names are trimmed and capped at 80 characters before they reach the page.
 4. **Contributor filter:** recipe browse uses this directory as a member picker. Translation-language search stays deferred.
 
+## W35.7 — Family settings (2026-11-09)
+
+1. **Fields:** `families.name` (1–120) and `default_language` (`en`/`fi`/`ru`/`uk`). `created_by` stays fixed via existing RLS `with check`.
+2. **Gates:** Owner/admin only (`canChangeFamilySettings` + `families_update_managers`); other roles see read-only values on `/{locale}/f/[familyId]/settings`.
+3. **Stack:** `updateFamilyInputSchema`, data-access `updateFamilySettings`, application `updateFamily`; no new RPC—RLS is the boundary.
+4. **Tests:** Vitest schema bounds; pgTAP `98_family_settings.sql` for owner/admin/editor and check constraint.
+
 ## W35.6 — Owner transfer (2026-11-09)
 
 1. **RPC** [`transfer_family_ownership`](../supabase/migrations/20251109200000_transfer_family_ownership.sql): caller must be active **owner**; demotes current owner to `p_former_owner_role` (default `admin`), then promotes target; demote-first ordering respects the partial unique owner index; audit `family_member.ownership_transferred`.

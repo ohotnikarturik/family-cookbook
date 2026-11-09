@@ -15,6 +15,14 @@ export const createFamilyInputSchema = z.object({
 
 export type CreateFamilyInput = z.infer<typeof createFamilyInputSchema>;
 
+export const updateFamilyInputSchema = z.object({
+  familyId: familyIdSchema,
+  name: z.string().trim().min(1).max(120),
+  defaultLanguage: profilePreferredLanguageSchema,
+});
+
+export type UpdateFamilyInput = z.infer<typeof updateFamilyInputSchema>;
+
 export const familySummarySchema = z.object({
   id: familyIdSchema,
   name: z.string(),

@@ -25,11 +25,13 @@ export {
 export { sampleDisplayNameSchema, type SampleDisplayNameInput } from './sample-profile.js';
 export {
   createFamilyInputSchema,
+  updateFamilyInputSchema,
   familyIdSchema,
   familyRoleSchema,
   familySummarySchema,
   familyWorkspaceSchema,
   type CreateFamilyInput,
+  type UpdateFamilyInput,
   type FamilyRole,
   type FamilySummary,
   type FamilyWorkspace,

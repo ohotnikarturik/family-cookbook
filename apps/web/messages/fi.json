@@ -112,7 +112,30 @@
       "allFamilies": "Kaikki perheet",
       "invitations": "Kutsut",
       "members": "Jäsenet",
+      "settings": "Asetukset",
       "account": "Tili"
+    },
+    "settings": {
+      "title": "Perheen asetukset",
+      "subtitle": "Nimi ja reseptien oletuskieli tälle perheelle. Tämä ei muuta henkilökohtaista sovelluksen kieltä.",
+      "subnavLabel": "Perheen asetuksen osiot",
+      "subnavGeneral": "Yleinen",
+      "subnavMembers": "Jäsenet",
+      "subnavInvitations": "Kutsut",
+      "nameLabel": "Perheen nimi",
+      "defaultLanguageLabel": "Reseptien oletuskieli",
+      "defaultLanguageHint": "Oletus uusille resepteille ja kutsuille—ei käyttöliittymän kielelle.",
+      "readOnlyNote": "Vain omistajat ja ylläpitäjät voivat muuttaa perheen asetuksia.",
+      "save": "Tallenna asetukset",
+      "saving": "Tallennetaan…",
+      "saved": "Asetukset tallennettu.",
+      "backDashboard": "Takaisin kojelaudalle",
+      "errors": {
+        "validation": "Tarkista nimi ja kieli, yritä uudelleen.",
+        "forbidden": "Et voi muuttaa perheen asetuksia.",
+        "notFound": "Perhettä ei löytynyt.",
+        "failed": "Asetuksia ei voitu tallentaa. Yritä uudelleen."
+      }
     },
     "members": {
       "title": "Perheen jäsenet",

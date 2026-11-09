@@ -83,6 +83,12 @@ async function FamilyLayoutShell({ children, params }: Props) {
             {t('shell.recipes')}
           </Link>
           <Link
+            href={`/f/${workspace.workspace.id}/settings`}
+            className="inline-flex min-h-11 items-center font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {t('shell.settings')}
+          </Link>
+          <Link
             href={`/f/${workspace.workspace.id}/settings/members`}
             className="inline-flex min-h-11 items-center font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >

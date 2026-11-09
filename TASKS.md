@@ -226,6 +226,8 @@ Complete the family-facing web application per approved product decisions (membe
 
 **Tests:** Vitest + pgTAP for family update policies.
 
+**Status:** Done (2026-11-09).
+
 ### W35.8 — Account settings and profile preference persistence
 - Profile display name, `preferred_language`, `theme_preference`; sync cookies ↔ profile after auth.
 

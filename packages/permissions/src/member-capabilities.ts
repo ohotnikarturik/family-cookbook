@@ -4,6 +4,10 @@ export function canManageFamilyMembers(role: FamilyRole): boolean {
   return role === 'owner' || role === 'admin';
 }
 
+export function canChangeFamilySettings(role: FamilyRole): boolean {
+  return canManageFamilyMembers(role);
+}
+
 export function canAssignMemberRole(actorRole: FamilyRole, targetRole: FamilyRole): boolean {
   if (targetRole === 'owner') {
     return false;

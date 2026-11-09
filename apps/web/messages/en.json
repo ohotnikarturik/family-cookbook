@@ -112,7 +112,30 @@
       "allFamilies": "All families",
       "invitations": "Invitations",
       "members": "Members",
+      "settings": "Settings",
       "account": "Account"
+    },
+    "settings": {
+      "title": "Family settings",
+      "subtitle": "Name and default recipe language for this family. This does not change your personal app language.",
+      "subnavLabel": "Family settings sections",
+      "subnavGeneral": "General",
+      "subnavMembers": "Members",
+      "subnavInvitations": "Invitations",
+      "nameLabel": "Family name",
+      "defaultLanguageLabel": "Default recipe language",
+      "defaultLanguageHint": "Used as a starting language for new recipes and invitations—not your UI locale.",
+      "readOnlyNote": "Only owners and admins can change family settings.",
+      "save": "Save settings",
+      "saving": "Saving…",
+      "saved": "Settings saved.",
+      "backDashboard": "Back to dashboard",
+      "errors": {
+        "validation": "Check the name and language, then try again.",
+        "forbidden": "You cannot change family settings.",
+        "notFound": "Family not found.",
+        "failed": "Could not save settings. Try again."
+      }
     },
     "members": {
       "title": "Family members",

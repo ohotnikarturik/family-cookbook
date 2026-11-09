@@ -36,6 +36,7 @@ export { getPendingRecipeAsset } from './recipe-asset/get-pending-asset.js';
 export { insertPendingRecipeAsset } from './recipe-asset/insert-pending-asset.js';
 export { updateRecipeAssetAfterValidation } from './recipe-asset/update-asset-after-validation.js';
 export { createFamilyBootstrap } from './family/create-family-bootstrap.js';
+export { updateFamilySettings } from './family/update-family-settings.js';
 export { getFamilyWorkspaceForMember } from './family/get-family-workspace.js';
 export {
   getLastSelectedFamilyId,

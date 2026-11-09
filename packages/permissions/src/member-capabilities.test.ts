@@ -4,6 +4,7 @@ import {
   assignableMemberRolesForActor,
   canAdministrateTargetMember,
   canAssignMemberRole,
+  canChangeFamilySettings,
   canReceiveFamilyOwnership,
   canTransferFamilyOwnership,
 } from './member-capabilities.js';
@@ -69,6 +70,14 @@ describe('assignableMemberRolesForActor', () => {
   it('lists roles an actor may assign', () => {
     expect(assignableMemberRolesForActor('admin')).toEqual(['viewer', 'contributor', 'editor']);
     expect(assignableMemberRolesForActor('owner')).toContain('admin');
+  });
+});
+
+describe('canChangeFamilySettings', () => {
+  it('allows owner and admin only', () => {
+    expect(canChangeFamilySettings('owner')).toBe(true);
+    expect(canChangeFamilySettings('admin')).toBe(true);
+    expect(canChangeFamilySettings('editor')).toBe(false);
   });
 });
 
