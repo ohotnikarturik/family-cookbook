@@ -6,6 +6,7 @@ const FILTER_KEYS = [
   'category',
   'tag',
   'language',
+  'createdBy',
   'sort',
   'includeArchived',
   'cursor',

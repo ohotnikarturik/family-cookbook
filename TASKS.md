@@ -167,6 +167,8 @@ Work in order. A task is complete only when its acceptance criteria and relevant
 
 **Acceptance:** supported filters work with representative fixtures; result set never leaks across families; max page size enforced.
 
+**Status:** Done (2026-11-09).
+
 ## EPIC 3.5 — Web MVP completion (before MCP)
 
 Complete the family-facing web application per approved product decisions (member suspension, owner transfer, contributor search picker, global theme/locale). **MCP (EPIC 4) is out of scope** until W35.12 passes.
@@ -194,6 +196,8 @@ Complete the family-facing web application per approved product decisions (membe
 - Document translation-language search as deferred.
 
 **Tests:** Application/data-access integration tests with local Supabase; UI filter e2e in W35.10.
+
+**Status:** Done (2026-11-09).
 
 ### W35.4 — Family member listing
 - Family-scoped member list with display name (or neutral fallback) and role; never expose auth emails to other members.

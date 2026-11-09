@@ -42,6 +42,7 @@ export function parseRecipeSearchFromUrl(
     category: firstParam(searchParams.category),
     tag: firstParam(searchParams.tag),
     language: firstParam(searchParams.language),
+    createdBy: firstParam(searchParams.createdBy),
     sort: firstParam(searchParams.sort),
     cursor: firstParam(searchParams.cursor),
     includeArchived: parseOptionalBoolean(firstParam(searchParams.includeArchived)),

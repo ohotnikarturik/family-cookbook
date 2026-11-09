@@ -1,4 +1,10 @@
-import { resolveAccessibleFamily, searchRecipes } from '@family-cookbook/application';
+import {
+  listFamilyMembers,
+  resolveAccessibleFamily,
+  searchRecipes,
+} from '@family-cookbook/application';
+import { resolveMemberDisplayLabel } from '@family-cookbook/domain';
+import { getSessionUser } from '@family-cookbook/data-access';
 import { canCreateRecipe } from '@family-cookbook/permissions';
 import { createServerSupabaseClient } from '@family-cookbook/data-access/supabase/server';
 import { getFormatter, getTranslations } from 'next-intl/server';
@@ -70,6 +76,7 @@ async function RecipesContent({ params, searchParams }: Props) {
   }
 
   const supabase = await createServerSupabaseClient();
+  const sessionUser = await getSessionUser(supabase);
   const workspace = await resolveAccessibleFamily(supabase, familyId);
   const canAdd = workspace.status === 'ok' ? canCreateRecipe(workspace.workspace.role) : false;
   const result = await searchRecipes(supabase, parsed.input);
@@ -121,6 +128,35 @@ async function RecipesContent({ params, searchParams }: Props) {
   }
 
   const { items, nextCursor } = result.result;
+  const tMembers = await getTranslations({ locale, namespace: 'family.members' });
+  const membersListed = await listFamilyMembers(supabase, { familyId });
+  const contributorOptions =
+    membersListed.status === 'ok' && sessionUser
+      ? membersListed.members
+          .map((member) => {
+            const name = resolveMemberDisplayLabel({
+              displayName: member.displayName,
+              memberUserId: member.userId,
+              actorUserId: sessionUser.id,
+              youLabel: tMembers('you'),
+              neutralLabel: tMembers('neutralName'),
+            });
+            return {
+              userId: member.userId,
+              label:
+                member.status === 'suspended' ? `${name} (${tMembers('suspendedBadge')})` : name,
+            };
+          })
+          .sort((a, b) => {
+            if (a.userId === sessionUser.id) {
+              return -1;
+            }
+            if (b.userId === sessionUser.id) {
+              return 1;
+            }
+            return a.label.localeCompare(b.label, locale);
+          })
+      : [];
 
   return (
     <section className="space-y-6" aria-labelledby="recipes-heading">
@@ -134,16 +170,23 @@ async function RecipesContent({ params, searchParams }: Props) {
       <RecipeSearchForm
         key={buildRecipeSearchQuery(parsed.input) || 'all'}
         familyId={familyId}
+        contributorOptions={contributorOptions}
         defaultValues={{
           ...(parsed.input.query ? { query: parsed.input.query } : {}),
           ...(parsed.input.ingredient ? { ingredient: parsed.input.ingredient } : {}),
           ...(parsed.input.category ? { category: parsed.input.category } : {}),
           ...(parsed.input.tag ? { tag: parsed.input.tag } : {}),
           ...(parsed.input.language ? { language: parsed.input.language } : {}),
+          ...(parsed.input.createdBy ? { createdBy: parsed.input.createdBy } : {}),
           ...(parsed.input.sort ? { sort: parsed.input.sort } : {}),
           ...(parsed.input.includeArchived ? { includeArchived: true } : {}),
         }}
       />
+      {membersListed.status !== 'ok' ? (
+        <p className="text-sm text-destructive" role="alert">
+          {tMembers('errors.loadFailed')}
+        </p>
+      ) : null}
       <RecipeList
         familyId={familyId}
         items={items}

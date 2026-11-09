@@ -9,12 +9,18 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Link } from '@/i18n/navigation';
 
+export type RecipeSearchContributorOption = Readonly<{
+  userId: string;
+  label: string;
+}>;
+
 export type RecipeSearchFormValues = Readonly<{
   query?: string;
   ingredient?: string;
   category?: string;
   tag?: string;
   language?: string;
+  createdBy?: string;
   sort?: RecipeSearchSort;
   includeArchived?: boolean;
 }>;
@@ -22,9 +28,10 @@ export type RecipeSearchFormValues = Readonly<{
 type Props = Readonly<{
   familyId: string;
   defaultValues: RecipeSearchFormValues;
+  contributorOptions: readonly RecipeSearchContributorOption[];
 }>;
 
-export function RecipeSearchForm({ familyId, defaultValues }: Props) {
+export function RecipeSearchForm({ familyId, defaultValues, contributorOptions }: Props) {
   const t = useTranslations('recipes.filters');
   const tSort = useTranslations('recipes.sort');
 
@@ -90,6 +97,27 @@ export function RecipeSearchForm({ familyId, defaultValues }: Props) {
             autoComplete="off"
             className="min-h-11"
           />
+        </FilterField>
+        <FilterField
+          id="recipe-contributor"
+          label={t('contributor')}
+          hint={t('contributorHint')}
+          hintId="recipe-contributor-hint"
+        >
+          <select
+            id="recipe-contributor"
+            name="createdBy"
+            defaultValue={defaultValues.createdBy ?? ''}
+            aria-describedby="recipe-contributor-hint"
+            className="flex min-h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <option value="">{t('contributorAny')}</option>
+            {contributorOptions.map((option) => (
+              <option key={option.userId} value={option.userId}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </FilterField>
         <FilterField id="recipe-sort" label={t('sort')}>
           <select

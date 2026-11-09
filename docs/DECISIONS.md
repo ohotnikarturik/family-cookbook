@@ -216,7 +216,14 @@ Approved for implementation without re-confirmation:
 1. **RPC** [`list_family_member_directory`](../supabase/migrations/20251109130000_family_member_directory.sql): `SECURITY DEFINER`, caller must be `private.is_active_member`; returns `user_id`, `role`, `status`, and `profiles.display_name` only (no `auth.users` email).
 2. **UI:** `/{locale}/f/[familyId]/settings/members` for every active member; shell nav **Members** link. The list is a Server Component. Labels are resolved on the server, and member ids are not rendered.
 3. **Labels:** `resolveMemberDisplayLabel` in `packages/domain` — You / display name / translated neutral fallback. Display names are trimmed and capped at 80 characters before they reach the page.
-4. **W35.3 ordering:** Contributor search picker stays next because it consumes this directory. Translation-language search stays deferred.
+4. **Contributor filter:** recipe browse uses this directory as a member picker. Translation-language search stays deferred.
+
+## W35.3 — Contributor search filter (2026-11-09)
+
+1. **UI:** Recipe browse uses a family member `<select>` (`createdBy` query param) fed by `listFamilyMembers` + `resolveMemberDisplayLabel`. No free-text UUID entry.
+2. **API:** Reuses existing `searchRecipes` `createdBy` filter in contracts/data-access; pagination keeps the param via `buildRecipeSearchQuery`.
+3. **Deferred:** Filtering by **translation** language (UI locale vs recipe `source_language` vs translation rows) is out of MVP scope; `language` filter remains recipe source language only.
+4. **Tests:** Vitest URL helpers in `apps/web`; optional `search-recipes.integration.test.ts` signs in seeded users when local Supabase + `apps/web/.env.local` are available (skipped otherwise).
 
 ## W35.2 — Archive and restore UI (2026-11-09)
 

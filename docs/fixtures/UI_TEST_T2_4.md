@@ -35,7 +35,7 @@ Local only. Use **http://localhost:3003** (not `127.0.0.1`) for auth cookies. Se
 3. Only this family’s titles.
 4. Open **Grandma's cardamom buns** — ingredients + steps.
 5. Back to list.
-6. Filter `query=salmon`, `category=Baking`, `tag=fish`, sort, **Include archived**.
+6. Filter `query=salmon`, `category=Baking`, `tag=fish`, **Contributor** (member picker), sort, **Include archived**.
 7. Pagination when >25 active recipes.
 8. Light/dark theme; locales `fi`, `ru`, `uk`.
 
