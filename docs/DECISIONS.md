@@ -224,3 +224,11 @@ Approved for implementation without re-confirmation:
 2. **Archive** sends `confirm: true` and `expectedVersion`. **Restore** sends `expectedVersion` only. Both call the existing use cases.
 3. **Conflict:** the message stays inside the archive dialog (or beside restore). The reload control is a full page load, because a client navigation does not refetch `expectedVersion`.
 4. A missing recipe is its own message. It is not shown as a generic save failure.
+
+## W35.5 — Member role and suspension (2026-11-09)
+
+1. **RPCs** [`20251109140000_family_member_admin.sql`](../supabase/migrations/20251109140000_family_member_admin.sql) and [`20251109150000_family_member_admin_guards.sql`](../supabase/migrations/20251109150000_family_member_admin_guards.sql): `set_family_member_role` and `set_family_member_status` — owner/admin only; no self-change; owner rows stay immutable until transfer (W35.6); the invitation role matrix is reused; only the owner may change an admin. A row lock serializes concurrent role and status changes. Each real change writes `family_member.role_changed` or `family_member.status_changed` with the target user id and the old and new value, and no email. [`20251109160000_role_check_false_for_non_members.sql`](../supabase/migrations/20251109160000_role_check_false_for_non_members.sql) makes `private.has_family_role` return false when the caller has no active role. A null result used to skip `if not` checks, so a non-member could suspend someone.
+2. **Direct updates:** `family_members_update_managers` matches those rules. An admin cannot demote another admin, nobody can edit their own row, identity columns cannot change, and a suspended member keeps their role.
+3. **Application:** `setFamilyMemberRole` / `setFamilyMemberStatus` check `@family-cookbook/permissions` before the RPC. The RPC remains the authority.
+4. **UI:** owner/admin **Manage roles and access** on the members page. The server decides who can be managed and passes only those people, with role labels as text, into the client forms.
+5. **Access:** a suspended user fails `is_active_member` on the next request (pgTAP `96_family_member_admin.sql`).

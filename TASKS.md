@@ -208,6 +208,8 @@ Complete the family-facing web application per approved product decisions (membe
 
 **Tests:** Transactional DB functions + pgTAP for suspension access loss and reactivation; concurrent role-change cases.
 
+**Status:** Done (2026-11-09).
+
 ### W35.6 — Owner transfer
 - Owner-only transfer UI; atomic transfer (exactly one active owner; former owner → admin).
 

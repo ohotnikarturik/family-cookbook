@@ -2,11 +2,17 @@ import { listFamilyMembers, resolveAccessibleFamily } from '@family-cookbook/app
 import { resolveMemberDisplayLabel } from '@family-cookbook/domain';
 import { getSessionUser } from '@family-cookbook/data-access';
 import { createServerSupabaseClient } from '@family-cookbook/data-access/supabase/server';
+import {
+  assignableMemberRolesForActor,
+  canAdministrateTargetMember,
+  canManageFamilyMembers,
+} from '@family-cookbook/permissions';
 import { getTranslations } from 'next-intl/server';
 import { connection } from 'next/server';
 import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
+import { FamilyMemberAdminSection } from '@/components/family/family-member-directory';
 import { FamilyMemberList } from '@/components/family/family-member-list';
 import { Link } from '@/i18n/navigation';
 import { locales, type AppLocale } from '@/i18n/routing';
@@ -30,6 +36,7 @@ async function MembersContent({ params }: Props) {
   const locale = localeParam as AppLocale;
   const t = await getTranslations({ locale, namespace: 'family.members' });
   const tRoles = await getTranslations({ locale, namespace: 'family.roles' });
+  const tAdmin = await getTranslations({ locale, namespace: 'family.members.admin' });
 
   const supabase = await createServerSupabaseClient();
   const sessionUser = await getSessionUser(supabase);
@@ -57,6 +64,25 @@ async function MembersContent({ params }: Props) {
     );
   }
 
+  const memberRows = listed.members.map((member) => ({
+    userId: member.userId,
+    label: resolveMemberDisplayLabel({
+      displayName: member.displayName,
+      memberUserId: member.userId,
+      actorUserId: sessionUser.id,
+      youLabel: t('you'),
+      neutralLabel: t('neutralName'),
+    }),
+    roleLabel: tRoles(member.role),
+    role: member.role,
+    status: member.status,
+    suspended: member.status === 'suspended',
+  }));
+  const actorRole = workspace.workspace.role;
+  const manageableMembers = canManageFamilyMembers(actorRole)
+    ? memberRows.filter((member) => canAdministrateTargetMember(actorRole, sessionUser.id, member))
+    : [];
+
   return (
     <div className="space-y-6">
       <header className="space-y-2">
@@ -64,21 +90,39 @@ async function MembersContent({ params }: Props) {
         <p className="text-sm text-muted-foreground">{t('subtitle')}</p>
       </header>
       <FamilyMemberList
-        members={listed.members.map((member) => ({
-          userId: member.userId,
-          label: resolveMemberDisplayLabel({
-            displayName: member.displayName,
-            memberUserId: member.userId,
-            actorUserId: sessionUser.id,
-            youLabel: t('you'),
-            neutralLabel: t('neutralName'),
-          }),
-          roleLabel: tRoles(member.role),
-          suspended: member.status === 'suspended',
-        }))}
+        members={memberRows}
         emptyLabel={t('empty')}
         suspendedLabel={t('suspendedBadge')}
       />
+      {manageableMembers.length > 0 ? (
+        <FamilyMemberAdminSection
+          familyId={familyId}
+          members={manageableMembers.map((member) => ({
+            userId: member.userId,
+            label: member.label,
+            role: member.role,
+            status: member.status,
+          }))}
+          assignableRoles={assignableMemberRolesForActor(actorRole)}
+          sectionTitle={tAdmin('sectionTitle')}
+          adminLabels={{
+            roleField: tAdmin('roleField'),
+            saveRole: tAdmin('saveRole'),
+            savingRole: tAdmin('savingRole'),
+            suspend: tAdmin('suspend'),
+            suspending: tAdmin('suspending'),
+            reactivate: tAdmin('reactivate'),
+            reactivating: tAdmin('reactivating'),
+            roleLabels: {
+              owner: tRoles('owner'),
+              admin: tRoles('admin'),
+              editor: tRoles('editor'),
+              contributor: tRoles('contributor'),
+              viewer: tRoles('viewer'),
+            },
+          }}
+        />
+      ) : null}
       <p className="text-sm text-muted-foreground">{t('privacyNote')}</p>
       <Link
         href={`/f/${familyId}`}

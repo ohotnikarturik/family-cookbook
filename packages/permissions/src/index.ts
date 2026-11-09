@@ -5,6 +5,12 @@ export const PACKAGE_VERSION = '0.0.0';
 export const permissionsBootstrapMarker = domainVersion;
 
 export {
+  assignableMemberRolesForActor,
+  canAdministrateTargetMember,
+  canAssignMemberRole,
+  canManageFamilyMembers,
+} from './member-capabilities.js';
+export {
   canArchiveRecipe,
   canAttachRecipeAsset,
   canCreateRecipe,

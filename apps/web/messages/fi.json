@@ -125,6 +125,22 @@
       "backDashboard": "Takaisin kojelaudalle",
       "errors": {
         "loadFailed": "Jäsenlistaa ei voitu ladata. Yritä hetken kuluttua uudelleen."
+      },
+      "admin": {
+        "sectionTitle": "Hallitse rooleja ja käyttöoikeutta",
+        "roleField": "Rooli",
+        "saveRole": "Tallenna rooli",
+        "savingRole": "Tallennetaan…",
+        "suspend": "Keskeytä jäsen",
+        "suspending": "Keskeytetään…",
+        "reactivate": "Aktivoi jäsen uudelleen",
+        "reactivating": "Aktivoidaan…",
+        "errors": {
+          "validation": "Tarkista lomake ja yritä uudelleen.",
+          "forbidden": "Et voi muuttaa tätä jäsentä.",
+          "notFound": "Jäsentä ei löytynyt.",
+          "failed": "Muutosta ei voitu tallentaa. Yritä uudelleen."
+        }
       }
     },
     "dashboard": {

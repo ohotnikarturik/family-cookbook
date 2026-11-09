@@ -125,6 +125,22 @@
       "backDashboard": "Back to dashboard",
       "errors": {
         "loadFailed": "We could not load the member list. Try again in a moment."
+      },
+      "admin": {
+        "sectionTitle": "Manage roles and access",
+        "roleField": "Role",
+        "saveRole": "Save role",
+        "savingRole": "Saving…",
+        "suspend": "Suspend member",
+        "suspending": "Suspending…",
+        "reactivate": "Reactivate member",
+        "reactivating": "Reactivating…",
+        "errors": {
+          "validation": "Check the form and try again.",
+          "forbidden": "You cannot change this member.",
+          "notFound": "Member not found.",
+          "failed": "Could not save the change. Try again."
+        }
       }
     },
     "dashboard": {

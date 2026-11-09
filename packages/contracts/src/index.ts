@@ -44,6 +44,12 @@ export {
   type MembershipStatus,
 } from './family-member.js';
 export {
+  setFamilyMemberRoleInputSchema,
+  setFamilyMemberStatusInputSchema,
+  type SetFamilyMemberRoleInput,
+  type SetFamilyMemberStatusInput,
+} from './family-member-admin.js';
+export {
   INVITATION_EXPIRY_DAYS,
   INVITATION_TOKEN_MAX_LENGTH,
   INVITATION_TOKEN_MIN_LENGTH,
