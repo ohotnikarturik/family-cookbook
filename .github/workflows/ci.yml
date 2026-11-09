@@ -68,6 +68,33 @@ jobs:
       - name: Dependency audit (high and critical)
         run: pnpm audit --audit-level high
 
+  pgtap:
+    name: pgTAP / RLS
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # Postgres only: pgTAP talks to the DB via docker exec (no Auth/API/Studio).
+      - name: Start Postgres
+        run: pnpm supabase:db:start
+
+      - name: Reset database
+        run: pnpm supabase:reset
+
+      - name: Run pgTAP
+        run: pnpm supabase:test
+
   e2e:
     name: Playwright E2E
     runs-on: ubuntu-latest

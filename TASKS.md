@@ -254,6 +254,8 @@ Complete the family-facing web application per approved product decisions (membe
 
 **Tests:** Workflow job passes on clean branch.
 
+**Status:** Done (2026-11-10).
+
 ### W35.12 — Complete web MVP and reconcile backlog
 - Mark EPIC 3.5 tasks done only when acceptance criteria verified; update `PROJECT_SPEC` §19 alignment; defer MCP.
 

@@ -59,7 +59,7 @@
 5. **Docs:** [`docs/LOCAL_SUPABASE.md`](LOCAL_SUPABASE.md) + README section; canonical reset workflow is `pnpm supabase:reset`.
 6. **Secrets:** no `service_role` in repo or `.env.example`; local keys from `supabase status -o env` into gitignored `.env.local`.
 7. **pgTAP:** placeholder [`supabase/tests/README.md`](../supabase/tests/README.md) until T1.2.
-8. **CI:** migration reset job deferred until pgTAP/Docker in GHA (PROJECT_SPEC §18.5).
+8. **CI:** pgTAP job added in W35.11 (`ci.yml` → `pgtap`: `supabase:db:start`, `supabase:reset`, `supabase:test`).
 
 ## T1.2 — Base schema and RLS helpers (2026-11-07)
 
@@ -231,6 +231,13 @@ Approved for implementation without re-confirmation:
 2. **Locale change:** `LanguageSwitcher` keeps the current pathname **and query string** when calling `next-intl` `router.replace` ([`localeSwitchTargetPath`](../apps/web/lib/locale-switch-path.ts)) so invitation tokens and other `searchParams` are not dropped.
 3. **Theme:** Existing inline `ThemeScript` + `ThemeProvider` handle flash-free appearance; switcher actions persist cookies and signed-in profile rows as in W35.8.
 4. **Tests:** Vitest for locale-switch path preservation and four-locale `uiPreferences` catalog completeness.
+
+## W35.11 — pgTAP in GitHub Actions (2026-11-10)
+
+1. **CI job:** `pgTAP / RLS` in [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) — `pnpm supabase:db:start` (Postgres only), `pnpm supabase:reset` (`db reset --yes`), `pnpm supabase:test` (same [`supabase-test.mjs`](../scripts/supabase-test.mjs) docker-exec runner as local).
+2. **Postgres-only start:** pgTAP files run as SQL inside `supabase_db_*`; they do not need Auth, PostgREST, Storage API, or Studio. That avoids pulling and health-checking those images on GHA. Playwright E2E still uses `supabase:start:core`.
+3. **Scope:** runs in parallel with Quality/Security/E2E (separate runner; no shared Postgres).
+4. **Local parity:** `pnpm supabase:reset && pnpm supabase:test` — 20 SQL files under [`supabase/tests/`](../supabase/tests/).
 
 ## W35.10 — Playwright critical journeys (2026-11-09)
 

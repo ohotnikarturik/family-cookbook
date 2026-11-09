@@ -39,6 +39,7 @@ Do **not** commit `service_role` keys. For rare local admin tasks, read `SUPABAS
 | `pnpm supabase:start` | Start stack (retries without Studio if Studio mount fails) |
 | `pnpm supabase:start:full` | Start everything including Studio; fails if Studio cannot mount |
 | `pnpm supabase:start:core` | Start without Studio (`-x studio`) |
+| `pnpm supabase:db:start` | Start Postgres only (used by the pgTAP CI job) |
 | `pnpm supabase:query -- "<sql>"` | Run SQL against local DB (no Studio needed) |
 | `pnpm supabase:stop` | Stop containers |
 | `pnpm supabase:status` | URLs, ports, health |
@@ -122,6 +123,8 @@ RLS tests live under [`supabase/tests/`](../supabase/tests/). After a reset:
 pnpm supabase:reset   # stack must be running
 pnpm supabase:test    # uses docker exec when CLI pg_prove mount fails (macOS Desktop paths)
 ```
+
+The **`pgTAP / RLS`** job in [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) runs `supabase:db:start` (Postgres only), `supabase:reset`, and `supabase:test` on every push/PR. Playwright E2E still starts the core API stack (`supabase:start:core`).
 
 ## Studio on macOS
 
