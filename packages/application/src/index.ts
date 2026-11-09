@@ -17,6 +17,7 @@ export {
 } from './profile/ensure-profile-for-user.js';
 export { createFamily, type CreateFamilyResult } from './family/create-family.js';
 export { listMyFamilies, type ListMyFamiliesResult } from './family/list-my-families.js';
+export { listFamilyMembers, type ListFamilyMembersResult } from './family/list-family-members.js';
 export {
   resolveAccessibleFamily,
   type ResolveAccessibleFamilyResult,

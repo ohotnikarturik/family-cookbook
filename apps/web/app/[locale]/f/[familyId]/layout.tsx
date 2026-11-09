@@ -78,27 +78,33 @@ async function FamilyLayoutShell({ children, params }: Props) {
         <nav aria-label={t('shell.navLabel')} className="flex flex-wrap gap-4 text-sm">
           <Link
             href={`/f/${workspace.workspace.id}/recipes`}
-            className="font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="inline-flex min-h-11 items-center font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             {t('shell.recipes')}
+          </Link>
+          <Link
+            href={`/f/${workspace.workspace.id}/settings/members`}
+            className="inline-flex min-h-11 items-center font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {t('shell.members')}
           </Link>
           {canManageInvitations(workspace.workspace.role) ? (
             <Link
               href={`/f/${workspace.workspace.id}/settings/invitations`}
-              className="font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="inline-flex min-h-11 items-center font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {t('shell.invitations')}
             </Link>
           ) : null}
           <Link
             href="/families"
-            className="font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="inline-flex min-h-11 items-center font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             {t('shell.allFamilies')}
           </Link>
           <Link
             href="/account"
-            className="font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="inline-flex min-h-11 items-center font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             {t('shell.account')}
           </Link>

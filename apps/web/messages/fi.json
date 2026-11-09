@@ -111,7 +111,21 @@
       "recipes": "Reseptit",
       "allFamilies": "Kaikki perheet",
       "invitations": "Kutsut",
+      "members": "Jäsenet",
       "account": "Tili"
+    },
+    "members": {
+      "title": "Perheen jäsenet",
+      "subtitle": "Kaikki tämän perheen jäsenet näkevät nimet ja roolit. Sähköpostiosoitteet pysyvät yksityisinä.",
+      "you": "Sinä",
+      "neutralName": "Perheen jäsen",
+      "suspendedBadge": "Keskeytetty",
+      "empty": "Jäseniä ei löytynyt.",
+      "privacyNote": "Vain näyttönimet näytetään. Kirjautumissähköposteja ei koskaan näytetä muille.",
+      "backDashboard": "Takaisin kojelaudalle",
+      "errors": {
+        "loadFailed": "Jäsenlistaa ei voitu ladata. Yritä hetken kuluttua uudelleen."
+      }
     },
     "dashboard": {
       "title": "Etusivu",

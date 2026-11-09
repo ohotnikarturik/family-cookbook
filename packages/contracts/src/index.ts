@@ -35,6 +35,15 @@ export {
   type FamilyWorkspace,
 } from './family.js';
 export {
+  FAMILY_MEMBER_DISPLAY_NAME_MAX,
+  familyMemberDirectoryEntrySchema,
+  listFamilyMembersInputSchema,
+  membershipStatusSchema,
+  type FamilyMemberDirectoryEntry,
+  type ListFamilyMembersInput,
+  type MembershipStatus,
+} from './family-member.js';
+export {
   INVITATION_EXPIRY_DAYS,
   INVITATION_TOKEN_MAX_LENGTH,
   INVITATION_TOKEN_MIN_LENGTH,

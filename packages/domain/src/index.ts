@@ -31,6 +31,7 @@ export {
   type ValidateUploadedBytesResult,
 } from './file-signature.js';
 export { safeRecipeAssetDownloadFilename } from './safe-download-filename.js';
+export { resolveMemberDisplayLabel } from './member-display-name.js';
 export {
   resolveRecipeDisplay,
   type RecipeDisplayIngredient,

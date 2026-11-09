@@ -42,6 +42,7 @@ export {
   updateLastSelectedFamilyId,
 } from './family/last-selected-family.js';
 export { listMyActiveFamilies } from './family/list-my-families.js';
+export { listFamilyMemberDirectory } from './family/list-family-member-directory.js';
 export { hashInvitationToken } from './invitations/hash-token.js';
 export { findPendingInvitationByEmail } from './invitations/find-pending-by-email.js';
 export { insertFamilyInvitation } from './invitations/insert-invitation.js';

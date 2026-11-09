@@ -200,6 +200,8 @@ Complete the family-facing web application per approved product decisions (membe
 
 **Tests:** RLS/pgTAP for member visibility; Vitest for display-name resolver.
 
+**Status:** Done (2026-11-09).
+
 ### W35.5 — Role management, suspension and reactivation
 - Owner/Admin change roles within matrix; suspend/reactivate members; block suspending the sole active owner.
 - Preserve history and authorship.

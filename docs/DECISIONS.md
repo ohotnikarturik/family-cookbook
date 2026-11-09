@@ -211,6 +211,13 @@ Approved for implementation without re-confirmation:
 7. **Shared limit:** the editor counts assets already on the recipe together with ids uploaded in the current session, including step photos, so the limit is enforced before the route refresh returns.
 8. **Unlink:** Removing a step photo clears `mediaAssetId` on the next save. The file stays on the recipe and still counts toward the limit.
 
+## W35.4 — Family member listing (2026-11-09)
+
+1. **RPC** [`list_family_member_directory`](../supabase/migrations/20251109130000_family_member_directory.sql): `SECURITY DEFINER`, caller must be `private.is_active_member`; returns `user_id`, `role`, `status`, and `profiles.display_name` only (no `auth.users` email).
+2. **UI:** `/{locale}/f/[familyId]/settings/members` for every active member; shell nav **Members** link. The list is a Server Component. Labels are resolved on the server, and member ids are not rendered.
+3. **Labels:** `resolveMemberDisplayLabel` in `packages/domain` — You / display name / translated neutral fallback. Display names are trimmed and capped at 80 characters before they reach the page.
+4. **W35.3 ordering:** Contributor search picker stays next because it consumes this directory. Translation-language search stays deferred.
+
 ## W35.2 — Archive and restore UI (2026-11-09)
 
 1. **Where:** recipe detail, for the same people who can edit that recipe. The list keeps the archived badge and the include-archived filter. Archive is not a list-row action, so the confirmation stays on the recipe page.

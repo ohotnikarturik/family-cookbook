@@ -111,7 +111,21 @@
       "recipes": "Recipes",
       "allFamilies": "All families",
       "invitations": "Invitations",
+      "members": "Members",
       "account": "Account"
+    },
+    "members": {
+      "title": "Family members",
+      "subtitle": "Everyone in this family can see names and roles here. Email addresses stay private.",
+      "you": "You",
+      "neutralName": "Family member",
+      "suspendedBadge": "Suspended",
+      "empty": "No members found for this family.",
+      "privacyNote": "Only display names are shown. Sign-in emails are never listed for other members.",
+      "backDashboard": "Back to dashboard",
+      "errors": {
+        "loadFailed": "We could not load the member list. Try again in a moment."
+      }
     },
     "dashboard": {
       "title": "Dashboard",
