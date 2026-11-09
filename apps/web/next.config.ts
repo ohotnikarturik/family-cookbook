@@ -1,3 +1,5 @@
+import { getPublicSupabaseEnv } from '@family-cookbook/data-access';
+import { buildSecurityHeaders } from '@family-cookbook/security';
 import createNextIntlPlugin from 'next-intl/plugin';
 import type { NextConfig } from 'next';
 
@@ -12,7 +14,28 @@ const nextConfig: NextConfig = {
     '@family-cookbook/data-access',
     '@family-cookbook/domain',
     '@family-cookbook/permissions',
+    '@family-cookbook/security',
   ],
+  async headers() {
+    const appUrl = process.env['NEXT_PUBLIC_APP_URL'] ?? 'http://localhost:3003';
+    let supabaseOrigin: string | undefined;
+    try {
+      supabaseOrigin = getPublicSupabaseEnv().url;
+    } catch {
+      supabaseOrigin = undefined;
+    }
+    const securityHeaders = buildSecurityHeaders({
+      appOrigin: appUrl,
+      ...(supabaseOrigin ? { supabaseOrigin } : {}),
+      isProduction: process.env.NODE_ENV === 'production',
+    });
+    return [
+      {
+        source: '/:path*',
+        headers: Object.entries(securityHeaders).map(([key, value]) => ({ key, value })),
+      },
+    ];
+  },
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {

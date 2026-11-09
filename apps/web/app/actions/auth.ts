@@ -12,6 +12,7 @@ import { getTranslations } from 'next-intl/server';
 import { redirect } from 'next/navigation';
 
 import { profileBootstrapHintsFromCookies } from '@/lib/auth-hints';
+import { clientIpFromRequestHeaders, enforceWebRateLimit } from '@/lib/web-security';
 import { ensureProfileForSession } from '@/lib/ensure-profile-session';
 import { LOCALE_COOKIE, parseAppLocale } from '@/lib/locale';
 import { resolveSignedInLandingPath } from '@/lib/post-auth-path';
@@ -58,6 +59,14 @@ export async function requestMagicLinkAction(
     return { ok: false, error: t('errors.invalidEmail') };
   }
 
+  const clientIp = await clientIpFromRequestHeaders();
+  if (
+    !(await enforceWebRateLimit('auth_magic_link_ip', clientIp)) ||
+    !(await enforceWebRateLimit('auth_magic_link_email', emailParsed.data.toLowerCase()))
+  ) {
+    return { ok: false, error: t('errors.rateLimited') };
+  }
+
   const nextPath = optionalNextPath(formData.get('next'));
   const supabase = await createServerSupabaseClient();
   const { error } = await supabase.auth.signInWithOtp({
@@ -90,6 +99,14 @@ export async function verifyEmailOtpAction(
 
   if (!emailParsed.success || !tokenParsed.success) {
     return { ok: false, error: t('errors.invalidOtp') };
+  }
+
+  const clientIp = await clientIpFromRequestHeaders();
+  if (
+    !(await enforceWebRateLimit('auth_otp_ip', clientIp)) ||
+    !(await enforceWebRateLimit('auth_otp_email', emailParsed.data.toLowerCase()))
+  ) {
+    return { ok: false, error: t('errors.rateLimited') };
   }
 
   const supabase = await createServerSupabaseClient();

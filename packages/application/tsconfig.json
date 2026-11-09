@@ -11,6 +11,7 @@
     { "path": "../contracts" },
     { "path": "../data-access" },
     { "path": "../domain" },
-    { "path": "../permissions" }
+    { "path": "../permissions" },
+    { "path": "../security" }
   ]
 }

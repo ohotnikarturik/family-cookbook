@@ -6,6 +6,7 @@
     { "path": "packages/permissions" },
     { "path": "packages/application" },
     { "path": "packages/data-access" },
+    { "path": "packages/security" },
     { "path": "apps/mcp" }
   ]
 }

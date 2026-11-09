@@ -91,6 +91,9 @@ export async function createInvitationAction(
   if (result.status === 'duplicate_pending') {
     return { ok: false, error: t('errors.duplicatePending') };
   }
+  if (result.status === 'rate_limited') {
+    return { ok: false, error: t('errors.rateLimited') };
+  }
   if (result.status === 'email_failed' || result.status === 'email_failed_kept') {
     revalidatePath(`/${locale}/f/${parsed.data.familyId}/settings/invitations`);
     return {
@@ -175,6 +178,9 @@ export async function acceptInvitationAction(
   }
   if (result.status === 'not_found') {
     return { ok: false, error: t('errors.invalid') };
+  }
+  if (result.status === 'rate_limited') {
+    return { ok: false, error: t('errors.rateLimited') };
   }
   if (result.status !== 'ok') {
     return { ok: false, error: t('errors.generic') };

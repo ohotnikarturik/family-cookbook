@@ -15,6 +15,7 @@ import {
   type AppSupabaseClient,
 } from '@family-cookbook/data-access';
 
+import { enforceRateLimit } from '../security/enforce-rate-limit.js';
 import { loadVerifiedAuthUser } from '../profile/ensure-profile-for-user.js';
 
 export type FinalizeRecipeUploadUseCaseResult =
@@ -23,6 +24,7 @@ export type FinalizeRecipeUploadUseCaseResult =
   | { status: 'forbidden' }
   | { status: 'not_found' }
   | { status: 'rejected' }
+  | { status: 'rate_limited'; retryAfterSeconds: number }
   | { status: 'finalize_failed' }
   | { status: 'ok'; result: FinalizeRecipeUploadResult };
 
@@ -52,6 +54,12 @@ export async function finalizeRecipeUpload(
 
   if (!canAttachRecipeAsset(workspace.workspace.role, auth.userId, header.header.createdBy)) {
     return { status: 'forbidden' };
+  }
+
+  const uploadKey = `${auth.userId}:${parsed.data.familyId}`;
+  const limit = enforceRateLimit('upload_finalize', uploadKey);
+  if (!limit.ok) {
+    return { status: 'rate_limited', retryAfterSeconds: limit.retryAfterSeconds };
   }
 
   const pending = await getPendingRecipeAsset(

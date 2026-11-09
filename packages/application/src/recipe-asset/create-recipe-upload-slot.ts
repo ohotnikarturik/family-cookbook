@@ -15,6 +15,7 @@ import {
   type AppSupabaseClient,
 } from '@family-cookbook/data-access';
 
+import { enforceRateLimit } from '../security/enforce-rate-limit.js';
 import { loadVerifiedAuthUser } from '../profile/ensure-profile-for-user.js';
 
 export type CreateRecipeUploadSlotUseCaseResult =
@@ -23,6 +24,7 @@ export type CreateRecipeUploadSlotUseCaseResult =
   | { status: 'forbidden' }
   | { status: 'not_found' }
   | { status: 'limit_reached' }
+  | { status: 'rate_limited'; retryAfterSeconds: number }
   | { status: 'slot_failed' }
   | { status: 'ok'; result: CreateRecipeUploadSlotResult };
 
@@ -52,6 +54,12 @@ export async function createRecipeUploadSlot(
 
   if (!canAttachRecipeAsset(workspace.workspace.role, auth.userId, header.header.createdBy)) {
     return { status: 'forbidden' };
+  }
+
+  const uploadKey = `${auth.userId}:${parsed.data.familyId}`;
+  const limit = enforceRateLimit('upload_slot', uploadKey);
+  if (!limit.ok) {
+    return { status: 'rate_limited', retryAfterSeconds: limit.retryAfterSeconds };
   }
 
   const counted = await countRecipeAssets(client, parsed.data.familyId, parsed.data.recipeId);

@@ -221,6 +221,9 @@ importers:
       '@family-cookbook/permissions':
         specifier: workspace:*
         version: link:../../packages/permissions
+      '@family-cookbook/security':
+        specifier: workspace:*
+        version: link:../../packages/security
       '@radix-ui/react-dialog':
         specifier: 1.1.15
         version: 1.1.15(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -312,6 +315,9 @@ importers:
       '@family-cookbook/permissions':
         specifier: workspace:*
         version: link:../permissions
+      '@family-cookbook/security':
+        specifier: workspace:*
+        version: link:../security
       nodemailer:
         specifier: 10.3.1
         version: 10.3.1
@@ -433,6 +439,24 @@ importers:
       '@family-cookbook/domain':
         specifier: workspace:*
         version: link:../domain
+    devDependencies:
+      '@family-cookbook/config':
+        specifier: workspace:*
+        version: link:../config
+      '@types/node':
+        specifier: 22.15.32
+        version: 22.15.32
+      eslint:
+        specifier: 9.39.5
+        version: 9.39.5(jiti@2.7.0)(supports-color@7.2.0)
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: 5.1.0
+        version: 5.1.0(@types/node@22.15.32)(vite@8.3.5(@types/node@22.15.32)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  packages/security:
     devDependencies:
       '@family-cookbook/config':
         specifier: workspace:*

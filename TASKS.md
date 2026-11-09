@@ -270,6 +270,8 @@ Complete the family-facing web application per approved product decisions (membe
 
 **Tests:** Automated security cases from spec §17.3 where applicable.
 
+**Status:** Done (2026-11-10).
+
 ### W35.14 — Production invitation email
 - Production-safe email adapter (no local SMTP assumptions).
 

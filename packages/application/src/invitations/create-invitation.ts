@@ -11,6 +11,7 @@ import {
   type AppSupabaseClient,
 } from '@family-cookbook/data-access';
 
+import { isWithinRateLimit } from '../security/enforce-rate-limit.js';
 import { loadVerifiedAuthUser } from '../profile/ensure-profile-for-user.js';
 import type { InvitationEmailContent } from './build-invitation-email.js';
 import { canAssignInviteRole, canManageInvitations } from './can-invite.js';
@@ -25,6 +26,7 @@ export type CreateInvitationResult =
   | { status: 'insert_failed' }
   | { status: 'email_failed' }
   | { status: 'email_failed_kept' }
+  | { status: 'rate_limited' }
   | { status: 'ok'; invitationId: string };
 
 export type InvitationEmailRenderInput = {
@@ -65,6 +67,10 @@ export async function createInvitation(
 
   if (!canAssignInviteRole(workspace.workspace.role, parsed.data.role)) {
     return { status: 'forbidden' };
+  }
+
+  if (!isWithinRateLimit('invitation_create', auth.userId)) {
+    return { status: 'rate_limited' };
   }
 
   const inserted = await insertOrReplaceExpired(client, auth.userId, parsed.data);

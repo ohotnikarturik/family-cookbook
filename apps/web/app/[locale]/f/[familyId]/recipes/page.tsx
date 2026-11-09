@@ -108,6 +108,24 @@ async function RecipesContent({ params, searchParams }: Props) {
       </section>
     );
   }
+  if (result.status === 'rate_limited') {
+    return (
+      <section className="space-y-4" aria-labelledby="recipes-heading">
+        <RecipesHeader
+          title={t('list.title')}
+          subtitle={t('list.subtitle')}
+          familyId={familyId}
+          addRecipeLabel={t('editor.addRecipe')}
+          showAddRecipe={canAdd}
+        />
+        <RecipeBrowseStates
+          variant="error"
+          title={t('status.rateLimitedTitle')}
+          description={t('status.rateLimited')}
+        />
+      </section>
+    );
+  }
   if (result.status === 'query_failed') {
     return (
       <section className="space-y-4" aria-labelledby="recipes-heading">

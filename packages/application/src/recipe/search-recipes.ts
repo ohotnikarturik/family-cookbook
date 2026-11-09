@@ -6,12 +6,14 @@ import {
   type AppSupabaseClient,
 } from '@family-cookbook/data-access';
 
+import { isWithinRateLimit } from '../security/enforce-rate-limit.js';
 import { loadVerifiedAuthUser } from '../profile/ensure-profile-for-user.js';
 
 export type SearchRecipesResult =
   | { status: 'auth_required' }
   | { status: 'validation_error' }
   | { status: 'forbidden' }
+  | { status: 'rate_limited' }
   | { status: 'query_failed' }
   | { status: 'ok'; result: RecipeSearchResult };
 
@@ -36,6 +38,10 @@ export async function searchRecipes(
 
   if (!canViewRecipes(workspace.workspace.role)) {
     return { status: 'forbidden' };
+  }
+
+  if (!isWithinRateLimit('recipe_search', auth.userId)) {
+    return { status: 'rate_limited' };
   }
 
   const result = await searchRecipesRepo(client, parsed.data);

@@ -1,6 +1,7 @@
 import { invitationTokenSchema } from '@family-cookbook/contracts';
 import { redeemFamilyInvitation, type AppSupabaseClient } from '@family-cookbook/data-access';
 
+import { isWithinRateLimit } from '../security/enforce-rate-limit.js';
 import { loadVerifiedAuthUser } from '../profile/ensure-profile-for-user.js';
 import { setActiveFamilyPreference } from '../family/set-active-family-preference.js';
 
@@ -15,6 +16,7 @@ export type AcceptInvitationResult =
   | { status: 'already_member' }
   | { status: 'email_unverified' }
   | { status: 'redeem_failed' }
+  | { status: 'rate_limited' }
   | { status: 'ok'; familyId: string };
 
 export async function acceptInvitation(
@@ -29,6 +31,10 @@ export async function acceptInvitation(
   const parsedToken = invitationTokenSchema.safeParse(rawToken);
   if (!parsedToken.success) {
     return { status: 'validation_error' };
+  }
+
+  if (!isWithinRateLimit('invitation_accept', auth.userId)) {
+    return { status: 'rate_limited' };
   }
 
   const redeemed = await redeemFamilyInvitation(client, parsedToken.data);

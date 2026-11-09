@@ -237,7 +237,14 @@ Approved for implementation without re-confirmation:
 1. **Backlog:** W35.1–W35.11 acceptance verified; EPIC 3.5 marked complete in [`TASKS.md`](../TASKS.md).
 2. **Spec:** [`PROJECT_SPEC.md`](../PROJECT_SPEC.md) §19 split into **19.1 web gate** (met), **19.2 MCP** (EPIC 4), **19.3 full staging release**; §18.5 lists current CI jobs.
 3. **CI fix:** Playwright job `runs-on: ubuntu-24.04` — Playwright 1.56.1 does not ship Chromium for Ubuntu 26.04 (`ubuntu-latest` on GHA).
-4. **Next:** W35.13 (rate limits/headers) or EPIC 4 (MCP); both required for §19.3.
+4. **Next:** W35.14–W35.17 and EPIC 4 (MCP) for §19.3 staging release.
+
+## W35.13 — Rate limits, headers, CORS, log redaction (2026-11-10)
+
+1. **Package:** [`packages/security`](../packages/security) — in-memory sliding-window rate limits (MVP; edge/redis provider deferred per spec), `redactLogText` / `redactLogFields`, CSP + baseline secure headers, strict credentialed CORS helpers.
+2. **Limits:** Auth magic link / OTP (per IP + email), invitation create/accept (per user), upload slot/finalize (per user+family), recipe search (per user) enforced in shared application use cases where applicable; sign-in limits in web Server Actions.
+3. **Web:** [`next.config.ts`](../apps/web/next.config.ts) `headers()` + [`proxy.ts`](../apps/web/proxy.ts) apply the same policy; upload API routes return `429` + remaining `Retry-After` and reject disallowed `Origin`; OPTIONS uses an empty 204 (JSON 204 throws in Node). No wildcard credentialed CORS. Dev CSP includes `'unsafe-eval'` and `ws:`/`wss:` so Next/React refresh works; production CSP does not.
+4. **Tests:** Vitest in `@family-cookbook/security` and web CORS/origin + 204 helper.
 
 ## W35.11 — pgTAP in GitHub Actions (2026-11-10)
 

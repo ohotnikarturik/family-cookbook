@@ -39,6 +39,7 @@
       "sendFailed": "Viestin lähetys epäonnistui. Yritä hetken kuluttua uudelleen.",
       "invalidOtp": "Syötä sähköpostin 6-numeroinen koodi.",
       "verifyFailed": "Koodi ei kelvannut. Pyydä uusi viesti, jos vanhentui.",
+      "rateLimited": "Liian monta kirjautumisyritystä. Odota hetki ja yritä uudelleen.",
       "callback": "Kirjautuminen keskeytyi. Yritä uudelleen."
     }
   },
@@ -264,7 +265,8 @@
       "emailFailedKept": "Kutsusähköpostia ei voitu lähettää. Peru odottava kutsu ja yritä uudelleen.",
       "loadFailed": "Kutsuja ei voitu ladata. Päivitä sivu ja yritä uudelleen.",
       "revokeFailed": "Kutsua ei voitu perua. Yritä uudelleen.",
-      "createFailed": "Kutsua ei voitu luoda."
+      "createFailed": "Kutsua ei voitu luoda.",
+      "rateLimited": "Liian monta kutsua lyhyessä ajassa. Odota hetki ja yritä uudelleen."
     }
   },
   "inviteAccept": {
@@ -282,7 +284,8 @@
       "emailUnverified": "Vahvista sähköpostiosoitteesi ennen kuin hyväksyt kutsun.",
       "expired": "Kutsu on vanhentunut. Pyydä uusi.",
       "unavailable": "Kutsu ei ole enää voimassa.",
-      "generic": "Kutsua ei voitu hyväksyä. Yritä uudelleen."
+      "generic": "Kutsua ei voitu hyväksyä. Yritä uudelleen.",
+      "rateLimited": "Liian monta yritystä. Odota hetki ja yritä uudelleen."
     }
   },
   "design": {
@@ -521,7 +524,9 @@
       "forbiddenTitle": "Ei saatavilla",
       "forbidden": "Sinulla ei ole oikeutta tähän reseptiin tässä perhekontekstissa.",
       "invalidFiltersTitle": "Tarkista suodattimet",
-      "invalidFilters": "Yksi tai useampi suodatin on virheellinen. Tyhjennä suodattimet ja yritä uudelleen."
+      "invalidFilters": "Yksi tai useampi suodatin on virheellinen. Tyhjennä suodattimet ja yritä uudelleen.",
+      "rateLimitedTitle": "Hetki rauhaa",
+      "rateLimited": "Liian monta hakua lyhyessä ajassa. Odota hetki ja yritä uudelleen."
     },
     "editor": {
       "addRecipe": "Lisää resepti",

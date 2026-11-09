@@ -39,6 +39,7 @@
       "sendFailed": "We could not send the message. Try again in a moment.",
       "invalidOtp": "Enter the 6-digit code from your email.",
       "verifyFailed": "That code did not work. Request a new message if it expired.",
+      "rateLimited": "Too many sign-in attempts. Wait a few minutes and try again.",
       "callback": "Sign-in could not be completed. Try again."
     }
   },
@@ -264,7 +265,8 @@
       "emailFailedKept": "The invitation email could not be sent. Revoke the pending invitation and try again.",
       "loadFailed": "We could not load invitations. Refresh the page and try again.",
       "revokeFailed": "We could not revoke that invitation. Try again.",
-      "createFailed": "Could not create the invitation."
+      "createFailed": "Could not create the invitation.",
+      "rateLimited": "Too many invitations sent recently. Wait a while and try again."
     }
   },
   "inviteAccept": {
@@ -282,7 +284,8 @@
       "emailUnverified": "Confirm your email address before accepting this invitation.",
       "expired": "This invitation has expired. Ask for a new one.",
       "unavailable": "This invitation is no longer available.",
-      "generic": "We could not accept the invitation. Try again."
+      "generic": "We could not accept the invitation. Try again.",
+      "rateLimited": "Too many attempts. Wait a few minutes and try again."
     }
   },
   "design": {
@@ -521,7 +524,9 @@
       "forbiddenTitle": "Not available",
       "forbidden": "You do not have access to this recipe in this family context.",
       "invalidFiltersTitle": "Check your filters",
-      "invalidFilters": "One or more filters are invalid. Clear filters and try again."
+      "invalidFilters": "One or more filters are invalid. Clear filters and try again.",
+      "rateLimitedTitle": "Slow down a moment",
+      "rateLimited": "Too many searches in a short time. Wait a minute and try again."
     },
     "editor": {
       "addRecipe": "Add recipe",
