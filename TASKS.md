@@ -298,6 +298,8 @@ Complete the family-facing web application per approved product decisions (membe
 
 **Tests:** Automated axe in CI; checklist in release notes.
 
+**Status:** Done (2026-11-10).
+
 ## EPIC 4 — MCP service and OAuth
 
 ### T4.1 MCP service bootstrap

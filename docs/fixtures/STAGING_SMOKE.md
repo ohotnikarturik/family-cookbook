@@ -23,8 +23,9 @@ Record date, git SHA, staging app URL, and pass/fail per row. Do not paste token
 | 7 | Media | Authorized editor uploads a JPEG/PNG/WebP or PDF within limits; unsigned guess of another family’s object URL fails. |
 | 8 | Archive | Archive with confirm + version; recipe leaves the default list; restore brings it back. |
 | 9 | Invitation | Follow [`STAGING_INVITATION_EMAIL.md`](STAGING_INVITATION_EMAIL.md). |
-| 10 | Preferences | Language (en/fi/ru/uk) and theme (system/light/dark) persist after refresh. |
-| 11 | Secrets | Host logs and browser Network panel show **no** service_role, SMTP password, or raw invitation token. Client bundle is covered in CI by `pnpm verify:client-bundle`. |
+| 10 | Accessibility | CI axe specs green; complete manual checklist in [`ACCESSIBILITY_RELEASE.md`](../ACCESSIBILITY_RELEASE.md). |
+| 11 | Preferences | Language (en/fi/ru/uk) and theme (system/light/dark) persist after refresh. |
+| 12 | Secrets | Host logs and browser Network panel show **no** service_role, SMTP password, or raw invitation token. Client bundle is covered in CI by `pnpm verify:client-bundle`. |
 
 ## Fail and stop
 

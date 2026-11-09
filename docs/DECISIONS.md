@@ -239,6 +239,12 @@ Approved for implementation without re-confirmation:
 3. **CI fix:** Playwright job `runs-on: ubuntu-24.04` — Playwright 1.56.1 does not ship Chromium for Ubuntu 26.04 (`ubuntu-latest` on GHA).
 4. **Next:** W35.14–W35.17 and EPIC 4 (MCP) for §19.3 staging release.
 
+## W35.17 — Accessibility release review (2026-11-10)
+
+1. **Automation:** [`expectNoSeriousAxeViolations`](../apps/web/e2e/fixtures/axe.ts) — WCAG 2.x + `wcag22aa` tags; critical/serious fail CI. [`critical-a11y.spec.ts`](../apps/web/e2e/critical-a11y.spec.ts) covers authenticated recipe/settings flows; [`sign-in-a11y.spec.ts`](../apps/web/e2e/sign-in-a11y.spec.ts) stays for anonymous auth.
+2. **Manual gate:** [`docs/ACCESSIBILITY_RELEASE.md`](ACCESSIBILITY_RELEASE.md) — keyboard, screen reader, zoom, 320px, locales, light/dark; **no standing WCAG exceptions** in the exceptions table until a rule is explicitly disabled in tests.
+3. **EPIC 3.5:** W35.13–W35.17 complete; EPIC 4 (MCP) may proceed per [`TASKS.md`](../TASKS.md).
+
 ## W35.16 — Backup and restoration verification (2026-11-10)
 
 1. **Ops guide:** [`docs/BACKUP_AND_RESTORE.md`](BACKUP_AND_RESTORE.md) — hosted Supabase backup schedule/PITR expectations, Storage co-dependence, staging restore steps.

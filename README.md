@@ -73,7 +73,7 @@ pnpm verify:client-bundle   # After build: scan web client bundles for secret-li
 
 ## Staging and production
 
-Operator guide (isolated Supabase projects, secrets, web build, smoke checklist): [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md). Repeatable staging smoke: [`docs/fixtures/STAGING_SMOKE.md`](docs/fixtures/STAGING_SMOKE.md). Invitation SMTP: [`docs/fixtures/STAGING_INVITATION_EMAIL.md`](docs/fixtures/STAGING_INVITATION_EMAIL.md). Backup/restore: [`docs/BACKUP_AND_RESTORE.md`](docs/BACKUP_AND_RESTORE.md).
+Operator guide (isolated Supabase projects, secrets, web build, smoke checklist): [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md). Repeatable staging smoke: [`docs/fixtures/STAGING_SMOKE.md`](docs/fixtures/STAGING_SMOKE.md). Invitation SMTP: [`docs/fixtures/STAGING_INVITATION_EMAIL.md`](docs/fixtures/STAGING_INVITATION_EMAIL.md). Backup/restore: [`docs/BACKUP_AND_RESTORE.md`](docs/BACKUP_AND_RESTORE.md). Accessibility release: [`docs/ACCESSIBILITY_RELEASE.md`](docs/ACCESSIBILITY_RELEASE.md).
 
 Do not deploy MCP until EPIC 4. Do not use local seed identities or `service_role` on hosted web.
 
