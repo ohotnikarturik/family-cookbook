@@ -16,8 +16,4 @@ export {
   buildSecurityHeaders,
   type SecurityHeaderOptions,
 } from './http-headers.js';
-export {
-  corsHeadersForAllowedOrigin,
-  evaluateCorsRequest,
-  type CorsDecision,
-} from './cors.js';
+export { corsHeadersForAllowedOrigin, evaluateCorsRequest, type CorsDecision } from './cors.js';

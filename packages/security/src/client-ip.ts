@@ -7,9 +7,7 @@ function firstHeaderValue(raw: string | null | undefined): string | undefined {
 }
 
 /** Best-effort client IP for rate limiting (trust reverse-proxy headers when present). */
-export function resolveClientIp(headers: {
-  get(name: string): string | null;
-}): string {
+export function resolveClientIp(headers: { get(name: string): string | null }): string {
   const forwarded = firstHeaderValue(headers.get('x-forwarded-for'));
   if (forwarded) {
     return forwarded;

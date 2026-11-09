@@ -28,9 +28,7 @@ export const RATE_LIMIT_POLICIES: Record<RateLimitPolicyId, RateLimitPolicy> = {
 
 type Bucket = { count: number; windowStart: number };
 
-export type RateLimitConsumeResult =
-  | { allowed: true }
-  | { allowed: false; retryAfterMs: number };
+export type RateLimitConsumeResult = { allowed: true } | { allowed: false; retryAfterMs: number };
 
 export type RateLimiter = {
   consume(policy: RateLimitPolicyId, subject: string): RateLimitConsumeResult;
