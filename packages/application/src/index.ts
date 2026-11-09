@@ -18,7 +18,10 @@ export {
 export { createFamily, type CreateFamilyResult } from './family/create-family.js';
 export { listMyFamilies, type ListMyFamiliesResult } from './family/list-my-families.js';
 export { listFamilyMembers, type ListFamilyMembersResult } from './family/list-family-members.js';
-export { setFamilyMemberRole, type SetFamilyMemberRoleResult } from './family/set-family-member-role.js';
+export {
+  setFamilyMemberRole,
+  type SetFamilyMemberRoleResult,
+} from './family/set-family-member-role.js';
 export {
   setFamilyMemberStatus,
   type SetFamilyMemberStatusResult,

@@ -1,10 +1,12 @@
-export function resolveMemberDisplayLabel(input: Readonly<{
-  displayName: string | null;
-  memberUserId: string;
-  actorUserId: string;
-  youLabel: string;
-  neutralLabel: string;
-}>): string {
+export function resolveMemberDisplayLabel(
+  input: Readonly<{
+    displayName: string | null;
+    memberUserId: string;
+    actorUserId: string;
+    youLabel: string;
+    neutralLabel: string;
+  }>,
+): string {
   if (input.memberUserId === input.actorUserId) {
     return input.youLabel;
   }

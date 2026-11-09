@@ -1,8 +1,5 @@
 import { setFamilyMemberRoleInputSchema } from '@family-cookbook/contracts';
-import {
-  canAdministrateTargetMember,
-  canAssignMemberRole,
-} from '@family-cookbook/permissions';
+import { canAdministrateTargetMember, canAssignMemberRole } from '@family-cookbook/permissions';
 import {
   getFamilyWorkspaceForMember,
   listFamilyMemberDirectory,
