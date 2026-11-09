@@ -284,6 +284,8 @@ Complete the family-facing web application per approved product decisions (membe
 
 **Tests:** Staging smoke documented and repeatable.
 
+**Status:** Done (2026-11-10).
+
 ### W35.16 — Backup and restoration verification
 - Backup schedule and documented restore drill.
 

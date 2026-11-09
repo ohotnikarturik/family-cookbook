@@ -71,6 +71,12 @@ pnpm format           # Prettier write
 pnpm verify:client-bundle   # After build: scan web client bundles for secret-like patterns
 ```
 
+## Staging and production
+
+Operator guide (isolated Supabase projects, secrets, web build, smoke checklist): [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md). Repeatable staging smoke: [`docs/fixtures/STAGING_SMOKE.md`](docs/fixtures/STAGING_SMOKE.md). Invitation SMTP: [`docs/fixtures/STAGING_INVITATION_EMAIL.md`](docs/fixtures/STAGING_INVITATION_EMAIL.md).
+
+Do not deploy MCP until EPIC 4. Do not use local seed identities or `service_role` on hosted web.
+
 ## Local Supabase
 
 Full steps: [`docs/LOCAL_SUPABASE.md`](docs/LOCAL_SUPABASE.md).

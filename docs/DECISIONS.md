@@ -239,6 +239,13 @@ Approved for implementation without re-confirmation:
 3. **CI fix:** Playwright job `runs-on: ubuntu-24.04` — Playwright 1.56.1 does not ship Chromium for Ubuntu 26.04 (`ubuntu-latest` on GHA).
 4. **Next:** W35.14–W35.17 and EPIC 4 (MCP) for §19.3 staging release.
 
+## W35.15 — Deployment and environment documentation (2026-11-10)
+
+1. **Guide:** [`docs/DEPLOYMENT.md`](DEPLOYMENT.md) — local vs staging vs production isolation; hosted Supabase Auth URLs + `db push`; web monorepo `pnpm build` / `next start`; env table; no `service_role` on the web host; MCP not deployed.
+2. **Vendor:** no vendor-specific deploy files. Any Node 22 + pnpm host that can build from the repo root is acceptable. Exact DNS/SMTP/host accounts are operator-owned (placeholders only).
+3. **Smoke:** [`docs/fixtures/STAGING_SMOKE.md`](fixtures/STAGING_SMOKE.md) plus existing invitation checklist. Not executed here (no staging project in this task).
+4. **Env:** [`.env.example`](../.env.example) comments point at the matrix; `NEXT_PUBLIC_*` must be present at **build** time.
+
 ## W35.14 — Production invitation email (2026-11-10)
 
 1. **Config:** [`parseInvitationSmtpConfigFromEnv`](../packages/application/src/invitations/invitation-smtp-config.ts) reads `INVITATION_SMTP_*`. When `NODE_ENV=production`, loopback hosts and `@family-cookbook.test` senders are rejected; SMTP user + password are required; TLS certificate verification stays enabled for remote hosts ([`invitation-smtp-host.ts`](../packages/application/src/invitations/invitation-smtp-host.ts)).
