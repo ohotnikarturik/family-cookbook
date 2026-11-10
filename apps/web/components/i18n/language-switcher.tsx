@@ -11,33 +11,46 @@ import { locales, type AppLocale } from '@/i18n/routing';
 import { localeSwitchTargetPath } from '@/lib/locale-switch-path';
 import { cn } from '@/lib/utils';
 
-export function LanguageSwitcher({ className }: Readonly<{ className?: string }>) {
+type SwitcherVariant = 'default' | 'compact';
+
+export function LanguageSwitcher({
+  className,
+  variant = 'default',
+}: Readonly<{ className?: string; variant?: SwitcherVariant }>) {
   return (
-    <Suspense fallback={<LanguageSwitcherFallback className={className} />}>
-      <LanguageSwitcherInner className={className} />
+    <Suspense fallback={<LanguageSwitcherFallback className={className} variant={variant} />}>
+      <LanguageSwitcherInner className={className} variant={variant} />
     </Suspense>
   );
 }
 
-function LanguageSwitcherFallback({ className }: Readonly<{ className?: string | undefined }>) {
+function LanguageSwitcherFallback({
+  className,
+  variant,
+}: Readonly<{ className?: string | undefined; variant: SwitcherVariant }>) {
   const t = useTranslations('locale');
   const fieldId = useId();
 
   return (
-    <div className={cn('space-y-2', className)}>
-      <Label htmlFor={fieldId}>{t('label')}</Label>
+    <div className={cn(variant === 'compact' ? 'space-y-1' : 'space-y-2', className)}>
+      <Label htmlFor={fieldId} className={variant === 'compact' ? 'text-xs' : undefined}>
+        {t('label')}
+      </Label>
       <select
         id={fieldId}
         name="ui-language"
         disabled
         aria-busy
-        className="flex h-11 w-full max-w-xs rounded-md border border-input bg-muted px-3 py-2 text-sm text-muted-foreground"
+        className="flex h-11 w-full rounded-md border border-input bg-muted px-3 py-2 text-sm text-muted-foreground"
       />
     </div>
   );
 }
 
-function LanguageSwitcherInner({ className }: Readonly<{ className?: string | undefined }>) {
+function LanguageSwitcherInner({
+  className,
+  variant,
+}: Readonly<{ className?: string | undefined; variant: SwitcherVariant }>) {
   const t = useTranslations('locale');
   const locale = useLocale() as AppLocale;
   const router = useRouter();
@@ -54,15 +67,17 @@ function LanguageSwitcherInner({ className }: Readonly<{ className?: string | un
   }
 
   return (
-    <div className={cn('space-y-2', className)}>
-      <Label htmlFor={fieldId}>{t('label')}</Label>
+    <div className={cn(variant === 'compact' ? 'space-y-1' : 'space-y-2', className)}>
+      <Label htmlFor={fieldId} className={variant === 'compact' ? 'text-xs' : undefined}>
+        {t('label')}
+      </Label>
       <select
         id={fieldId}
         name="ui-language"
         value={locale}
         disabled={pending}
         onChange={(e) => onChange(e.target.value as AppLocale)}
-        className="flex h-11 w-full max-w-xs rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-[length:var(--ring-width)] focus-visible:ring-ring focus-visible:ring-offset-[length:var(--ring-offset)] focus-visible:ring-offset-background"
+        className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-[length:var(--ring-width)] focus-visible:ring-ring focus-visible:ring-offset-[length:var(--ring-offset)] focus-visible:ring-offset-background"
         aria-busy={pending}
       >
         {locales.map((l) => (

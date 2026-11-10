@@ -12,8 +12,9 @@ import { Suspense } from 'react';
 
 import { invitableRolesForActor } from '@/lib/invitable-roles';
 import { InviteMemberForm } from '@/components/invitations/invite-member-form';
+import { FamilySettingsSubnav } from '@/components/shell/family-settings-subnav';
 import { PendingInvitationsList } from '@/components/invitations/pending-invitations-list';
-import { Link } from '@/i18n/navigation';
+import { TextLink } from '@/components/product/text-link';
 import { locales, type AppLocale } from '@/i18n/routing';
 
 type Props = Readonly<{ params: Promise<{ locale: string; familyId: string }> }>;
@@ -54,6 +55,7 @@ async function InvitationsContent({ params }: Props) {
         <h2 className="text-xl font-semibold text-foreground">{t('title')}</h2>
         <p className="text-sm text-muted-foreground">{t('subtitle')}</p>
       </div>
+      <FamilySettingsSubnav familyId={familyId} showInvitations />
       <InviteMemberForm
         familyId={familyId}
         invitableRoles={invitableRolesForActor(workspace.workspace.role)}
@@ -70,12 +72,7 @@ async function InvitationsContent({ params }: Props) {
           </p>
         )}
       </section>
-      <Link
-        href={`/f/${familyId}`}
-        className="text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        {t('backDashboard')}
-      </Link>
+      <TextLink href={`/f/${familyId}`}>{t('backDashboard')}</TextLink>
     </div>
   );
 }

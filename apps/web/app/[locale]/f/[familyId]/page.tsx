@@ -1,5 +1,4 @@
 import { resolveAccessibleFamily, searchRecipes } from '@family-cookbook/application';
-import { canCreateRecipe } from '@family-cookbook/permissions';
 import { createServerSupabaseClient } from '@family-cookbook/data-access/supabase/server';
 import { getFormatter, getTranslations } from 'next-intl/server';
 import { connection } from 'next/server';
@@ -10,7 +9,7 @@ import { RecipeCard } from '@/components/recipe/recipe-card';
 import { RecipeLoading } from '@/components/recipe/recipe-loading';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
-import { recipeContentLang } from '@/lib/format-recipe-meta';
+import { recipeContentLang, recipeTimingLabel } from '@/lib/format-recipe-meta';
 import { locales, type AppLocale } from '@/i18n/routing';
 
 type Props = Readonly<{ params: Promise<{ locale: string; familyId: string }> }>;
@@ -36,7 +35,6 @@ async function DashboardContent({ params }: Props) {
   const locale = localeParam as AppLocale;
   const t = await getTranslations({ locale, namespace: 'family' });
   const tRecipes = await getTranslations({ locale, namespace: 'recipes' });
-  const tRoles = await getTranslations({ locale, namespace: 'family.roles' });
   const format = await getFormatter({ locale });
 
   const supabase = await createServerSupabaseClient();
@@ -44,8 +42,6 @@ async function DashboardContent({ params }: Props) {
   if (workspace.status !== 'ok') {
     notFound();
   }
-
-  const { workspace: family } = workspace;
 
   const recent = await searchRecipes(supabase, {
     familyId,
@@ -66,25 +62,10 @@ async function DashboardContent({ params }: Props) {
           {t('dashboard.title')}
         </h2>
         <p className="text-sm text-muted-foreground">{t('dashboard.subtitle')}</p>
-        <dl className="grid gap-4 text-sm sm:grid-cols-2">
-          <div>
-            <dt className="text-muted-foreground">{t('dashboard.yourRole')}</dt>
-            <dd className="font-medium text-foreground">{tRoles(family.role)}</dd>
-          </div>
-          <div>
-            <dt className="text-muted-foreground">{t('dashboard.memberCount')}</dt>
-            <dd className="font-medium text-foreground">{family.memberCount}</dd>
-          </div>
-        </dl>
         <div className="flex flex-col gap-3 sm:flex-row">
           <Button type="button" className="min-h-11 w-full sm:w-auto" asChild>
             <Link href={`/f/${familyId}/recipes`}>{t('dashboard.browseRecipes')}</Link>
           </Button>
-          {canCreateRecipe(family.role) ? (
-            <Button type="button" variant="outline" className="min-h-11 w-full sm:w-auto" asChild>
-              <Link href={`/f/${familyId}/recipes/new`}>{t('dashboard.addRecipe')}</Link>
-            </Button>
-          ) : null}
         </div>
       </section>
 
@@ -101,7 +82,7 @@ async function DashboardContent({ params }: Props) {
         ) : recentItems.length === 0 ? (
           <p className="text-sm text-muted-foreground">{tRecipes('status.empty')}</p>
         ) : (
-          <ul className="grid list-none gap-4 p-0">
+          <ul className="grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2">
             {recentItems.map((recipe) => {
               const contentLang = recipeContentLang(recipe, locale);
               return (
@@ -117,6 +98,13 @@ async function DashboardContent({ params }: Props) {
                   })}
                   archivedLabel={tRecipes('list.archivedBadge')}
                   categoryFallback={tRecipes('list.uncategorized')}
+                  imageLoadingLabel={tRecipes('list.imageLoading')}
+                  metaLabel={recipeTimingLabel(recipe, {
+                    prep: (minutes) => tRecipes('list.prepMinutes', { minutes }),
+                    cook: (minutes) => tRecipes('list.cookMinutes', { minutes }),
+                    servings: (servings) =>
+                      tRecipes('list.servings', { servings: format.number(servings) }),
+                  })}
                   headingLevel="h4"
                   {...(contentLang ? { contentLang } : {})}
                 />

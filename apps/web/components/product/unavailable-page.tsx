@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 
-import { Link } from '@/i18n/navigation';
+import { TextLink } from '@/components/product/text-link';
 import type { AppLocale } from '@/i18n/routing';
 
 export async function UnavailablePage({
@@ -25,12 +25,7 @@ export async function UnavailablePage({
       </Heading>
       <p className="text-muted-foreground">{t('description')}</p>
       <p>
-        <Link
-          href="/"
-          className="inline-flex min-h-11 items-center font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          {t('home')}
-        </Link>
+        <TextLink href="/">{t('home')}</TextLink>
       </p>
     </Root>
   );

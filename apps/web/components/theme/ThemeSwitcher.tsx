@@ -14,28 +14,45 @@ const options: { value: ThemePreference; id: string }[] = [
   { value: 'dark', id: 'theme-dark' },
 ];
 
-export function ThemeSwitcher({ className }: Readonly<{ className?: string }>) {
+type SwitcherVariant = 'default' | 'compact';
+
+export function ThemeSwitcher({
+  className,
+  variant = 'default',
+}: Readonly<{ className?: string; variant?: SwitcherVariant }>) {
   const t = useTranslations('theme');
   const { preference, ready, setPreference } = useTheme();
+  const inputSize = variant === 'compact' ? 'size-4' : 'size-6';
+  const radioName = variant === 'compact' ? `${THEME_COOKIE}-compact` : THEME_COOKIE;
 
   return (
-    <fieldset className={cn('space-y-3', className)}>
-      <legend className="text-sm font-medium text-foreground">{t('label')}</legend>
-      <div className="flex flex-wrap gap-2">
+    <fieldset className={cn(variant === 'compact' ? 'space-y-1.5' : 'space-y-3', className)}>
+      <legend
+        className={cn('font-medium text-foreground', variant === 'compact' ? 'text-xs' : 'text-sm')}
+      >
+        {t('label')}
+      </legend>
+      <div className="flex flex-wrap gap-1.5">
         {options.map(({ value, id }) => (
           <Label
             key={value}
-            htmlFor={id}
-            className="inline-flex min-h-11 cursor-pointer items-center gap-3 rounded-lg px-3 font-normal"
+            htmlFor={variant === 'compact' ? `${id}-compact` : id}
+            className={cn(
+              'inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-lg font-normal',
+              variant === 'compact' ? 'px-2 text-xs' : 'gap-3 px-3',
+            )}
           >
             <input
-              id={id}
+              id={variant === 'compact' ? `${id}-compact` : id}
               type="radio"
-              name={THEME_COOKIE}
+              name={radioName}
               value={value}
               checked={ready && preference === value}
               onChange={() => setPreference(value)}
-              className="size-6 shrink-0 accent-primary focus-visible:ring-ring focus-visible:ring-[length:var(--ring-width)] focus-visible:ring-offset-2 focus-visible:outline-none"
+              className={cn(
+                'shrink-0 accent-primary focus-visible:ring-ring focus-visible:ring-[length:var(--ring-width)] focus-visible:ring-offset-2 focus-visible:outline-none',
+                inputSize,
+              )}
             />
             {value === 'system' ? t('system') : value === 'light' ? t('light') : t('dark')}
           </Label>

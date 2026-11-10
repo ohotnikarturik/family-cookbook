@@ -22,6 +22,7 @@ import {
   type PreservedTranslationCollections,
   type RecipeEditorDraft,
 } from '@/lib/recipe-editor';
+import { FLASH_NOTICE_COOKIE, RECIPE_SAVED_NOTICE } from '@/lib/flash-notice';
 import { LOCALE_COOKIE, parseAppLocale } from '@/lib/locale';
 
 async function actionLocale(): Promise<string> {
@@ -194,6 +195,7 @@ export async function createRecipeAction(
     return { ok: false, code: 'mutation_failed', message: t('errors.saveFailed'), draft };
   }
 
+  await rememberRecipeSaved();
   redirect(`/${locale}/f/${familyParsed.data}/recipes/${result.recipeId}`);
 }
 
@@ -288,7 +290,19 @@ export async function updateRecipeAction(
     return { ok: false, code: 'mutation_failed', message: t('errors.saveFailed'), draft };
   }
 
+  await rememberRecipeSaved();
   redirect(`/${locale}/f/${familyParsed.data}/recipes/${result.recipeId}`);
+}
+
+async function rememberRecipeSaved(): Promise<void> {
+  const jar = await cookies();
+  jar.set(FLASH_NOTICE_COOKIE, RECIPE_SAVED_NOTICE, {
+    path: '/',
+    maxAge: 60,
+    sameSite: 'lax',
+    httpOnly: false,
+    secure: process.env.NODE_ENV === 'production',
+  });
 }
 
 function emptyDraftFallback(): RecipeEditorDraft {

@@ -16,6 +16,7 @@ const buttonVariants = cva(
         ghost: 'hover:bg-muted',
         destructive: 'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/92',
         quiet: 'text-muted-foreground hover:text-foreground',
+        link: 'h-auto min-h-0 min-w-0 px-0 text-primary underline-offset-4 hover:text-primary/90 hover:underline',
       },
       size: {
         default: 'h-11 px-4 py-2',
@@ -35,13 +36,35 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  loading?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : 'button';
+  (
+    { className, variant, size, asChild = false, loading = false, disabled, children, ...props },
+    ref,
+  ) => {
+    const Comp = asChild && !loading ? Slot : 'button';
     return (
-      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        aria-busy={loading || undefined}
+        {...(Comp === 'button' ? { disabled: disabled === true || loading } : {})}
+        {...props}
+      >
+        {loading ? (
+          <>
+            <span
+              className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+              aria-hidden
+            />
+            <span>{children}</span>
+          </>
+        ) : (
+          children
+        )}
+      </Comp>
     );
   },
 );

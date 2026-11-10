@@ -1,7 +1,8 @@
 import type { RecipeAssetSummary, RecipeDetail } from '@family-cookbook/contracts';
-import type { ResolvedRecipeDisplay } from '@family-cookbook/domain';
+import { pickRecipeCoverAssetId, type ResolvedRecipeDisplay } from '@family-cookbook/domain';
 import type { ReactNode } from 'react';
 
+import { RecipeCardCover } from '@/components/recipe/recipe-card-cover';
 import { RecipeMediaGallery, type RecipeMediaCard } from '@/components/recipe/recipe-media-gallery';
 import { RecipeStepPhoto } from '@/components/recipe/recipe-step-photo';
 
@@ -76,13 +77,34 @@ export function RecipeDetailView({
       return [asset.id];
     }),
   );
+  const heroAssetId = pickRecipeCoverAssetId(
+    recipe.assets.map((asset) => ({
+      id: asset.id,
+      assetKind: asset.assetKind,
+      processingStatus: asset.processingStatus,
+      detectedMimeType: asset.detectedMimeType,
+      createdAt: asset.createdAt,
+    })),
+  );
   const galleryAssets = recipe.assets
-    .filter((asset) => !inlineStepAssetIds.has(asset.id))
+    .filter((asset) => asset.id !== heroAssetId && !inlineStepAssetIds.has(asset.id))
     .map(toMediaCard);
   const amountByPosition = new Map(ingredients.map((item) => [item.position, item.amount]));
 
   return (
     <article className="space-y-8">
+      {heroAssetId ? (
+        <div className="-mx-2 overflow-hidden rounded-xl border border-border md:mx-0">
+          <RecipeCardCover
+            familyId={familyId}
+            recipeId={recipe.id}
+            coverAssetId={heroAssetId}
+            title={display.title}
+            loadingLabel={mediaLabels.loading}
+            errorLabel={mediaLabels.loadError}
+          />
+        </div>
+      ) : null}
       <header className="space-y-3 border-b border-border pb-6">
         <ArchivedBadge recipe={recipe} archivedLabel={labels.archived} />
         {languageSelector}

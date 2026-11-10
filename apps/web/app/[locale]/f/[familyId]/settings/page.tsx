@@ -8,7 +8,8 @@ import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
 import { FamilySettingsForm } from '@/components/family/family-settings-form';
-import { Link } from '@/i18n/navigation';
+import { FamilySettingsSubnav } from '@/components/shell/family-settings-subnav';
+import { TextLink } from '@/components/product/text-link';
 import { locales, type AppLocale } from '@/i18n/routing';
 
 type Props = Readonly<{ params: Promise<{ locale: string; familyId: string }> }>;
@@ -52,41 +53,17 @@ async function SettingsContent({ params }: Props) {
         <h2 className="text-xl font-semibold text-foreground">{t('title')}</h2>
         <p className="text-sm text-muted-foreground">{t('subtitle')}</p>
       </header>
-      <nav aria-label={t('subnavLabel')} className="flex flex-wrap gap-3 text-sm">
-        <Link
-          href={`/f/${familyId}/settings`}
-          aria-current="page"
-          className="inline-flex min-h-11 items-center font-semibold text-foreground underline-offset-4"
-        >
-          {t('subnavGeneral')}
-        </Link>
-        <Link
-          href={`/f/${familyId}/settings/members`}
-          className="inline-flex min-h-11 items-center font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          {t('subnavMembers')}
-        </Link>
-        {canManageInvitations(workspace.workspace.role) ? (
-          <Link
-            href={`/f/${familyId}/settings/invitations`}
-            className="inline-flex min-h-11 items-center font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            {t('subnavInvitations')}
-          </Link>
-        ) : null}
-      </nav>
+      <FamilySettingsSubnav
+        familyId={familyId}
+        showInvitations={canManageInvitations(workspace.workspace.role)}
+      />
       <FamilySettingsForm
         familyId={familyId}
         name={workspace.workspace.name}
         defaultLanguage={workspace.workspace.defaultLanguage}
         canEdit={canEdit}
       />
-      <Link
-        href={`/f/${familyId}`}
-        className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        {t('backDashboard')}
-      </Link>
+      <TextLink href={`/f/${familyId}`}>{t('backDashboard')}</TextLink>
     </div>
   );
 }

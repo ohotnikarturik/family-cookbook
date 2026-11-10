@@ -339,6 +339,49 @@ Complete the family-facing web application per approved product decisions (membe
 
 **Status:** Done (2026-11-10).
 
+## EPIC 3.7 — Product shell and cookbook UX (pre-MCP)
+
+Cohesive navigation, compact preferences, photo-led browse, and polish from the UI/UX audit. Completes P0 shell work before EPIC 4; P1/P2 may continue alongside MCP.
+
+### UI-01 — App shell and navigation
+- `FamilyAppShell`, `PrimaryNavigation`, `MobileNavigation`, sticky header, account menu.
+
+**Status:** Done (2026-11-10).
+
+### UI-02–UI-06 — Preferences, active nav, auth CTA, switcher id
+- Compact signed-in prefs in account menu; auth footer prefs; landing sign-in button; `#family-shell-switcher`.
+
+**Status:** Done (2026-11-10).
+
+### UI-04 — Collapsible recipe filters and chips
+- Mobile-collapsible filter panel; active filter chips.
+
+**Status:** Done (2026-11-10).
+
+### UI-07–UI-08 — Recipe cards and list thumbnails
+- Gallery-style cards, responsive grid; `coverAssetId` on summaries from search.
+
+**Status:** Done (2026-11-10).
+
+### UI-09–UI-12 — Detail, language UI, editor sticky save
+- Detail hero image; segmented translation selector; translation index hierarchy; sticky save bar.
+
+**Status:** Done (2026-11-10).
+
+### UI-13–UI-16 — Family and dashboard
+- Member admin in `<details>`; dashboard de-emphasizes stats; settings subnav chips.
+
+**Status:** Done (2026-11-10).
+
+### UI-14–UI-22 — Component polish
+- `TextLink`, button `link`/`loading`, `FormField`, `Skeleton`, dropdown menu primitive.
+
+**Status:** Done (2026-11-10).
+
+**MCP gate:** EPIC 4 may start after EPIC 3.7 P0; remaining visual QA tracked in W35.17 / release checklist.
+
+**Follow-up (2026-11-10):** fixed save bar, stable dish-photo covers, thumbnail error state, contributor and sort chips, compact family switcher, mobile recipe actions, collapsible editor sections, reading width, `TextLink` sweep, `FormField` on the control, save notice, skeleton loading, and card prep/cook/servings. See `docs/DECISIONS.md` EPIC 3.7.
+
 ## EPIC 4 — MCP service and OAuth
 
 ### T4.1 MCP service bootstrap

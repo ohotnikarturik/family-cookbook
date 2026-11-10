@@ -1,4 +1,8 @@
-import { listFamilyMembers, resolveAccessibleFamily } from '@family-cookbook/application';
+import {
+  canManageInvitations,
+  listFamilyMembers,
+  resolveAccessibleFamily,
+} from '@family-cookbook/application';
 import { resolveMemberDisplayLabel } from '@family-cookbook/domain';
 import { getSessionUser } from '@family-cookbook/data-access';
 import { createServerSupabaseClient } from '@family-cookbook/data-access/supabase/server';
@@ -15,9 +19,10 @@ import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
 import { FamilyMemberAdminSection } from '@/components/family/family-member-directory';
+import { FamilySettingsSubnav } from '@/components/shell/family-settings-subnav';
 import { FamilyMemberList } from '@/components/family/family-member-list';
 import { FamilyOwnershipTransferSection } from '@/components/family/family-ownership-transfer';
-import { Link } from '@/i18n/navigation';
+import { TextLink } from '@/components/product/text-link';
 import { locales, type AppLocale } from '@/i18n/routing';
 
 type Props = Readonly<{ params: Promise<{ locale: string; familyId: string }> }>;
@@ -107,6 +112,7 @@ async function MembersContent({ params }: Props) {
         <h2 className="text-xl font-semibold text-foreground">{t('title')}</h2>
         <p className="text-sm text-muted-foreground">{t('subtitle')}</p>
       </header>
+      <FamilySettingsSubnav familyId={familyId} showInvitations={canManageInvitations(actorRole)} />
       <FamilyMemberList
         members={memberRows}
         emptyLabel={t('empty')}
@@ -158,6 +164,7 @@ async function MembersContent({ params }: Props) {
             suspending: tAdmin('suspending'),
             reactivate: tAdmin('reactivate'),
             reactivating: tAdmin('reactivating'),
+            manageMember: tAdmin('manageMember'),
             roleLabels: {
               owner: tRoles('owner'),
               admin: tRoles('admin'),
@@ -169,12 +176,7 @@ async function MembersContent({ params }: Props) {
         />
       ) : null}
       <p className="text-sm text-muted-foreground">{t('privacyNote')}</p>
-      <Link
-        href={`/f/${familyId}`}
-        className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        {t('backDashboard')}
-      </Link>
+      <TextLink href={`/f/${familyId}`}>{t('backDashboard')}</TextLink>
     </div>
   );
 }
@@ -191,12 +193,7 @@ function MembersFailedState({
       <p className="text-sm text-destructive" role="alert">
         {message}
       </p>
-      <Link
-        href={`/f/${familyId}`}
-        className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        {backLabel}
-      </Link>
+      <TextLink href={`/f/${familyId}`}>{backLabel}</TextLink>
     </div>
   );
 }

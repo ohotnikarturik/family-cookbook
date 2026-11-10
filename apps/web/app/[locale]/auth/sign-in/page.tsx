@@ -1,5 +1,5 @@
 import { SignInForm } from '@/components/auth/sign-in-form';
-import { UiPreferencesControls } from '@/components/preferences/ui-preferences-controls';
+import { AuthFooterPreferences } from '@/components/preferences/auth-footer-preferences';
 import { locales, type AppLocale } from '@/i18n/routing';
 import { sanitizeAuthRedirect } from '@family-cookbook/data-access/auth/redirect';
 import { getTranslations } from 'next-intl/server';
@@ -44,7 +44,6 @@ async function SignInContent({ params, searchParams }: Props) {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-lg flex-col justify-center gap-6 px-6 py-16 font-sans">
-      <UiPreferencesControls />
       <div className="space-y-2">
         <h1 className="font-serif-display text-3xl font-semibold tracking-tight text-foreground">
           {t('title')}
@@ -52,6 +51,7 @@ async function SignInContent({ params, searchParams }: Props) {
         <p className="text-muted-foreground">{t('subtitle')}</p>
       </div>
       <SignInForm locale={locale} nextPath={nextPath} callbackError={sp.error === 'callback'} />
+      <AuthFooterPreferences />
     </main>
   );
 }

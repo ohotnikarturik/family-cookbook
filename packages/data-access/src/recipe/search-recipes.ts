@@ -14,6 +14,9 @@ type RecipeSummaryRow = {
   title: string;
   source_language: string;
   category: string | null;
+  servings: number | string | null;
+  prep_minutes: number | string | null;
+  cook_minutes: number | string | null;
   status: 'active' | 'archived';
   version: number;
   created_by: string;
@@ -26,6 +29,8 @@ import {
   escapeIlikePattern,
   recipeSearchKeysetFilter,
 } from './search-cursor.js';
+import { listRecipeCoverAssetIds } from './list-recipe-cover-asset-ids.js';
+import { readRecipeSummaryNumber } from './summary-number.js';
 
 export async function searchRecipes(
   client: AppSupabaseClient,
@@ -38,7 +43,7 @@ export async function searchRecipes(
   const sort = input.sort ?? 'updatedAt';
 
   let select =
-    'id, family_id, title, source_language, category, status, version, created_by, updated_at, created_at';
+    'id, family_id, title, source_language, category, servings, prep_minutes, cook_minutes, status, version, created_by, updated_at, created_at';
   if (input.ingredient) {
     select += ',recipe_ingredients!inner(name)';
   }
@@ -107,12 +112,21 @@ export async function searchRecipes(
 
   const items = [];
   for (const row of page) {
+    const servings = readRecipeSummaryNumber(row.servings, false);
+    const prepMinutes = readRecipeSummaryNumber(row.prep_minutes, true);
+    const cookMinutes = readRecipeSummaryNumber(row.cook_minutes, true);
+    if (servings === 'invalid' || prepMinutes === 'invalid' || cookMinutes === 'invalid') {
+      return { ok: false, error: 'invalid_row' };
+    }
     const candidate = {
       id: row.id,
       familyId: row.family_id,
       title: row.title,
       sourceLanguage: row.source_language,
       category: row.category,
+      servings,
+      prepMinutes,
+      cookMinutes,
       status: row.status,
       version: row.version,
       createdBy: row.created_by,
@@ -124,6 +138,24 @@ export async function searchRecipes(
       return { ok: false, error: 'invalid_row' };
     }
     items.push(parsed.data);
+  }
+
+  const coverIds = await listRecipeCoverAssetIds(
+    client,
+    input.familyId,
+    items.map((item) => item.id),
+  );
+  if (coverIds.size > 0) {
+    for (let index = 0; index < items.length; index += 1) {
+      const cover = coverIds.get(items[index]!.id);
+      if (cover) {
+        const withCover = { ...items[index]!, coverAssetId: cover };
+        const reparsed = recipeSummarySchema.safeParse(withCover);
+        if (reparsed.success) {
+          items[index] = reparsed.data;
+        }
+      }
+    }
   }
 
   let nextCursor: string | null = null;

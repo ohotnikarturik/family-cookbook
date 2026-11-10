@@ -67,6 +67,7 @@ test.describe('critical journeys', () => {
       timeout: 30_000,
     });
     await expect(page.getByRole('heading', { level: 2, name: title })).toBeVisible();
+    await expect(page.getByRole('status').filter({ hasText: 'Recipe saved.' })).toBeVisible();
   });
 
   test('owner restores an archived recipe and edit view supports uploads', async ({ page }) => {
@@ -99,11 +100,14 @@ test.describe('critical journeys — family switch', () => {
   test('multi-family member switches workspaces', async ({ page, baseURL }) => {
     await loginAs(page, TEST_USERS.multi, baseURL);
     await page.goto(`/en/f/${FAMILY_A_ID}/recipes`);
-    await expect(page.getByRole('heading', { name: 'Andersen Test Kitchen' })).toBeVisible();
+    await expect(page.getByLabel('Active family')).toBeVisible();
 
-    await page.locator('#family-switcher').selectOption(FAMILY_B_ID);
-    await expect(page).toHaveURL(new RegExp(`/en/f/${FAMILY_B_ID}/?$`), { timeout: 15_000 });
-    await expect(page.getByRole('heading', { name: 'Berg Test Pantry' })).toBeVisible();
+    await page.locator('#family-shell-switcher').selectOption(FAMILY_B_ID);
+    await expect(page).toHaveURL(new RegExp(`/en/f/${FAMILY_B_ID}(?:/|$)`), { timeout: 15_000 });
+    await expect(page.locator('#family-shell-switcher')).toHaveValue(FAMILY_B_ID);
+    await expect(page.locator('#family-shell-switcher option:checked')).toHaveText(
+      'Berg Test Pantry',
+    );
   });
 });
 

@@ -9,15 +9,14 @@ import { connection } from 'next/server';
 import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
-import { RecipeBrowseStates } from '@/components/recipe/recipe-browse-states';
-import { RecipeLanguageSelector } from '@/components/recipe/recipe-language-selector';
-import { Button } from '@/components/ui/button';
-import { RecipeDetailView } from '@/components/recipe/recipe-detail-view';
-import { RecipeLifecycleControls } from '@/components/recipe/recipe-lifecycle-controls';
-import { RecipeMediaUploadPanel } from '@/components/recipe/recipe-media-upload-panel';
+import { TextLink } from '@/components/product/text-link';
 import { UnavailablePage } from '@/components/product/unavailable-page';
+import { RecipeBrowseStates } from '@/components/recipe/recipe-browse-states';
+import { RecipeDetailToolbar } from '@/components/recipe/recipe-detail-toolbar';
+import { RecipeDetailView } from '@/components/recipe/recipe-detail-view';
+import { RecipeLanguageSelector } from '@/components/recipe/recipe-language-selector';
 import { RecipeLoading } from '@/components/recipe/recipe-loading';
-import { Link } from '@/i18n/navigation';
+import { RecipeMediaUploadPanel } from '@/components/recipe/recipe-media-upload-panel';
 import { formatIngredientAmount } from '@/lib/format-recipe-meta';
 import { locales, type AppLocale } from '@/i18n/routing';
 
@@ -131,35 +130,14 @@ async function RecipeDetailContent({ params, searchParams }: Props) {
     <section className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <BackLink familyId={familyId} label={t('detail.backToList')} />
-        <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-          {showHistory ? (
-            <Button type="button" variant="outline" className="min-h-11 w-full sm:w-auto" asChild>
-              <Link href={`/f/${familyId}/recipes/${recipeId}/history`}>
-                {t('history.viewHistory')}
-              </Link>
-            </Button>
-          ) : null}
-          {showEdit ? (
-            <>
-              <RecipeLifecycleControls
-                familyId={familyId}
-                recipeId={recipeId}
-                expectedVersion={recipe.version}
-                status={recipe.status}
-              />
-              <Button type="button" variant="outline" className="min-h-11 w-full sm:w-auto" asChild>
-                <Link href={`/f/${familyId}/recipes/${recipeId}/translations`}>
-                  {t('detail.translation.manage')}
-                </Link>
-              </Button>
-              <Button type="button" variant="outline" className="min-h-11 w-full sm:w-auto" asChild>
-                <Link href={`/f/${familyId}/recipes/${recipeId}/edit`}>
-                  {t('editor.editRecipe')}
-                </Link>
-              </Button>
-            </>
-          ) : null}
-        </div>
+        <RecipeDetailToolbar
+          familyId={familyId}
+          recipeId={recipeId}
+          expectedVersion={recipe.version}
+          status={recipe.status}
+          showEdit={showEdit}
+          showHistory={showHistory}
+        />
       </div>
       <RecipeDetailView
         recipe={recipe}
@@ -241,12 +219,5 @@ function canonicalViewLanguage(
 }
 
 function BackLink({ familyId, label }: Readonly<{ familyId: string; label: string }>) {
-  return (
-    <Link
-      href={`/f/${familyId}/recipes`}
-      className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-    >
-      {label}
-    </Link>
-  );
+  return <TextLink href={`/f/${familyId}/recipes`}>{label}</TextLink>;
 }

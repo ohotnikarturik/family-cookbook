@@ -31,6 +31,11 @@ export const recipeSummarySchema = z.object({
   createdBy: z.uuid(),
   updatedAt: z.string(),
   createdAt: z.string(),
+  servings: z.number().nullable().optional(),
+  prepMinutes: z.number().int().nullable().optional(),
+  cookMinutes: z.number().int().nullable().optional(),
+  /** Earliest available recipe or original photo. Step photos are not covers. */
+  coverAssetId: z.uuid().nullable().optional(),
 });
 
 export type RecipeSummary = z.infer<typeof recipeSummarySchema>;

@@ -92,7 +92,12 @@ export default async function RecipeTranslationsIndexPage({ params }: Props) {
           <ul className="list-none space-y-2 p-0">
             {available.map((language) => (
               <li key={language}>
-                <Button type="button" className="min-h-11 w-full justify-start" asChild>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="min-h-11 w-full justify-start"
+                  asChild
+                >
                   <Link href={`/f/${familyId}/recipes/${recipeId}/translations/${language}`}>
                     {t('addLanguage', { language })}
                   </Link>

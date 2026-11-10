@@ -1,3 +1,4 @@
+import { textLinkClassName } from '@/components/product/text-link';
 import { getTranslations } from 'next-intl/server';
 import { defaultLocale } from '@/i18n/routing';
 
@@ -11,10 +12,7 @@ export default async function NotFound() {
       </h1>
       <p className="text-muted-foreground">{t('description')}</p>
       <p>
-        <a
-          href={`/${defaultLocale}`}
-          className="inline-flex min-h-11 items-center font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
+        <a href={`/${defaultLocale}`} className={textLinkClassName}>
           {t('home')}
         </a>
       </p>

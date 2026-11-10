@@ -1,7 +1,7 @@
 import { signOutAction } from '@/app/actions/auth';
-import { UiPreferencesControls } from '@/components/preferences/ui-preferences-controls';
+import { TextLink } from '@/components/product/text-link';
+import { AuthFooterPreferences } from '@/components/preferences/auth-footer-preferences';
 import { Button } from '@/components/ui/button';
-import { Link } from '@/i18n/navigation';
 import { locales, type AppLocale } from '@/i18n/routing';
 import { profileBootstrapHintsFromCookies } from '@/lib/auth-hints';
 import { ensureProfileForCurrentUser } from '@family-cookbook/application';
@@ -66,7 +66,6 @@ async function AccountContent({ params }: Props) {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-lg flex-col justify-center gap-8 px-6 py-16 font-sans">
-      <UiPreferencesControls />
       <div className="space-y-2">
         <h1 className="font-serif-display text-3xl font-semibold tracking-tight text-foreground">
           {t('title')}
@@ -96,12 +95,7 @@ async function AccountContent({ params }: Props) {
       </section>
 
       <p>
-        <Link
-          href="/account/preferences"
-          className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          {t('preferencesLink')}
-        </Link>
+        <TextLink href="/account/preferences">{t('preferencesLink')}</TextLink>
       </p>
 
       <form action={signOutAction}>
@@ -111,12 +105,8 @@ async function AccountContent({ params }: Props) {
         </Button>
       </form>
 
-      <Link
-        href="/"
-        className="text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        {t('backHome')}
-      </Link>
+      <TextLink href="/">{t('backHome')}</TextLink>
+      <AuthFooterPreferences />
     </main>
   );
 }

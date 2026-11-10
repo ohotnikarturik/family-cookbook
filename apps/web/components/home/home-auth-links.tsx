@@ -3,6 +3,8 @@ import { createServerSupabaseClient } from '@family-cookbook/data-access/supabas
 import { getTranslations } from 'next-intl/server';
 import { connection } from 'next/server';
 
+import { TextLink } from '@/components/product/text-link';
+import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 import type { AppLocale } from '@/i18n/routing';
 
@@ -16,31 +18,18 @@ export async function HomeAuthLinks({ locale }: Props) {
 
   if (!user) {
     return (
-      <nav aria-label={t('navLabel')} className="flex flex-wrap gap-3 text-sm">
-        <Link
-          href="/auth/sign-in"
-          className="font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        >
-          {t('signIn')}
-        </Link>
+      <nav aria-label={t('navLabel')}>
+        <Button type="button" className="min-h-11 w-full sm:w-auto" asChild>
+          <Link href="/auth/sign-in">{t('signIn')}</Link>
+        </Button>
       </nav>
     );
   }
 
   return (
     <nav aria-label={t('navLabel')} className="flex flex-wrap gap-3 text-sm">
-      <Link
-        href="/families"
-        className="font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        {t('families')}
-      </Link>
-      <Link
-        href="/account"
-        className="font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        {t('account')}
-      </Link>
+      <TextLink href="/families">{t('families')}</TextLink>
+      <TextLink href="/account">{t('account')}</TextLink>
     </nav>
   );
 }

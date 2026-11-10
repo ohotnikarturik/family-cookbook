@@ -4,7 +4,7 @@ import type { RecipeDetail } from '@family-cookbook/contracts';
 import type { TranslationReviewStatus } from '@family-cookbook/contracts';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 type Props = Readonly<{
   recipe: RecipeDetail;
@@ -53,26 +53,36 @@ export function RecipeLanguageSelector({ recipe, viewLanguage, labels }: Props) 
       <p id="recipe-language-label" className="text-sm font-medium text-foreground">
         {labels.label}
       </p>
-      <div className="flex flex-wrap gap-2" role="group" aria-labelledby="recipe-language-label">
+      <div
+        className="inline-flex max-w-full flex-wrap gap-0 rounded-lg border border-border bg-muted/40 p-1"
+        role="radiogroup"
+        aria-labelledby="recipe-language-label"
+      >
         {options.map((option) => {
           const selected = viewLanguage.trim().toLowerCase() === option.value.trim().toLowerCase();
           const reviewStatus = reviewStatusFor(recipe, option.value);
           return (
-            <Button
+            <button
               key={option.value}
               type="button"
-              variant={selected ? 'default' : 'outline'}
-              className="min-h-11"
-              aria-pressed={selected}
+              role="radio"
+              aria-checked={selected}
+              className={cn(
+                'inline-flex min-h-11 items-center gap-2 rounded-md px-3 text-sm font-medium transition-colors',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                selected
+                  ? 'bg-card text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground',
+              )}
               onClick={() => onSelect(option.value)}
             >
               <span>{option.label}</span>
               {reviewStatus === 'unreviewed' && option.value !== recipe.sourceLanguage ? (
-                <span className="ms-2 rounded-md bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
+                <span className="rounded-md bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
                   {labels.unreviewedBadge}
                 </span>
               ) : null}
-            </Button>
+            </button>
           );
         })}
       </div>

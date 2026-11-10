@@ -1,6 +1,7 @@
 'use client';
 
-import { useActionState, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { ChevronDown } from 'lucide-react';
+import { useActionState, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 
 import {
@@ -8,6 +9,8 @@ import {
   updateRecipeAction,
   type RecipeEditorActionState,
 } from '@/app/actions/recipe';
+import { FormField } from '@/components/product/form-field';
+import { textLinkClassName } from '@/components/product/text-link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -134,6 +137,7 @@ function RecipeEditorFormBody({
 
   const titleId = useId();
   const descriptionId = useId();
+  const formId = useId();
 
   const fieldErrors = state?.ok === false ? state.fieldErrors : undefined;
   const titleError = fieldErrors ? fieldErrorForPath(fieldErrors, 'title') : undefined;
@@ -151,7 +155,7 @@ function RecipeEditorFormBody({
   }, [state]);
 
   return (
-    <>
+    <div className="pb-28 md:pb-24">
       {mode.kind === 'edit' ? (
         <RecipeMediaUploadPanel
           familyId={mode.familyId}
@@ -165,7 +169,7 @@ function RecipeEditorFormBody({
           {tUpload('createDeferred')}
         </p>
       )}
-      <form action={action} className="mt-6 space-y-6" aria-busy={pending} noValidate>
+      <form id={formId} action={action} className="mt-6 space-y-6" aria-busy={pending} noValidate>
         <input type="hidden" name="familyId" value={mode.familyId} />
         <input type="hidden" name="payload" value={JSON.stringify(draft)} />
         {mode.kind === 'edit' ? (
@@ -187,7 +191,7 @@ function RecipeEditorFormBody({
               <p className="mt-2 text-sm text-muted-foreground">
                 <a
                   href={`/${locale}/f/${mode.familyId}/recipes/${mode.recipeId}/edit`}
-                  className="font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className={textLinkClassName}
                 >
                   {t('errors.reloadEdit')}
                 </a>
@@ -215,10 +219,13 @@ function RecipeEditorFormBody({
 
         <section className="space-y-4 rounded-xl border border-border bg-card p-4 shadow-sm">
           <h3 className="text-base font-semibold text-foreground">{t('sections.basics')}</h3>
-          <div className="space-y-2">
-            <Label htmlFor={titleId}>{t('fields.title')}</Label>
+          <FormField
+            id={titleId}
+            label={t('fields.title')}
+            hint={t('hints.title')}
+            error={titleError}
+          >
             <Input
-              id={titleId}
               value={draft.title}
               onChange={(event) =>
                 setDraft((current) => ({ ...current, title: event.target.value }))
@@ -226,17 +233,9 @@ function RecipeEditorFormBody({
               disabled={pending}
               required
               className="min-h-11"
-              aria-invalid={titleError !== undefined}
-              aria-describedby={titleError ? `${titleId}-error` : undefined}
               autoComplete="off"
             />
-            {titleError ? (
-              <p id={`${titleId}-error`} className="text-sm text-destructive">
-                {titleError}
-              </p>
-            ) : null}
-            <p className="text-sm text-muted-foreground">{t('hints.title')}</p>
-          </div>
+          </FormField>
 
           <div className="space-y-2">
             <Label htmlFor={`${titleId}-lang`}>{t('fields.sourceLanguage')}</Label>
@@ -296,10 +295,8 @@ function RecipeEditorFormBody({
             ) : null}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor={descriptionId}>{t('fields.description')}</Label>
+          <FormField id={descriptionId} label={t('fields.description')}>
             <Textarea
-              id={descriptionId}
               value={draft.description}
               onChange={(event) =>
                 setDraft((current) => ({ ...current, description: event.target.value }))
@@ -308,11 +305,18 @@ function RecipeEditorFormBody({
               className="min-h-24 text-base"
               rows={4}
             />
-          </div>
+          </FormField>
         </section>
 
-        <section className="space-y-4 rounded-xl border border-border bg-card p-4 shadow-sm">
-          <h3 className="text-base font-semibold text-foreground">{t('sections.timing')}</h3>
+        <EditorSection
+          title={t('sections.timing')}
+          defaultOpen={
+            draft.servings.trim() !== '' ||
+            draft.prepMinutes.trim() !== '' ||
+            draft.cookMinutes.trim() !== '' ||
+            sectionHasError(fieldErrors, ['servings', 'prepMinutes', 'cookMinutes'])
+          }
+        >
           <div className="grid gap-4 sm:grid-cols-3">
             <NumberField
               label={t('fields.servings')}
@@ -339,14 +343,18 @@ function RecipeEditorFormBody({
               error={cookError}
             />
           </div>
-        </section>
+        </EditorSection>
 
-        <section className="space-y-4 rounded-xl border border-border bg-card p-4 shadow-sm">
-          <h3 className="text-base font-semibold text-foreground">{t('sections.meta')}</h3>
-          <div className="space-y-2">
-            <Label htmlFor={`${titleId}-category`}>{t('fields.category')}</Label>
+        <EditorSection
+          title={t('sections.meta')}
+          defaultOpen={
+            draft.category.trim() !== '' ||
+            draft.notes.trim() !== '' ||
+            sectionHasError(fieldErrors, ['category', 'notes'])
+          }
+        >
+          <FormField id={`${titleId}-category`} label={t('fields.category')}>
             <Input
-              id={`${titleId}-category`}
               value={draft.category}
               onChange={(event) =>
                 setDraft((current) => ({ ...current, category: event.target.value }))
@@ -355,11 +363,9 @@ function RecipeEditorFormBody({
               className="min-h-11"
               autoComplete="off"
             />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor={`${titleId}-notes`}>{t('fields.notes')}</Label>
+          </FormField>
+          <FormField id={`${titleId}-notes`} label={t('fields.notes')}>
             <Textarea
-              id={`${titleId}-notes`}
               value={draft.notes}
               onChange={(event) =>
                 setDraft((current) => ({ ...current, notes: event.target.value }))
@@ -368,11 +374,16 @@ function RecipeEditorFormBody({
               className="min-h-20 text-base"
               rows={3}
             />
-          </div>
-        </section>
+          </FormField>
+        </EditorSection>
 
-        <section className="space-y-2 rounded-xl border border-border bg-card p-4 shadow-sm">
-          <h3 className="text-base font-semibold text-foreground">{t('sections.tags')}</h3>
+        <EditorSection
+          title={t('sections.tags')}
+          defaultOpen={
+            draft.tags.some((tag) => tag.name.trim() !== '') ||
+            sectionHasError(fieldErrors, ['tags'])
+          }
+        >
           <TagListEditor
             tags={draft.tags}
             onChange={(tags) => setDraft((current) => ({ ...current, tags }))}
@@ -383,7 +394,7 @@ function RecipeEditorFormBody({
             disabled={pending}
             fieldErrors={fieldErrors}
           />
-        </section>
+        </EditorSection>
 
         <IngredientListEditor
           ingredients={draft.ingredients}
@@ -428,17 +439,65 @@ function RecipeEditorFormBody({
         {preserved && preserved.translations.length > 0 ? (
           <p className="text-sm text-muted-foreground">{t('hints.translationsPreserved')}</p>
         ) : null}
-
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <Button type="submit" disabled={pending} className="min-h-11 w-full sm:w-auto">
+      </form>
+      <div className="fixed inset-x-0 z-30 border-t border-border bg-background/95 px-4 py-3 backdrop-blur-sm bottom-[calc(4.25rem+env(safe-area-inset-bottom,0px))] md:bottom-0">
+        <div className="mx-auto flex w-full max-w-3xl flex-col gap-3 sm:flex-row sm:items-center">
+          <Button
+            type="submit"
+            form={formId}
+            disabled={pending}
+            className="min-h-11 w-full sm:w-auto"
+          >
             {pending ? t('saving') : t('submit')}
           </Button>
           <Button type="button" variant="outline" className="min-h-11 w-full sm:w-auto" asChild>
             <Link href={cancelHref}>{t('cancel')}</Link>
           </Button>
         </div>
-      </form>
-    </>
+      </div>
+    </div>
+  );
+}
+
+function EditorSection({
+  title,
+  defaultOpen,
+  children,
+}: Readonly<{ title: string; defaultOpen: boolean; children: ReactNode }>) {
+  const detailsRef = useRef<HTMLDetailsElement>(null);
+
+  useEffect(() => {
+    if (defaultOpen && detailsRef.current) {
+      detailsRef.current.open = true;
+    }
+  }, [defaultOpen]);
+
+  return (
+    <details ref={detailsRef} className="group rounded-xl border border-border bg-card shadow-sm">
+      <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-base font-semibold text-foreground marker:content-none [&::-webkit-details-marker]:hidden">
+        <span>{title}</span>
+        <ChevronDown
+          className="size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180"
+          aria-hidden
+        />
+      </summary>
+      <div className="space-y-4 border-t border-border p-4">{children}</div>
+    </details>
+  );
+}
+
+function sectionHasError(
+  fieldErrors: Record<string, string> | undefined,
+  prefixes: readonly string[],
+): boolean {
+  if (!fieldErrors) {
+    return false;
+  }
+  return Object.keys(fieldErrors).some((key) =>
+    prefixes.some(
+      (prefix) =>
+        key === prefix || key.startsWith(`${prefix}.`) || key.startsWith(`recipe.${prefix}`),
+    ),
   );
 }
 
@@ -459,24 +518,15 @@ function NumberField({
 }>) {
   const id = useId();
   return (
-    <div className="space-y-2">
-      <Label htmlFor={id}>{label}</Label>
+    <FormField id={id} label={label} error={error}>
       <Input
-        id={id}
         value={value}
         onChange={(event) => onChange(event.target.value)}
         disabled={disabled}
         className="min-h-11"
         inputMode={inputMode}
         autoComplete="off"
-        aria-invalid={error !== undefined}
-        aria-describedby={error ? `${id}-error` : undefined}
       />
-      {error ? (
-        <p id={`${id}-error`} className="text-sm text-destructive">
-          {error}
-        </p>
-      ) : null}
-    </div>
+    </FormField>
   );
 }

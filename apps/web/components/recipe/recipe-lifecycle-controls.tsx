@@ -9,6 +9,7 @@ import {
   restoreRecipeAction,
   type RecipeLifecycleActionState,
 } from '@/app/actions/recipe-lifecycle';
+import { textLinkClassName } from '@/components/product/text-link';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -25,11 +26,24 @@ type Props = Readonly<{
   recipeId: string;
   expectedVersion: number;
   status: RecipeStatus;
+  showTrigger?: boolean;
+  archiveOpen?: boolean;
+  onArchiveOpenChange?: (open: boolean) => void;
 }>;
 
-export function RecipeLifecycleControls({ familyId, recipeId, expectedVersion, status }: Props) {
+export function RecipeLifecycleControls({
+  familyId,
+  recipeId,
+  expectedVersion,
+  status,
+  showTrigger = true,
+  archiveOpen: archiveOpenProp,
+  onArchiveOpenChange,
+}: Props) {
   const t = useTranslations('recipes.lifecycle');
-  const [archiveOpen, setArchiveOpen] = useState(false);
+  const [archiveOpenInternal, setArchiveOpenInternal] = useState(false);
+  const archiveOpen = archiveOpenProp ?? archiveOpenInternal;
+  const setArchiveOpen = onArchiveOpenChange ?? setArchiveOpenInternal;
   const [confirmChecked, setConfirmChecked] = useState(false);
   const confirmId = useId();
 
@@ -72,11 +86,13 @@ export function RecipeLifecycleControls({ familyId, recipeId, expectedVersion, s
 
   return (
     <Dialog open={archiveOpen} onOpenChange={handleArchiveOpenChange}>
-      <DialogTrigger asChild>
-        <Button type="button" variant="outline" className="min-h-11 w-full sm:w-auto">
-          {t('archive')}
-        </Button>
-      </DialogTrigger>
+      {showTrigger ? (
+        <DialogTrigger asChild>
+          <Button type="button" variant="outline" className="min-h-11 w-full sm:w-auto">
+            {t('archive')}
+          </Button>
+        </DialogTrigger>
+      ) : null}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{t('archiveDialogTitle')}</DialogTitle>
@@ -146,10 +162,7 @@ function LifecycleError({
       {state.code === 'version_conflict' ? (
         <p className="mt-1 text-muted-foreground">
           {t('errors.reloadHint')}{' '}
-          <a
-            href={`/${locale}/f/${familyId}/recipes/${recipeId}`}
-            className="inline-flex min-h-11 items-center font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
+          <a href={`/${locale}/f/${familyId}/recipes/${recipeId}`} className={textLinkClassName}>
             {t('errors.reload')}
           </a>
         </p>

@@ -125,13 +125,18 @@
     },
     "shell": {
       "kicker": "Perheen keittokirja",
+      "productName": "Family Cookbook",
+      "currentFamily": "Nykyinen perhe",
       "skipToContent": "Hyppää sisältöön",
       "navLabel": "Perhesivuston navigointi",
+      "mobileNavLabel": "Pikanavigointi",
+      "accountMenuLabel": "Tili ja asetukset",
       "recipes": "Reseptit",
+      "addRecipe": "Lisää resepti",
       "allFamilies": "Kaikki perheet",
       "invitations": "Kutsut",
       "members": "Jäsenet",
-      "settings": "Asetukset",
+      "settings": "Perhe",
       "account": "Tili"
     },
     "settings": {
@@ -170,6 +175,7 @@
       },
       "admin": {
         "sectionTitle": "Hallitse rooleja ja käyttöoikeutta",
+        "manageMember": "Hallitse käyttöoikeutta",
         "roleField": "Rooli",
         "saveRole": "Tallenna rooli",
         "savingRole": "Tallennetaan…",
@@ -366,10 +372,16 @@
       "resultsLabel": "Reseptitulokset",
       "updated": "Päivitetty {date}",
       "archivedBadge": "Arkistoitu",
-      "uncategorized": "Luokittelematon"
+      "uncategorized": "Luokittelematon",
+      "imageLoading": "Ladataan reseptikuvaa…",
+      "prepMinutes": "{minutes} min esivalmistelu",
+      "cookMinutes": "{minutes} min kypsennys",
+      "servings": "{servings} annosta"
     },
     "filters": {
       "legend": "Reseptihaun suodattimet",
+      "toggleLabel": "Haku ja suodattimet",
+      "activeLabel": "Käytössä olevat suodattimet",
       "query": "Haku",
       "queryHint": "Otsikko tai kuvaus",
       "category": "Kategoria",
@@ -384,7 +396,8 @@
       "sort": "Järjestä",
       "includeArchived": "Näytä arkistoidut",
       "apply": "Käytä suodattimia",
-      "clear": "Tyhjennä suodattimet"
+      "clear": "Tyhjennä suodattimet",
+      "removeChip": "Poista {value}"
     },
     "sort": {
       "updatedAt": "Viimeksi päivitetty",
@@ -399,6 +412,7 @@
     },
     "detail": {
       "backToList": "Takaisin resepteihin",
+      "actions": "Toiminnot",
       "description": "Kuvaus",
       "ingredients": "Ainekset",
       "steps": "Vaiheet",
@@ -675,5 +689,9 @@
         "limitReached": "Reseptissä on jo suurin sallittu määrä tiedostoja."
       }
     }
+  },
+  "notices": {
+    "recipeSaved": "Resepti tallennettu.",
+    "dismiss": "Sulje"
   }
 }

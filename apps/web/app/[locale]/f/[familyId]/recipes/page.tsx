@@ -1,11 +1,6 @@
-import {
-  listFamilyMembers,
-  resolveAccessibleFamily,
-  searchRecipes,
-} from '@family-cookbook/application';
+import { listFamilyMembers, searchRecipes } from '@family-cookbook/application';
 import { resolveMemberDisplayLabel } from '@family-cookbook/domain';
 import { getSessionUser } from '@family-cookbook/data-access';
-import { canCreateRecipe } from '@family-cookbook/permissions';
 import { createServerSupabaseClient } from '@family-cookbook/data-access/supabase/server';
 import { getFormatter, getTranslations } from 'next-intl/server';
 import { connection } from 'next/server';
@@ -16,11 +11,13 @@ import { RecipeBrowseStates } from '@/components/recipe/recipe-browse-states';
 import { RecipeList } from '@/components/recipe/recipe-list';
 import { RecipeLoading } from '@/components/recipe/recipe-loading';
 import { RecipePagination } from '@/components/recipe/recipe-pagination';
+import { RecipeSearchActiveChips } from '@/components/recipe/recipe-search-active-chips';
 import { RecipeSearchForm } from '@/components/recipe/recipe-search-form';
 import { UnavailablePage } from '@/components/product/unavailable-page';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 import { buildRecipeSearchQuery } from '@/lib/build-recipe-search-query';
+import { recipeTimingLabel } from '@/lib/format-recipe-meta';
 import { parseRecipeSearchFromUrl } from '@/lib/recipe-search-params';
 import { locales, type AppLocale } from '@/i18n/routing';
 
@@ -56,13 +53,7 @@ async function RecipesContent({ params, searchParams }: Props) {
   if (parsed.input === null) {
     return (
       <section className="space-y-4" aria-labelledby="recipes-heading">
-        <RecipesHeader
-          title={t('list.title')}
-          subtitle={t('list.subtitle')}
-          familyId={familyId}
-          addRecipeLabel={t('editor.addRecipe')}
-          showAddRecipe={false}
-        />
+        <RecipesHeader title={t('list.title')} subtitle={t('list.subtitle')} />
         <RecipeBrowseStates
           variant="invalidFilters"
           title={t('status.invalidFiltersTitle')}
@@ -77,8 +68,6 @@ async function RecipesContent({ params, searchParams }: Props) {
 
   const supabase = await createServerSupabaseClient();
   const sessionUser = await getSessionUser(supabase);
-  const workspace = await resolveAccessibleFamily(supabase, familyId);
-  const canAdd = workspace.status === 'ok' ? canCreateRecipe(workspace.workspace.role) : false;
   const result = await searchRecipes(supabase, parsed.input);
 
   if (result.status === 'auth_required') {
@@ -90,13 +79,7 @@ async function RecipesContent({ params, searchParams }: Props) {
   if (result.status === 'validation_error') {
     return (
       <section className="space-y-4" aria-labelledby="recipes-heading">
-        <RecipesHeader
-          title={t('list.title')}
-          subtitle={t('list.subtitle')}
-          familyId={familyId}
-          addRecipeLabel={t('editor.addRecipe')}
-          showAddRecipe={canAdd}
-        />
+        <RecipesHeader title={t('list.title')} subtitle={t('list.subtitle')} />
         <RecipeBrowseStates
           variant="invalidFilters"
           title={t('status.invalidFiltersTitle')}
@@ -111,13 +94,7 @@ async function RecipesContent({ params, searchParams }: Props) {
   if (result.status === 'rate_limited') {
     return (
       <section className="space-y-4" aria-labelledby="recipes-heading">
-        <RecipesHeader
-          title={t('list.title')}
-          subtitle={t('list.subtitle')}
-          familyId={familyId}
-          addRecipeLabel={t('editor.addRecipe')}
-          showAddRecipe={canAdd}
-        />
+        <RecipesHeader title={t('list.title')} subtitle={t('list.subtitle')} />
         <RecipeBrowseStates
           variant="error"
           title={t('status.rateLimitedTitle')}
@@ -129,13 +106,7 @@ async function RecipesContent({ params, searchParams }: Props) {
   if (result.status === 'query_failed') {
     return (
       <section className="space-y-4" aria-labelledby="recipes-heading">
-        <RecipesHeader
-          title={t('list.title')}
-          subtitle={t('list.subtitle')}
-          familyId={familyId}
-          addRecipeLabel={t('editor.addRecipe')}
-          showAddRecipe={canAdd}
-        />
+        <RecipesHeader title={t('list.title')} subtitle={t('list.subtitle')} />
         <RecipeBrowseStates
           variant="error"
           title={t('status.errorTitle')}
@@ -178,13 +149,7 @@ async function RecipesContent({ params, searchParams }: Props) {
 
   return (
     <section className="space-y-6" aria-labelledby="recipes-heading">
-      <RecipesHeader
-        title={t('list.title')}
-        subtitle={t('list.subtitle')}
-        familyId={familyId}
-        addRecipeLabel={t('editor.addRecipe')}
-        showAddRecipe={canAdd}
-      />
+      <RecipesHeader title={t('list.title')} subtitle={t('list.subtitle')} />
       <RecipeSearchForm
         key={buildRecipeSearchQuery(parsed.input) || 'all'}
         familyId={familyId}
@@ -199,6 +164,20 @@ async function RecipesContent({ params, searchParams }: Props) {
           ...(parsed.input.sort ? { sort: parsed.input.sort } : {}),
           ...(parsed.input.includeArchived ? { includeArchived: true } : {}),
         }}
+      />
+      <RecipeSearchActiveChips
+        familyId={familyId}
+        values={{
+          ...(parsed.input.query ? { query: parsed.input.query } : {}),
+          ...(parsed.input.ingredient ? { ingredient: parsed.input.ingredient } : {}),
+          ...(parsed.input.category ? { category: parsed.input.category } : {}),
+          ...(parsed.input.tag ? { tag: parsed.input.tag } : {}),
+          ...(parsed.input.language ? { language: parsed.input.language } : {}),
+          ...(parsed.input.createdBy ? { createdBy: parsed.input.createdBy } : {}),
+          ...(parsed.input.sort ? { sort: parsed.input.sort } : {}),
+          ...(parsed.input.includeArchived ? { includeArchived: true } : {}),
+        }}
+        contributorOptions={contributorOptions}
       />
       {membersListed.status !== 'ok' ? (
         <p className="text-sm text-destructive" role="alert">
@@ -227,6 +206,13 @@ async function RecipesContent({ params, searchParams }: Props) {
             }),
           archivedLabel: t('list.archivedBadge'),
           categoryFallback: t('list.uncategorized'),
+          imageLoadingLabel: t('list.imageLoading'),
+          metaLabelFor: (recipe) =>
+            recipeTimingLabel(recipe, {
+              prep: (minutes) => t('list.prepMinutes', { minutes }),
+              cook: (minutes) => t('list.cookMinutes', { minutes }),
+              servings: (servings) => t('list.servings', { servings: format.number(servings) }),
+            }),
         }}
       />
       {items.length > 0 ? (
@@ -247,29 +233,16 @@ async function RecipesContent({ params, searchParams }: Props) {
 function RecipesHeader({
   title,
   subtitle,
-  familyId,
-  addRecipeLabel,
-  showAddRecipe,
 }: Readonly<{
   title: string;
   subtitle: string;
-  familyId: string;
-  addRecipeLabel: string;
-  showAddRecipe: boolean;
 }>) {
   return (
-    <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-      <div className="space-y-1">
-        <h2 id="recipes-heading" className="text-xl font-semibold text-foreground">
-          {title}
-        </h2>
-        <p className="text-sm text-muted-foreground">{subtitle}</p>
-      </div>
-      {showAddRecipe ? (
-        <Button type="button" className="min-h-11 w-full sm:w-auto" asChild>
-          <Link href={`/f/${familyId}/recipes/new`}>{addRecipeLabel}</Link>
-        </Button>
-      ) : null}
+    <header className="space-y-1">
+      <h2 id="recipes-heading" className="text-xl font-semibold text-foreground">
+        {title}
+      </h2>
+      <p className="text-sm text-muted-foreground">{subtitle}</p>
     </header>
   );
 }

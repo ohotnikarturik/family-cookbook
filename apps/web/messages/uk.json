@@ -125,13 +125,18 @@
     },
     "shell": {
       "kicker": "Сімейна кулінарна книга",
+      "productName": "Family Cookbook",
+      "currentFamily": "Поточна сім'я",
       "skipToContent": "Перейти до вмісту",
       "navLabel": "Навігація сім'єю",
+      "mobileNavLabel": "Швидка навігація",
+      "accountMenuLabel": "Обліковий запис і налаштування",
       "recipes": "Рецепти",
+      "addRecipe": "Додати рецепт",
       "allFamilies": "Усі сім'ї",
       "invitations": "Запрошення",
       "members": "Учасники",
-      "settings": "Налаштування",
+      "settings": "Сім'я",
       "account": "Обліковий запис"
     },
     "settings": {
@@ -170,6 +175,7 @@
       },
       "admin": {
         "sectionTitle": "Ролі та доступ",
+        "manageMember": "Керування доступом",
         "roleField": "Роль",
         "saveRole": "Зберегти роль",
         "savingRole": "Збереження…",
@@ -366,10 +372,16 @@
       "resultsLabel": "Результати пошуку",
       "updated": "Оновлено {date}",
       "archivedBadge": "В архіві",
-      "uncategorized": "Без категорії"
+      "uncategorized": "Без категорії",
+      "imageLoading": "Завантаження фото рецепта…",
+      "prepMinutes": "{minutes} хв підготовка",
+      "cookMinutes": "{minutes} хв готування",
+      "servings": "{servings} порцій"
     },
     "filters": {
       "legend": "Фільтри пошуку",
+      "toggleLabel": "Пошук і фільтри",
+      "activeLabel": "Активні фільтри",
       "query": "Пошук",
       "queryHint": "Назва або опис",
       "category": "Категорія",
@@ -384,7 +396,8 @@
       "sort": "Сортування",
       "includeArchived": "Показувати архівні",
       "apply": "Застосувати",
-      "clear": "Скинути фільтри"
+      "clear": "Скинути фільтри",
+      "removeChip": "Прибрати {value}"
     },
     "sort": {
       "updatedAt": "За оновленням",
@@ -399,6 +412,7 @@
     },
     "detail": {
       "backToList": "До списку рецептів",
+      "actions": "Дії",
       "description": "Опис",
       "ingredients": "Інгредієнти",
       "steps": "Кроки",
@@ -675,5 +689,9 @@
         "limitReached": "Для цього рецепта вже досягнуто ліміт файлів."
       }
     }
+  },
+  "notices": {
+    "recipeSaved": "Рецепт збережено.",
+    "dismiss": "Закрити"
   }
 }

@@ -312,6 +312,14 @@ Approved for implementation without re-confirmation:
 3. **Conflict:** the message stays inside the archive dialog (or beside restore). The reload control is a full page load, because a client navigation does not refetch `expectedVersion`.
 4. A missing recipe is its own message. It is not shown as a generic save failure.
 
+## EPIC 3.7 — Shell follow-up (2026-11-10)
+
+1. **Supersedes the family-shell part of W35.9.** Signed-in family pages keep language and theme inside the account menu. Home, sign-in, account, families, onboarding, and invitation accept use the compact footer. The account preferences form remains the detailed editor.
+2. **Covers.** Browse thumbnails and the detail hero use the earliest available `recipe_photo` or `original_photo`. Step photos stay on their steps. A recipe with no dish photo has a card placeholder and no detail hero. The hero file is omitted from the gallery. A failed thumbnail falls back to the placeholder and does not keep polling.
+3. **Reading width.** The family shell stays `max-w-5xl`. Recipe browse uses that full width. Other family pages center a `max-w-3xl` column.
+4. **Save.** A successful recipe create or update sets a short `fc-notice=recipe-saved` cookie (no recipe text) and the next family page shows a dismissible status. The editor save bar is fixed above the mobile navigation.
+5. **EPIC 3.6 deferrals now done:** the shell switcher id is `family-shell-switcher`. Its accessible name is the `aria-label` "Active family", and the select is the only family-name control in the header. Switching calls the redirecting server action and does not also refresh, which was leaving a second select in the document. List thumbnails ship as `coverAssetId` on search summaries, which also include servings and times for the card meta row.
+
 ## EPIC 3.6 — Product face before MCP (2026-11-10)
 
 1. **Scope:** P0 UX for local family testing—landing, metadata, compact family shell, cook-first recipe detail, `ensureProfile` on `createFamily`, and human dashboard copy. Not staging hardening or MCP.

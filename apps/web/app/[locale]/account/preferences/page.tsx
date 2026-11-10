@@ -1,6 +1,6 @@
 import { getOwnProfile } from '@family-cookbook/application';
 import { AccountPreferencesForm } from '@/components/account/account-preferences-form';
-import { Link } from '@/i18n/navigation';
+import { TextLink } from '@/components/product/text-link';
 import { locales, type AppLocale } from '@/i18n/routing';
 import { ensureProfileForCurrentUser } from '@family-cookbook/application';
 import { profileBootstrapHintsFromCookies } from '@/lib/auth-hints';
@@ -66,12 +66,7 @@ async function PreferencesContent({ params }: Props) {
         <p className="text-muted-foreground">{t('subtitle')}</p>
       </header>
       <AccountPreferencesForm profile={loaded.profile} />
-      <Link
-        href="/account"
-        className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        {t('backAccount')}
-      </Link>
+      <TextLink href="/account">{t('backAccount')}</TextLink>
     </main>
   );
 }

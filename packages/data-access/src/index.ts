@@ -62,6 +62,7 @@ export { getRecipeById } from './recipe/get-recipe.js';
 export { getRecipeHeader, type RecipeHeader } from './recipe/get-recipe-header.js';
 export { listRecipeRevisions } from './recipe/list-recipe-revisions.js';
 export { searchRecipes } from './recipe/search-recipes.js';
+export { listRecipeCoverAssetIds } from './recipe/list-recipe-cover-asset-ids.js';
 export { setRecipeStatus } from './recipe/set-recipe-status.js';
 export { updateRecipeAggregate } from './recipe/update-recipe-aggregate.js';
 export { upsertRecipeTranslationsRpc } from './recipe/upsert-recipe-translations.js';

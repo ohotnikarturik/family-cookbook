@@ -33,6 +33,12 @@ export {
 export { safeRecipeAssetDownloadFilename } from './safe-download-filename.js';
 export { resolveMemberDisplayLabel } from './member-display-name.js';
 export {
+  pickRecipeCoverAssetId,
+  RECIPE_COVER_ASSET_KINDS,
+  type RecipeCoverAssetKind,
+  type RecipeCoverCandidate,
+} from './recipe-cover.js';
+export {
   resolveRecipeDisplay,
   type RecipeDisplayIngredient,
   type RecipeDisplayStep,

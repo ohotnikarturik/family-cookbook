@@ -18,8 +18,7 @@ import { RecipeHistoryList } from '@/components/recipe/recipe-history-list';
 import { RecipeHistoryPagination } from '@/components/recipe/recipe-history-pagination';
 import { RecipeLoading } from '@/components/recipe/recipe-loading';
 import { UnavailablePage } from '@/components/product/unavailable-page';
-import { Button } from '@/components/ui/button';
-import { Link } from '@/i18n/navigation';
+import { TextLink } from '@/components/product/text-link';
 import { locales, type AppLocale } from '@/i18n/routing';
 import { recipeContentLang } from '@/lib/format-recipe-meta';
 import { recipeHistoryHref, type HistoryQuery } from '@/lib/recipe-history/query';
@@ -285,19 +284,5 @@ function BackToDetail({
   recipeId,
   label,
 }: Readonly<{ familyId: string; recipeId: string; label: string }>) {
-  return (
-    <Button
-      type="button"
-      variant="ghost"
-      className="min-h-11 w-full justify-start px-0 sm:w-auto"
-      asChild
-    >
-      <Link
-        href={`/f/${familyId}/recipes/${recipeId}`}
-        className="text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        {label}
-      </Link>
-    </Button>
-  );
+  return <TextLink href={`/f/${familyId}/recipes/${recipeId}`}>{label}</TextLink>;
 }

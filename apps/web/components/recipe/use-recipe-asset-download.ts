@@ -32,6 +32,7 @@ export function useRecipeAssetDownload(
 
   useEffect(() => {
     let cancelled = false;
+    let timer: number | undefined;
 
     async function load(keepReadyUrl: boolean) {
       try {
@@ -40,10 +41,17 @@ export function useRecipeAssetDownload(
           return;
         }
         if (!isDisplayableAssetDownload(result, accept)) {
-          setState({ status: 'error' });
+          if (!keepReadyUrl) {
+            setState({ status: 'error' });
+          }
           return;
         }
         setState({ status: 'ready', url: result.signedDownloadUrl });
+        if (timer === undefined) {
+          timer = window.setInterval(() => {
+            void load(true);
+          }, REFRESH_AFTER_MS);
+        }
       } catch {
         if (cancelled) {
           return;
@@ -55,13 +63,12 @@ export function useRecipeAssetDownload(
     }
 
     void load(false);
-    const timer = window.setInterval(() => {
-      void load(true);
-    }, REFRESH_AFTER_MS);
 
     return () => {
       cancelled = true;
-      window.clearInterval(timer);
+      if (timer !== undefined) {
+        window.clearInterval(timer);
+      }
     };
   }, [accept, assetId, attempt, familyId, recipeId]);
 

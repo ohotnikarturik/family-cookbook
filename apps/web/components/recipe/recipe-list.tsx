@@ -13,6 +13,8 @@ type Props = Readonly<{
     updatedLabelFor: (recipe: RecipeSummary) => string;
     archivedLabel: string;
     categoryFallback: string;
+    imageLoadingLabel: string;
+    metaLabelFor: (recipe: RecipeSummary) => string | null;
   };
   emptyState?: ReactNode;
 }>;
@@ -30,7 +32,10 @@ export function RecipeList({
   }
 
   return (
-    <ul aria-label={listLabel} className="grid list-none gap-4 p-0">
+    <ul
+      aria-label={listLabel}
+      className="grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3"
+    >
       {items.map((recipe) => {
         const contentLang = recipeContentLang(recipe, uiLocale);
         return (
@@ -41,6 +46,8 @@ export function RecipeList({
             updatedLabel={cardLabels.updatedLabelFor(recipe)}
             archivedLabel={cardLabels.archivedLabel}
             categoryFallback={cardLabels.categoryFallback}
+            imageLoadingLabel={cardLabels.imageLoadingLabel}
+            metaLabel={cardLabels.metaLabelFor(recipe)}
             headingLevel="h3"
             {...(contentLang ? { contentLang } : {})}
           />

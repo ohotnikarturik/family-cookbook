@@ -8,8 +8,8 @@ import { Suspense } from 'react';
 import { resolveSignedInLandingPath } from '@/lib/post-auth-path';
 
 import { HomeAuthLinks } from '@/components/home/home-auth-links';
-import { CompactUiPreferences } from '@/components/preferences/compact-ui-preferences';
-import { Link } from '@/i18n/navigation';
+import { TextLink } from '@/components/product/text-link';
+import { AuthFooterPreferences } from '@/components/preferences/auth-footer-preferences';
 import { type AppLocale, locales } from '@/i18n/routing';
 
 type Props = Readonly<{ params: Promise<{ locale: string }> }>;
@@ -55,15 +55,12 @@ async function HomeContent(props: Props) {
   const bullets = [t('bulletCollect'), t('bulletTogether'), t('bulletLanguages')];
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-lg flex-col justify-center gap-10 px-6 py-16 font-sans">
-      <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-        <div className="min-w-0 space-y-4">
-          <h1 className="font-serif-display text-3xl font-semibold tracking-tight text-foreground">
-            {t('title')}
-          </h1>
-          <p className="text-base leading-relaxed text-muted-foreground">{t('subtitle')}</p>
-        </div>
-        <CompactUiPreferences className="shrink-0 sm:max-w-xs" />
+    <main className="mx-auto flex min-h-screen max-w-2xl flex-col justify-center gap-10 px-6 py-16 font-sans">
+      <div className="min-w-0 space-y-4">
+        <h1 className="font-serif-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+          {t('title')}
+        </h1>
+        <p className="text-base leading-relaxed text-muted-foreground">{t('subtitle')}</p>
       </div>
 
       <ul className="list-none space-y-3 p-0 text-sm leading-relaxed text-foreground">
@@ -82,15 +79,11 @@ async function HomeContent(props: Props) {
         <p className="text-sm text-muted-foreground">{t('inviteHint')}</p>
       </div>
 
+      <AuthFooterPreferences />
       {showDesignLink ? (
-        <footer className="border-t border-border pt-4">
-          <Link
-            href="/design"
-            className="text-sm font-medium text-primary underline-offset-4 transition-colors hover:text-primary/90 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          >
-            {t('designGalleryLink')}
-          </Link>
-        </footer>
+        <p>
+          <TextLink href="/design">{t('designGalleryLink')}</TextLink>
+        </p>
       ) : null}
     </main>
   );

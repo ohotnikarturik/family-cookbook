@@ -125,13 +125,18 @@
     },
     "shell": {
       "kicker": "Family cookbook",
+      "productName": "Family Cookbook",
+      "currentFamily": "Current family",
       "skipToContent": "Skip to content",
       "navLabel": "Family navigation",
+      "mobileNavLabel": "Quick navigation",
+      "accountMenuLabel": "Account and preferences",
       "recipes": "Recipes",
+      "addRecipe": "Add recipe",
       "allFamilies": "All families",
       "invitations": "Invitations",
       "members": "Members",
-      "settings": "Settings",
+      "settings": "Family",
       "account": "Account"
     },
     "settings": {
@@ -170,6 +175,7 @@
       },
       "admin": {
         "sectionTitle": "Manage roles and access",
+        "manageMember": "Manage access",
         "roleField": "Role",
         "saveRole": "Save role",
         "savingRole": "Saving…",
@@ -366,10 +372,16 @@
       "resultsLabel": "Recipe results",
       "updated": "Updated {date}",
       "archivedBadge": "Archived",
-      "uncategorized": "Uncategorized"
+      "uncategorized": "Uncategorized",
+      "imageLoading": "Loading recipe photo…",
+      "prepMinutes": "{minutes} min prep",
+      "cookMinutes": "{minutes} min cook",
+      "servings": "{servings} servings"
     },
     "filters": {
       "legend": "Recipe search filters",
+      "toggleLabel": "Search and filters",
+      "activeLabel": "Active filters",
       "query": "Search",
       "queryHint": "Title or description",
       "category": "Category",
@@ -384,7 +396,8 @@
       "sort": "Sort by",
       "includeArchived": "Include archived recipes",
       "apply": "Apply filters",
-      "clear": "Clear filters"
+      "clear": "Clear filters",
+      "removeChip": "Remove {value}"
     },
     "sort": {
       "updatedAt": "Last updated",
@@ -399,6 +412,7 @@
     },
     "detail": {
       "backToList": "Back to recipes",
+      "actions": "Actions",
       "description": "Description",
       "ingredients": "Ingredients",
       "steps": "Steps",
@@ -675,5 +689,9 @@
         "limitReached": "This recipe already has the maximum number of files."
       }
     }
+  },
+  "notices": {
+    "recipeSaved": "Recipe saved.",
+    "dismiss": "Dismiss"
   }
 }

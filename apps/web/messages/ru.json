@@ -125,13 +125,18 @@
     },
     "shell": {
       "kicker": "Семейная кулинарная книга",
+      "productName": "Family Cookbook",
+      "currentFamily": "Текущая семья",
       "skipToContent": "Перейти к содержимому",
       "navLabel": "Навигация по семье",
+      "mobileNavLabel": "Быстрая навигация",
+      "accountMenuLabel": "Аккаунт и настройки",
       "recipes": "Рецепты",
+      "addRecipe": "Добавить рецепт",
       "allFamilies": "Все семьи",
       "invitations": "Приглашения",
       "members": "Участники",
-      "settings": "Настройки",
+      "settings": "Семья",
       "account": "Аккаунт"
     },
     "settings": {
@@ -170,6 +175,7 @@
       },
       "admin": {
         "sectionTitle": "Роли и доступ",
+        "manageMember": "Управление доступом",
         "roleField": "Роль",
         "saveRole": "Сохранить роль",
         "savingRole": "Сохранение…",
@@ -366,10 +372,16 @@
       "resultsLabel": "Результаты поиска",
       "updated": "Обновлено {date}",
       "archivedBadge": "В архиве",
-      "uncategorized": "Без категории"
+      "uncategorized": "Без категории",
+      "imageLoading": "Загрузка фото рецепта…",
+      "prepMinutes": "{minutes} мин подготовка",
+      "cookMinutes": "{minutes} мин готовка",
+      "servings": "{servings} порций"
     },
     "filters": {
       "legend": "Фильтры поиска",
+      "toggleLabel": "Поиск и фильтры",
+      "activeLabel": "Активные фильтры",
       "query": "Поиск",
       "queryHint": "Название или описание",
       "category": "Категория",
@@ -384,7 +396,8 @@
       "sort": "Сортировка",
       "includeArchived": "Показывать архивные",
       "apply": "Применить",
-      "clear": "Сбросить фильтры"
+      "clear": "Сбросить фильтры",
+      "removeChip": "Убрать {value}"
     },
     "sort": {
       "updatedAt": "По обновлению",
@@ -399,6 +412,7 @@
     },
     "detail": {
       "backToList": "К списку рецептов",
+      "actions": "Действия",
       "description": "Описание",
       "ingredients": "Ингредиенты",
       "steps": "Шаги",
@@ -675,5 +689,9 @@
         "limitReached": "Для этого рецепта уже достигнут лимит файлов."
       }
     }
+  },
+  "notices": {
+    "recipeSaved": "Рецепт сохранён.",
+    "dismiss": "Закрыть"
   }
 }
