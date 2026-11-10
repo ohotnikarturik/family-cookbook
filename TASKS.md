@@ -300,6 +300,45 @@ Complete the family-facing web application per approved product decisions (membe
 
 **Status:** Done (2026-11-10).
 
+**Note:** W35.12 marked backend signed-in flows and test harness complete; product-facing landing, shell, and cook-first layout are tracked in EPIC 3.6.
+
+## EPIC 3.6 — Product face (local family testing)
+
+### W36.1 — Profile before create family
+- Call `ensureProfile` inside shared `createFamily` before family bootstrap; pass cookie hints from web action.
+
+**Acceptance:** onboarding create-family works without visiting Account first; application test proves profile runs before RPC.
+
+**Status:** Done (2026-11-10).
+
+### W36.2 — Dashboard and shell copy
+- Replace engineering dashboard “tenant scope” strings in all UI locales; compact family header with skip link.
+
+**Acceptance:** no rental-tenant wording; single-family switcher does not duplicate the family name; skip link targets `#family-main`.
+
+**Status:** Done (2026-11-10).
+
+### W36.3 — Public landing and metadata
+- Signed-out home is editorial cookbook welcome; localized `meta` title/description via `generateMetadata` and `DocumentLangSync`.
+
+**Acceptance:** no bootstrap demo JSON or contracts block on home; description is cookbook copy in each locale.
+
+**Status:** Done (2026-11-10).
+
+### W36.4 — Cook-first recipe detail
+- Recipe reading before upload/admin chrome; media gallery after ingredients/steps.
+
+**Acceptance:** viewers never see upload panel; on narrow viewports title and ingredients precede upload UI.
+
+**Status:** Done (2026-11-10).
+
+### W36.5 — Reconcile backlog note
+- Document EPIC 3.6 scope; defer PPR duplicate IDs, list thumbnails, and MCP to follow-up epics.
+
+**Acceptance:** `DECISIONS.md` records scope boundary.
+
+**Status:** Done (2026-11-10).
+
 ## EPIC 4 — MCP service and OAuth
 
 ### T4.1 MCP service bootstrap

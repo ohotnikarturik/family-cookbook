@@ -19,15 +19,7 @@ export function FamilySwitcher({ families, currentFamilyId }: Props) {
   const [pending, startTransition] = useTransition();
 
   if (families.length <= 1) {
-    const only = families[0];
-    if (!only) {
-      return null;
-    }
-    return (
-      <p className="text-sm text-muted-foreground">
-        <span className="font-medium text-foreground">{only.name}</span>
-      </p>
-    );
+    return null;
   }
 
   return (

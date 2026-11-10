@@ -1,8 +1,6 @@
-import { applicationBootstrapMarker } from '@family-cookbook/application';
-import { PACKAGE_VERSION as contractsVersion } from '@family-cookbook/contracts';
 import { getSessionUser } from '@family-cookbook/data-access';
 import { createServerSupabaseClient } from '@family-cookbook/data-access/supabase/server';
-import { getFormatter, getTranslations } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 import { connection } from 'next/server';
 import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
@@ -10,8 +8,7 @@ import { Suspense } from 'react';
 import { resolveSignedInLandingPath } from '@/lib/post-auth-path';
 
 import { HomeAuthLinks } from '@/components/home/home-auth-links';
-import { SampleDisplayNameForm } from '@/components/home/sample-display-name-form';
-import { UiPreferencesControls } from '@/components/preferences/ui-preferences-controls';
+import { CompactUiPreferences } from '@/components/preferences/compact-ui-preferences';
 import { Link } from '@/i18n/navigation';
 import { type AppLocale, locales } from '@/i18n/routing';
 
@@ -53,64 +50,38 @@ async function HomeContent(props: Props) {
   }
 
   const t = await getTranslations({ locale, namespace: 'home' });
-  const format = await getFormatter({ locale });
   const showDesignLink = process.env['NODE_ENV'] !== 'production';
 
-  const refDate = new Date('2026-03-15T14:30:00.000Z');
-  const demoCount = 3;
+  const bullets = [t('bulletCollect'), t('bulletTogether'), t('bulletLanguages')];
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-lg flex-col justify-center gap-8 px-6 py-16 font-sans">
+    <main className="mx-auto flex min-h-screen max-w-lg flex-col justify-center gap-10 px-6 py-16 font-sans">
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0 space-y-4">
+          <h1 className="font-serif-display text-3xl font-semibold tracking-tight text-foreground">
+            {t('title')}
+          </h1>
+          <p className="text-base leading-relaxed text-muted-foreground">{t('subtitle')}</p>
+        </div>
+        <CompactUiPreferences className="shrink-0 sm:max-w-xs" />
+      </div>
+
+      <ul className="list-none space-y-3 p-0 text-sm leading-relaxed text-foreground">
+        {bullets.map((line) => (
+          <li key={line} className="flex gap-3">
+            <span className="mt-1.5 size-2 shrink-0 rounded-full bg-primary" aria-hidden />
+            <span>{line}</span>
+          </li>
+        ))}
+      </ul>
+
       <div className="space-y-4">
-        <h1 className="font-serif-display text-3xl font-semibold tracking-tight text-foreground">
-          {t('title')}
-        </h1>
-        <p className="text-muted-foreground">{t('subtitle')}</p>
-        <UiPreferencesControls />
         <Suspense fallback={null}>
           <HomeAuthLinks locale={locale} />
         </Suspense>
+        <p className="text-sm text-muted-foreground">{t('inviteHint')}</p>
       </div>
 
-      <section
-        aria-labelledby="format-demo-heading"
-        className="space-y-2 rounded-xl border border-border bg-muted/30 p-5 text-sm text-foreground"
-      >
-        <h2 id="format-demo-heading" className="text-base font-semibold">
-          {t('formatDemo.title')}
-        </h2>
-        <dl className="space-y-2">
-          <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between">
-            <dt className="text-muted-foreground">{t('formatDemo.numberLabel')}</dt>
-            <dd className="font-mono">{format.number(12345.67, { minimumFractionDigits: 2 })}</dd>
-          </div>
-          <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between">
-            <dt className="text-muted-foreground">{t('formatDemo.dateLabel')}</dt>
-            <dd className="font-mono">
-              {format.dateTime(refDate, { dateStyle: 'medium', timeStyle: 'short' })}
-            </dd>
-          </div>
-          <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between">
-            <dt className="text-muted-foreground">{t('formatDemo.pluralLabel')}</dt>
-            <dd>{t('formatDemo.recipeCount', { count: demoCount })}</dd>
-          </div>
-        </dl>
-      </section>
-
-      <SampleDisplayNameForm />
-
-      <dl className="rounded-xl border border-border bg-card p-5 text-sm text-card-foreground shadow-sm">
-        <div className="flex justify-between gap-4">
-          <dt className="text-muted-foreground">{t('contractsLabel')}</dt>
-          <dd className="font-mono text-foreground">{contractsVersion}</dd>
-        </div>
-        <div className="mt-3 flex justify-between gap-4">
-          <dt className="text-muted-foreground">{t('applicationLayersLabel')}</dt>
-          <dd className="max-w-[55%] break-all text-right font-mono text-foreground">
-            {JSON.stringify(applicationBootstrapMarker)}
-          </dd>
-        </div>
-      </dl>
       {showDesignLink ? (
         <footer className="border-t border-border pt-4">
           <Link

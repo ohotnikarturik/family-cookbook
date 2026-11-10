@@ -117,13 +117,6 @@ export function RecipeDetailView({
         </dl>
       </header>
 
-      <RecipeMediaGallery
-        familyId={familyId}
-        recipeId={recipe.id}
-        assets={galleryAssets}
-        labels={mediaLabels}
-      />
-
       {ingredients.length > 0 ? (
         <section aria-labelledby="recipe-ingredients-heading">
           <h3
@@ -239,6 +232,13 @@ export function RecipeDetailView({
           </p>
         </section>
       ) : null}
+
+      <RecipeMediaGallery
+        familyId={familyId}
+        recipeId={recipe.id}
+        assets={galleryAssets}
+        labels={mediaLabels}
+      />
     </article>
   );
 }

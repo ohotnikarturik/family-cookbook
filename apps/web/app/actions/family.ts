@@ -11,6 +11,7 @@ import { cookies } from 'next/headers';
 import { getTranslations } from 'next-intl/server';
 import { redirect } from 'next/navigation';
 
+import { profileBootstrapHintsFromCookies } from '@/lib/auth-hints';
 import { LOCALE_COOKIE, parseAppLocale } from '@/lib/locale';
 
 export type CreateFamilyState = null | { ok: true } | { ok: false; error: string };
@@ -40,7 +41,8 @@ export async function createFamilyAction(
   }
 
   const supabase = await createServerSupabaseClient();
-  const result = await createFamily(supabase, parsed.data);
+  const jar = await cookies();
+  const result = await createFamily(supabase, parsed.data, profileBootstrapHintsFromCookies(jar));
 
   if (result.status === 'auth_required') {
     redirect(`/${locale}/auth/sign-in?next=/${locale}/onboarding`);

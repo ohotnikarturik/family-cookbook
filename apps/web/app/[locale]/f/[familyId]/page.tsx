@@ -75,10 +75,6 @@ async function DashboardContent({ params }: Props) {
             <dt className="text-muted-foreground">{t('dashboard.memberCount')}</dt>
             <dd className="font-medium text-foreground">{family.memberCount}</dd>
           </div>
-          <div className="sm:col-span-2">
-            <dt className="text-muted-foreground">{t('dashboard.scopeNote')}</dt>
-            <dd className="text-foreground">{t('dashboard.scopeProof', { name: family.name })}</dd>
-          </div>
         </dl>
         <div className="flex flex-col gap-3 sm:flex-row">
           <Button type="button" className="min-h-11 w-full sm:w-auto" asChild>

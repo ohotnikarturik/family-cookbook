@@ -11,7 +11,8 @@ import { notFound, redirect } from 'next/navigation';
 import { Suspense, type ReactNode } from 'react';
 
 import { FamilySwitcher } from '@/components/family/family-switcher';
-import { UiPreferencesControls } from '@/components/preferences/ui-preferences-controls';
+import { CompactUiPreferences } from '@/components/preferences/compact-ui-preferences';
+import { SkipLink } from '@/components/product/skip-link';
 import { UnavailablePage } from '@/components/product/unavailable-page';
 import { Link } from '@/i18n/navigation';
 import { locales, type AppLocale } from '@/i18n/routing';
@@ -66,16 +67,20 @@ async function FamilyLayoutShell({ children, params }: Props) {
 
   return (
     <div className="mx-auto min-h-screen max-w-3xl px-6 py-8 font-sans">
+      <SkipLink href="#family-main">{t('shell.skipToContent')}</SkipLink>
       <header className="mb-8 space-y-4 border-b border-border pb-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div className="space-y-1">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div className="min-w-0 flex-1 space-y-1">
             <p className="text-sm font-medium text-muted-foreground">{t('shell.kicker')}</p>
             <h1 className="font-serif-display text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
               {workspace.workspace.name}
             </h1>
           </div>
-          <FamilySwitcher families={families} currentFamilyId={workspace.workspace.id} />
+          <CompactUiPreferences className="lg:max-w-md lg:justify-end" />
         </div>
+        {families.length > 1 ? (
+          <FamilySwitcher families={families} currentFamilyId={workspace.workspace.id} />
+        ) : null}
         <nav aria-label={t('shell.navLabel')} className="flex flex-wrap gap-4 text-sm">
           <Link
             href={`/f/${workspace.workspace.id}/recipes`}
@@ -116,9 +121,8 @@ async function FamilyLayoutShell({ children, params }: Props) {
             {t('shell.account')}
           </Link>
         </nav>
-        <UiPreferencesControls />
       </header>
-      {children}
+      <div id="family-main">{children}</div>
     </div>
   );
 }

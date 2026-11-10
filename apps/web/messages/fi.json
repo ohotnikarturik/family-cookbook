@@ -78,25 +78,18 @@
     "tooLong": "Pidä tämä alle 80 merkin.",
     "invalid": "Tarkista tämä kenttä ja yritä uudelleen."
   },
+  "meta": {
+    "title": "Family Cookbook",
+    "description": "Kerää ja kokkaa perheen reseptejä yhdessä—ainekset, vaiheet, kuvat ja käännökset yhdessä yksityisessä keittokirjassa."
+  },
   "home": {
     "title": "Family Cookbook",
-    "subtitle": "Monorepon väliaikainen sivu. Varsinainen tuotekäyttöliittymä tulee myöhemmissä tehtävissä.",
-    "contractsLabel": "contracts",
-    "applicationLayersLabel": "application-kerrokset",
+    "subtitle": "Säilytä perheen reseptit yhdessä—helppo lukea hellan ääressä ja jaettu vain kutsumillesi ihmisille.",
+    "bulletCollect": "Tallenna ainekset, vaiheet, muistiinpanot ja kuvat samaan paikkaan.",
+    "bulletTogether": "Kutsu sukulaisia rooleilla, jotka sopivat heidän tapaansa auttaa keittiössä.",
+    "bulletLanguages": "Reseptit voivat olla useilla kielillä; sovellus toimii suomeksi, englanniksi, venäjäksi ja ukrainaksi.",
+    "inviteHint": "Saitko jo kutsun? Avaa sähköpostin linkki kirjautumisen jälkeen.",
     "designGalleryLink": "Design-galleria (kehitys)",
-    "formatDemo": {
-      "title": "Paikallinen muotoilu (esimerkki)",
-      "numberLabel": "Luku",
-      "dateLabel": "Päivä ja aika",
-      "pluralLabel": "Monikko",
-      "recipeCount": "{count, plural, one {# resepti} other {# reseptiä}}"
-    },
-    "sampleForm": {
-      "label": "Näyttönimi (demo)",
-      "placeholder": "Nimesi",
-      "submit": "Tarkista",
-      "success": "Tarkistettu (vain demo — mitään ei tallenneta)."
-    },
     "auth": {
       "navLabel": "Tilin käyttö",
       "signIn": "Kirjaudu",
@@ -132,6 +125,7 @@
     },
     "shell": {
       "kicker": "Perheen keittokirja",
+      "skipToContent": "Hyppää sisältöön",
       "navLabel": "Perhesivuston navigointi",
       "recipes": "Reseptit",
       "allFamilies": "Kaikki perheet",
@@ -213,11 +207,9 @@
     },
     "dashboard": {
       "title": "Etusivu",
-      "subtitle": "Perheen viimeksi päivitetyt reseptit. Haku ja suodattimet ovat täydellä reseptilistalla.",
+      "subtitle": "Pikakatsaus perheen keittiöön. Haku ja suodattimet ovat täydellä reseptilistalla.",
       "yourRole": "Roolisi",
       "memberCount": "Aktiiviset jäsenet",
-      "scopeNote": "Vuokraajan rajaus",
-      "scopeProof": "Alla olevat luvut haetaan vain kohteelle {name} eksplisiittisellä perhe kontekstilla.",
       "browseRecipes": "Selaa kaikkia reseptejä",
       "addRecipe": "Lisää resepti",
       "recentRecipes": "Viimeksi päivitetty",

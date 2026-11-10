@@ -312,6 +312,11 @@ Approved for implementation without re-confirmation:
 3. **Conflict:** the message stays inside the archive dialog (or beside restore). The reload control is a full page load, because a client navigation does not refetch `expectedVersion`.
 4. A missing recipe is its own message. It is not shown as a generic save failure.
 
+## EPIC 3.6 — Product face before MCP (2026-11-10)
+
+1. **Scope:** P0 UX for local family testing—landing, metadata, compact family shell, cook-first recipe detail, `ensureProfile` on `createFamily`, and human dashboard copy. Not staging hardening or MCP.
+2. **Deferred to EPIC 3.7 / pre-MCP:** PPR duplicate form IDs (`#family-switcher`), recipe list hero thumbnails, reliable media display after upload, second-family UI, distinct forbidden/suspended pages, and origin CI push.
+
 ## W35.5 — Member role and suspension (2026-11-09)
 
 1. **RPCs** [`20251109140000_family_member_admin.sql`](../supabase/migrations/20251109140000_family_member_admin.sql) and [`20251109150000_family_member_admin_guards.sql`](../supabase/migrations/20251109150000_family_member_admin_guards.sql): `set_family_member_role` and `set_family_member_status` — owner/admin only; no self-change; owner rows stay immutable until transfer (W35.6); the invitation role matrix is reused; only the owner may change an admin. A row lock serializes concurrent role and status changes. Each real change writes `family_member.role_changed` or `family_member.status_changed` with the target user id and the old and new value, and no email. [`20251109160000_role_check_false_for_non_members.sql`](../supabase/migrations/20251109160000_role_check_false_for_non_members.sql) makes `private.has_family_role` return false when the caller has no active role. A null result used to skip `if not` checks, so a non-member could suspend someone.

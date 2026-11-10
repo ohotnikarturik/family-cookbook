@@ -78,25 +78,18 @@
     "tooLong": "Keep this under 80 characters.",
     "invalid": "Check this field and try again."
   },
+  "meta": {
+    "title": "Family Cookbook",
+    "description": "Collect and cook family recipes together—ingredients, steps, photos, and translations in one private cookbook."
+  },
   "home": {
     "title": "Family Cookbook",
-    "subtitle": "Monorepo bootstrap placeholder. Product UI arrives in later tasks.",
-    "contractsLabel": "contracts",
-    "applicationLayersLabel": "application layers",
+    "subtitle": "Keep your family's recipes together—easy to read at the stove and shared only with people you invite.",
+    "bulletCollect": "Save ingredients, steps, notes, and photos in one place.",
+    "bulletTogether": "Invite relatives with roles that match how they help in the kitchen.",
+    "bulletLanguages": "Recipes can be written in several languages; the app works in English, Finnish, Russian, and Ukrainian.",
+    "inviteHint": "Already have an invitation? Open the link in that email after you sign in.",
     "designGalleryLink": "Design gallery (development)",
-    "formatDemo": {
-      "title": "Locale formatting (sample)",
-      "numberLabel": "Number",
-      "dateLabel": "Date and time",
-      "pluralLabel": "Plural",
-      "recipeCount": "{count, plural, one {# recipe} other {# recipes}}"
-    },
-    "sampleForm": {
-      "label": "Display name (demo)",
-      "placeholder": "Your name",
-      "submit": "Check",
-      "success": "Validated (demo only — nothing is saved)."
-    },
     "auth": {
       "navLabel": "Account access",
       "signIn": "Sign in",
@@ -132,6 +125,7 @@
     },
     "shell": {
       "kicker": "Family cookbook",
+      "skipToContent": "Skip to content",
       "navLabel": "Family navigation",
       "recipes": "Recipes",
       "allFamilies": "All families",
@@ -212,12 +206,10 @@
       }
     },
     "dashboard": {
-      "title": "Dashboard",
-      "subtitle": "Recently updated recipes for this family. Search and filters are on the full recipe list.",
+      "title": "Home",
+      "subtitle": "A quick look at what your family has been cooking. Open the full recipe list for search and filters.",
       "yourRole": "Your role",
       "memberCount": "Active members",
-      "scopeNote": "Tenant scope",
-      "scopeProof": "Counts and details below are loaded only for {name} using an explicit family context.",
       "browseRecipes": "Browse all recipes",
       "addRecipe": "Add recipe",
       "recentRecipes": "Recently updated",

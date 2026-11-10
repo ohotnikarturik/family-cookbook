@@ -161,9 +161,6 @@ async function RecipeDetailContent({ params, searchParams }: Props) {
           ) : null}
         </div>
       </div>
-      {showEdit ? (
-        <RecipeMediaUploadPanel familyId={familyId} recipeId={recipeId} assets={recipe.assets} />
-      ) : null}
       <RecipeDetailView
         recipe={recipe}
         familyId={familyId}
@@ -217,6 +214,11 @@ async function RecipeDetailContent({ params, searchParams }: Props) {
           stepPhotoAlt: t('detail.media.stepPhotoAlt'),
         }}
       />
+      {showEdit ? (
+        <div className="space-y-4 border-t border-border pt-8">
+          <RecipeMediaUploadPanel familyId={familyId} recipeId={recipeId} assets={recipe.assets} />
+        </div>
+      ) : null}
     </section>
   );
 }

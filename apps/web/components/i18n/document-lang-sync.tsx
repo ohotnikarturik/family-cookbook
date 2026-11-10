@@ -6,9 +6,9 @@ import { useEffect } from 'react';
 /** Keeps `document.documentElement.lang` and the meta description in sync with the active next-intl locale. */
 export function DocumentLangSync() {
   const locale = useLocale();
-  const t = useTranslations('home');
+  const t = useTranslations('meta');
   const title = t('title');
-  const description = t('subtitle');
+  const description = t('description');
 
   useEffect(() => {
     document.documentElement.lang = locale;
