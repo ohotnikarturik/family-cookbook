@@ -378,12 +378,12 @@ enabled = false
 
 # OAuth server configuration
 [auth.oauth_server]
-# Enable OAuth server functionality
-enabled = false
+# Enable OAuth server functionality (EPIC 4 — required for MCP OAuth staging proof)
+enabled = true
 # Path for OAuth consent flow UI
 authorization_url_path = "/oauth/consent"
-# Allow dynamic client registration
-allow_dynamic_registration = false
+# Local dev: allow MCP clients (Cursor, etc.) to register; restrict in staging/production if abused
+allow_dynamic_registration = true
 
 [edge_runtime]
 enabled = true

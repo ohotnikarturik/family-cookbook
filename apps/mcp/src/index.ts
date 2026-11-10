@@ -1,25 +1,22 @@
 import { serve } from '@hono/node-server';
-import { Hono } from 'hono';
 
-/** Ensures the MCP app links the shared application layer at build time (T0.1 wiring check). */
-import '@family-cookbook/application';
+import { ensureSupabaseServerEnv } from './config/supabase-server-env.js';
+import { createMcpApp } from './app.js';
 
-const defaultPort = 8787;
+ensureSupabaseServerEnv();
+import { getMcpHonoAppOptions, getMcpPort } from './config/env.js';
 
-const app = new Hono();
-
-app.get('/health', (c) => {
-  return c.json({ status: 'ok' });
-});
-
-const port = Number(process.env['MCP_PORT'] ?? defaultPort);
+const app = createMcpApp();
+const port = getMcpPort();
+const { host } = getMcpHonoAppOptions();
 
 serve(
   {
     fetch: app.fetch,
     port,
+    hostname: host,
   },
   (info) => {
-    console.info(`MCP placeholder listening on http://localhost:${info.port}`);
+    console.info(`MCP listening on http://${info.address}:${info.port} (health: /health, mcp: /mcp)`);
   },
 );

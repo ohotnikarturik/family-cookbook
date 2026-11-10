@@ -693,5 +693,19 @@
   "notices": {
     "recipeSaved": "Recipe saved.",
     "dismiss": "Dismiss"
+  },
+  "oauthConsent": {
+    "title": "Authorize application",
+    "subtitle": "An application wants to access your Family Cookbook account.",
+    "clientUnknown": "Unknown application",
+    "scopesHeading": "It may access:",
+    "approve": "Allow access",
+    "deny": "Deny",
+    "working": "Working…",
+    "missingAuthorization": "This authorization link is invalid or expired.",
+    "signInRequired": "Sign in to continue",
+    "signInCta": "Sign in",
+    "errorLoad": "We could not load authorization details.",
+    "errorAction": "Something went wrong. Try again."
   }
 }

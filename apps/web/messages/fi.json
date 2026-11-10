@@ -693,5 +693,19 @@
   "notices": {
     "recipeSaved": "Resepti tallennettu.",
     "dismiss": "Sulje"
+  },
+  "oauthConsent": {
+    "title": "Valtuuta sovellus",
+    "subtitle": "Sovellus haluaa käyttää Family Cookbook -tiliäsi.",
+    "clientUnknown": "Tuntematon sovellus",
+    "scopesHeading": "Se voi käyttää:",
+    "approve": "Salli käyttö",
+    "deny": "Estä",
+    "working": "Odota…",
+    "missingAuthorization": "Tämä valtuutuslinkki on virheellinen tai vanhentunut.",
+    "signInRequired": "Kirjaudu sisään jatkaaksesi",
+    "signInCta": "Kirjaudu",
+    "errorLoad": "Valtuutustietoja ei voitu ladata.",
+    "errorAction": "Jokin meni pieleen. Yritä uudelleen."
   }
 }
