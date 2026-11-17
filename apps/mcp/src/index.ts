@@ -17,6 +17,8 @@ serve(
     hostname: host,
   },
   (info) => {
-    console.info(`MCP listening on http://${info.address}:${info.port} (health: /health, mcp: /mcp)`);
+    console.info(
+      `MCP listening on http://${info.address}:${info.port} (health: /health, mcp: /mcp)`,
+    );
   },
 );

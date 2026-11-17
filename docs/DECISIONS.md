@@ -350,3 +350,8 @@ Approved for implementation without re-confirmation:
 3. **Photos:** `pnpm supabase:seed-photos` (`apps/web/scripts/seed-recipe-photos.mjs`) draws four dish pictures as PNG in code and uploads them as Owner A through `createRecipeUploadSlot` → signed PUT → `finalizeRecipeUpload`. It refuses non-local URLs, uses no service-role key, and does not log URLs or tokens. Generated pictures avoid adding third-party image files and licences to the repo. 0101 gets no photo, because pgTAP 92 fills that recipe up to the 10-asset limit.
 4. **E2E hygiene:** the journeys archive the recipe they create and re-archive "Archived beet salad" after restoring it, through `e2e/fixtures/recipe-lifecycle.ts`. W38.17 changes the archive dialog, so it updates that one helper.
 5. **Screenshots:** `e2e/screenshots.spec.ts` runs only when `PW_SCREENS=1` (`pnpm test:screens`), as its own Playwright project. The default projects ignore it. Output goes to the gitignored `apps/web/screenshots/<label>/`. It sets the `fc-theme` cookie as well as `colorScheme`, so a saved profile theme cannot override the requested one.
+
+## W38.0a — Restore green checks (2026-11-17)
+
+1. **Consent page:** `/oauth/consent` is a thin default export that renders `ConsentContent` inside `<Suspense>`, so Next.js 16 can prerender the shell. The request-time reads (cookies, `authorization_id`, `getUser`, `getAuthorizationDetails`) and the redirects are unchanged.
+2. **Cross-family MCP search** returns `FORBIDDEN`, not an empty list. The integration test now asserts that, in line with the web `searchRecipes` behaviour and spec §17.3 item 10.

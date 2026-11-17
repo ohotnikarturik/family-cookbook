@@ -24,7 +24,8 @@ const DEFAULT_MESSAGES: Record<McpErrorCode, string> = {
   FAMILY_ACCESS_DENIED: 'You do not have access to this family.',
   NOT_FOUND: 'The requested resource was not found.',
   VALIDATION_ERROR: 'The tool input was invalid.',
-  VERSION_CONFLICT: 'The recipe was modified by someone else. Refresh and retry with the current version.',
+  VERSION_CONFLICT:
+    'The recipe was modified by someone else. Refresh and retry with the current version.',
   RATE_LIMITED: 'Too many requests. Try again later.',
   CONFIRMATION_REQUIRED: 'This action requires explicit confirmation.',
   FORBIDDEN: 'You are not allowed to perform this action.',

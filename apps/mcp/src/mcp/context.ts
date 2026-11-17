@@ -21,7 +21,10 @@ export function getMcpContext(): McpActorContext | undefined {
   return storage.getStore();
 }
 
-export function requireMcpAuth(): McpActorContext & { userId: string; supabase: AppSupabaseClient } {
+export function requireMcpAuth(): McpActorContext & {
+  userId: string;
+  supabase: AppSupabaseClient;
+} {
   const ctx = storage.getStore();
   if (!ctx?.userId || !ctx.supabase) {
     throw new Error('MCP_AUTH_REQUIRED');

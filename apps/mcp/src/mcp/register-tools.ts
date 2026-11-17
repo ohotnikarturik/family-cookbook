@@ -13,7 +13,7 @@ import {
   searchRecipesToolSchema,
   updateRecipeToolSchema,
 } from './tool-schemas.js';
-import { toolError, toolSuccessJson } from './tool-result.js';
+import { toolError } from './tool-result.js';
 import { executeMcpTool } from './tool-executor.js';
 
 export const MCP_TOOL_NAMES = [
@@ -50,7 +50,8 @@ const TOOL_DEFINITIONS: ToolRegistration[] = [
   },
   {
     name: 'get_recipe',
-    description: 'Get a recipe with ingredients, steps, and tags. Requires family_id and recipe_id.',
+    description:
+      'Get a recipe with ingredients, steps, and tags. Requires family_id and recipe_id.',
     inputSchema: getRecipeToolSchema,
     readOnlyHint: true,
   },
@@ -115,10 +116,18 @@ export function registerFamilyCookbookTools(server: McpServer): void {
           return result;
         } catch (error) {
           if (error instanceof Error && error.message === 'MCP_AUTH_REQUIRED') {
-            logMcpEvent('warn', 'tool_call_denied', { requestId, tool: tool.name, outcome: 'auth_required' });
+            logMcpEvent('warn', 'tool_call_denied', {
+              requestId,
+              tool: tool.name,
+              outcome: 'auth_required',
+            });
             return toolError('AUTH_REQUIRED');
           }
-          logMcpEvent('warn', 'tool_call_failed', { requestId, tool: tool.name, outcome: 'internal' });
+          logMcpEvent('warn', 'tool_call_failed', {
+            requestId,
+            tool: tool.name,
+            outcome: 'internal',
+          });
           return toolError('QUERY_FAILED');
         }
       },

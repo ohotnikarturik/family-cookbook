@@ -8,3 +8,4 @@ coverage
 *.md
 next-env.d.ts
 .gitleaks.toml
+apps/web/screenshots

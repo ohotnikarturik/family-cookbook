@@ -25,7 +25,10 @@ export function createMcpApp(options?: CreateMcpAppOptions) {
   const mcpHandler = getMcpHttpHandler();
   const protectedFetch = enableOAuth ? createMcpProtectedFetch() : null;
 
-  const handleMcpRequest = async (c: { req: { raw: Request }; get: (key: 'parsedBody') => unknown }) => {
+  const handleMcpRequest = async (c: {
+    req: { raw: Request };
+    get: (key: 'parsedBody') => unknown;
+  }) => {
     const bearer = await resolveBearerActorContext(c.req.raw);
     const parent = getMcpContext();
     const userId = parent?.userId ?? bearer?.userId;
@@ -62,7 +65,9 @@ export function createMcpApp(options?: CreateMcpAppOptions) {
     c.json({
       mcp_endpoint: `${getMcpPublicUrl()}/mcp`,
       health: `${getMcpPublicUrl()}/health`,
-      oauth_protected_resource: enableOAuth ? `${getMcpPublicUrl()}/mcp/oauth-protected-resource` : null,
+      oauth_protected_resource: enableOAuth
+        ? `${getMcpPublicUrl()}/mcp/oauth-protected-resource`
+        : null,
     }),
   );
 

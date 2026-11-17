@@ -1,6 +1,6 @@
 import { createServerSupabaseClient } from '@family-cookbook/data-access/supabase/server';
 import { LOCALE_COOKIE, parseAppLocale } from '@/lib/locale';
-import { defaultLocale, type AppLocale } from '@/i18n/routing';
+import type { AppLocale } from '@/i18n/routing';
 import en from '@/messages/en.json';
 import fi from '@/messages/fi.json';
 import ru from '@/messages/ru.json';
@@ -9,7 +9,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import type { ReactNode } from 'react';
+import { Suspense, type ReactNode } from 'react';
 
 import { OAuthConsentForm } from './oauth-consent-form';
 
@@ -19,7 +19,17 @@ type Props = {
   searchParams: Promise<{ authorization_id?: string }>;
 };
 
-export default async function OAuthConsentPage(props: Props) {
+// Cookies, search params and the auth lookup are request-time data, so they render inside
+// <Suspense> (Next.js 16 prerenders the static shell). Authorization logic is unchanged.
+export default function OAuthConsentPage(props: Props) {
+  return (
+    <Suspense fallback={<ConsentShell>{null}</ConsentShell>}>
+      <ConsentContent searchParams={props.searchParams} />
+    </Suspense>
+  );
+}
+
+async function ConsentContent(props: Props) {
   const sp = await props.searchParams;
   const authorizationId = sp.authorization_id?.trim();
   const cookieStore = await cookies();
@@ -57,7 +67,7 @@ export default async function OAuthConsentPage(props: Props) {
           <div className="space-y-4">
             <p className="text-muted-foreground">{messages.oauthConsent.errorLoad}</p>
             <Link href="/" className="text-primary underline-offset-4 hover:underline">
-              Home
+              {messages.notFound.home}
             </Link>
           </div>
         </ConsentShell>
@@ -91,7 +101,11 @@ export default async function OAuthConsentPage(props: Props) {
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <ConsentShell>
-        <OAuthConsentForm authorizationId={authorizationId} clientName={clientName} scopes={scopes} />
+        <OAuthConsentForm
+          authorizationId={authorizationId}
+          clientName={clientName}
+          scopes={scopes}
+        />
       </ConsentShell>
     </NextIntlClientProvider>
   );

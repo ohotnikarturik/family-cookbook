@@ -6,7 +6,9 @@ import type { McpActorContext } from '../context.js';
 import { useCaseToToolResult } from './map-use-case.js';
 
 export const mapFamilyTool = {
-  async listMyFamilies(ctx: McpActorContext & { supabase: AppSupabaseClient }): Promise<CallToolResult> {
+  async listMyFamilies(
+    ctx: McpActorContext & { supabase: AppSupabaseClient },
+  ): Promise<CallToolResult> {
     const result = await listMyFamilies(ctx.supabase);
     return useCaseToToolResult(result, {
       ok: (value) => ({ families: value.families }),

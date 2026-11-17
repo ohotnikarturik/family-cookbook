@@ -1,6 +1,5 @@
 import { Client } from '@modelcontextprotocol/client';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/client';
-import type { AppSupabaseClient } from '@family-cookbook/data-access';
 import { createClient } from '@supabase/supabase-js';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -142,15 +141,13 @@ describe.skipIf(!stackReady)('MCP tools integration (local Supabase)', () => {
     await client.close();
   });
 
-  it('search_recipes is family-scoped', async () => {
-    const result = await callToolWithBearer(
-      'search_recipes',
-      { family_id: FAMILY_B },
-      ownerToken,
-    );
-    expect(result.isError).toBeFalsy();
-    const payload = JSON.parse(result.text) as { items: unknown[] };
-    expect(payload.items.length).toBe(0);
+  it('search_recipes refuses a family the user does not belong to', async () => {
+    // Owner A is not a member of Family B. The shared searchRecipes use case returns
+    // `forbidden` (same as the web: search-recipes.integration.test.ts), never an empty list.
+    const result = await callToolWithBearer('search_recipes', { family_id: FAMILY_B }, ownerToken);
+    expect(result.isError).toBe(true);
+    const payload = JSON.parse(result.text) as { code: string };
+    expect(payload.code).toBe('FORBIDDEN');
   });
 
   it('viewer cannot create_recipe', async () => {

@@ -88,7 +88,11 @@ export const mapRecipeTool = {
   async archiveRecipe(ctx: AuthedCtx, raw: unknown): Promise<CallToolResult> {
     const parsed = parseArchiveRecipeMcpInput(raw);
     if (!parsed.success) {
-      if (typeof raw === 'object' && raw !== null && (raw as Record<string, unknown>)['confirm'] !== true) {
+      if (
+        typeof raw === 'object' &&
+        raw !== null &&
+        (raw as Record<string, unknown>)['confirm'] !== true
+      ) {
         return toolError('CONFIRMATION_REQUIRED');
       }
       return validationFailed();

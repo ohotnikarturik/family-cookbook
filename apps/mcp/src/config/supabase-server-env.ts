@@ -13,7 +13,8 @@ export function ensureSupabaseServerEnv(): void {
     process.env['SUPABASE_PUBLISHABLE_KEY'] = config.anonKey;
   }
   if (!process.env['SUPABASE_JWKS_URL']) {
-    process.env['SUPABASE_JWKS_URL'] = `${config.url.replace(/\/$/, '')}/auth/v1/.well-known/jwks.json`;
+    process.env['SUPABASE_JWKS_URL'] =
+      `${config.url.replace(/\/$/, '')}/auth/v1/.well-known/jwks.json`;
   }
   if (!process.env['NEXT_PUBLIC_SUPABASE_URL']) {
     process.env['NEXT_PUBLIC_SUPABASE_URL'] = config.url;

@@ -28,6 +28,9 @@ try {
     console.info('authorization_servers:', body.authorization_servers);
   }
 } catch (error) {
-  console.warn('Metadata probe failed (is MCP running?):', error instanceof Error ? error.message : error);
+  console.warn(
+    'Metadata probe failed (is MCP running?):',
+    error instanceof Error ? error.message : error,
+  );
   process.exitCode = 1;
 }

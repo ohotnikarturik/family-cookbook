@@ -13,5 +13,9 @@ export async function executeMcpTool(
   if (!ctx?.userId || !ctx.supabase) {
     return toolError('AUTH_REQUIRED');
   }
-  return executeMcpToolImpl(name, input, ctx as McpActorContext & { userId: string; supabase: NonNullable<McpActorContext['supabase']> });
+  return executeMcpToolImpl(
+    name,
+    input,
+    ctx as McpActorContext & { userId: string; supabase: NonNullable<McpActorContext['supabase']> },
+  );
 }
