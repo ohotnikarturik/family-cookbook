@@ -9,10 +9,9 @@ import { Suspense } from 'react';
 
 import { RecipeBrowseStates } from '@/components/recipe/recipe-browse-states';
 import { RecipeEditorForm } from '@/components/recipe/recipe-editor-form';
-import { RecipeLoading } from '@/components/recipe/recipe-loading';
+import { LoadingState } from '@/components/product/loading-state';
+import { PageHeader } from '@/components/product/page-header';
 import { UnavailablePage } from '@/components/product/unavailable-page';
-import { Button } from '@/components/ui/button';
-import { Link } from '@/i18n/navigation';
 import { draftFromRecipeDetail, preservedTranslationsFromDetail } from '@/lib/recipe-editor';
 import { locales, type AppLocale } from '@/i18n/routing';
 
@@ -24,7 +23,7 @@ export const instant = false;
 
 export default function EditRecipePage(props: Props) {
   return (
-    <Suspense fallback={<RecipeLoading />}>
+    <Suspense fallback={<LoadingState />}>
       <EditRecipeContent params={props.params} />
     </Suspense>
   );
@@ -38,6 +37,7 @@ async function EditRecipeContent({ params }: Props) {
   }
   const locale = localeParam as AppLocale;
   const t = await getTranslations({ locale, namespace: 'recipes.editor' });
+  const backToDetail = { href: `/f/${familyId}/recipes/${recipeId}`, label: t('backToDetail') };
 
   const supabase = await createServerSupabaseClient();
   const sessionUser = await getSessionUser(supabase);
@@ -60,25 +60,22 @@ async function EditRecipeContent({ params }: Props) {
   if (result.status === 'forbidden') {
     return (
       <section className="space-y-4">
-        <EditHeader title={t('editTitle')} />
+        <PageHeader title={t('editTitle')} back={backToDetail} />
         <RecipeBrowseStates
           variant="forbidden"
           title={t('forbiddenTitle')}
           description={t('forbiddenDescription')}
         />
-        <Button type="button" variant="outline" className="min-h-11" asChild>
-          <Link href={`/f/${familyId}/recipes/${recipeId}`}>{t('backToDetail')}</Link>
-        </Button>
       </section>
     );
   }
   if (result.status === 'not_found') {
-    return <UnavailablePage locale={locale} headingLevel="h2" embedded />;
+    return <UnavailablePage locale={locale} headingLevel="h1" embedded />;
   }
   if (result.status === 'validation_error' || result.status === 'query_failed') {
     return (
       <section className="space-y-4">
-        <EditHeader title={t('editTitle')} />
+        <PageHeader title={t('editTitle')} back={backToDetail} />
         <RecipeBrowseStates
           variant="error"
           title={t('loadErrorTitle')}
@@ -92,15 +89,12 @@ async function EditRecipeContent({ params }: Props) {
   if (!canEditRecipe(workspace.workspace.role, sessionUser.id, recipe.createdBy)) {
     return (
       <section className="space-y-4">
-        <EditHeader title={t('editTitle')} />
+        <PageHeader title={t('editTitle')} back={backToDetail} />
         <RecipeBrowseStates
           variant="forbidden"
           title={t('forbiddenTitle')}
           description={t('forbiddenDescription')}
         />
-        <Button type="button" variant="outline" className="min-h-11" asChild>
-          <Link href={`/f/${familyId}/recipes/${recipeId}`}>{t('backToDetail')}</Link>
-        </Button>
       </section>
     );
   }
@@ -109,7 +103,11 @@ async function EditRecipeContent({ params }: Props) {
 
   return (
     <section className="space-y-6">
-      <EditHeader title={t('editTitle')} subtitle={t('editSubtitle', { title: recipe.title })} />
+      <PageHeader
+        title={t('editTitle')}
+        description={t('editSubtitle', { title: recipe.title })}
+        back={backToDetail}
+      />
       <RecipeEditorForm
         mode={{
           kind: 'edit',
@@ -124,16 +122,5 @@ async function EditRecipeContent({ params }: Props) {
         recipeAssets={recipe.assets}
       />
     </section>
-  );
-}
-
-function EditHeader({ title, subtitle }: Readonly<{ title: string; subtitle?: string }>) {
-  return (
-    <header className="space-y-1">
-      <h2 className="font-serif-display text-2xl font-semibold tracking-tight text-foreground">
-        {title}
-      </h2>
-      {subtitle ? <p className="text-sm text-muted-foreground">{subtitle}</p> : null}
-    </header>
   );
 }

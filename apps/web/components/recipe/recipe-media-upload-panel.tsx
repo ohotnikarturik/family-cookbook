@@ -102,9 +102,9 @@ export function RecipeMediaUploadPanel({
       className="space-y-4 rounded-xl border border-dashed border-border bg-surface-raised p-4"
     >
       <div className="space-y-1">
-        <h3 id={headingId} className="text-base font-semibold text-foreground">
+        <h2 id={headingId} className="text-base font-semibold text-foreground">
           {t('heading')}
-        </h3>
+        </h2>
         <p className="text-sm text-muted-foreground">
           {t('count', { count: counted, max: RECIPE_ASSETS_PER_RECIPE_MAX })}
         </p>

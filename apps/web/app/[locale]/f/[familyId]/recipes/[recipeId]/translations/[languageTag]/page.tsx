@@ -7,9 +7,8 @@ import { getTranslations } from 'next-intl/server';
 import { connection } from 'next/server';
 import { notFound, redirect } from 'next/navigation';
 
+import { PageHeader } from '@/components/product/page-header';
 import { RecipeTranslationForm } from '@/components/recipe/recipe-translation-form';
-import { Button } from '@/components/ui/button';
-import { Link } from '@/i18n/navigation';
 import { locales, type AppLocale } from '@/i18n/routing';
 
 type Props = Readonly<{
@@ -103,10 +102,12 @@ export default async function RecipeTranslationEditPage({ params }: Props) {
   return (
     <section className="mx-auto max-w-3xl space-y-6">
       <PageHeader
-        languageTag={languageTag}
-        sourceLanguage={recipe.sourceLanguage}
-        title={recipe.title}
-        t={t}
+        title={t('pageTitle', { language: languageTag })}
+        back={{ href: `/f/${familyId}/recipes/${recipeId}/translations`, label: t('backToList') }}
+        description={t.rich('pageSubtitle', {
+          title: recipe.title,
+          recipeTitle: (chunks) => <span lang={recipe.sourceLanguage}>{chunks}</span>,
+        })}
       />
       <RecipeTranslationForm
         recipe={recipe}
@@ -146,35 +147,6 @@ export default async function RecipeTranslationEditPage({ params }: Props) {
           auth_required: t('errors.auth'),
         }}
       />
-      <Button type="button" variant="outline" className="min-h-11" asChild>
-        <Link href={`/f/${familyId}/recipes/${recipeId}/translations`}>{t('backToList')}</Link>
-      </Button>
     </section>
-  );
-}
-
-function PageHeader({
-  languageTag,
-  sourceLanguage,
-  title,
-  t,
-}: Readonly<{
-  languageTag: string;
-  sourceLanguage: string;
-  title: string;
-  t: Awaited<ReturnType<typeof getTranslations>>;
-}>) {
-  return (
-    <header className="space-y-2">
-      <h2 className="font-serif-display text-2xl font-semibold">
-        {t('pageTitle', { language: languageTag })}
-      </h2>
-      <p className="text-sm text-muted-foreground">
-        {t.rich('pageSubtitle', {
-          title,
-          recipeTitle: (chunks) => <span lang={sourceLanguage}>{chunks}</span>,
-        })}
-      </p>
-    </header>
   );
 }

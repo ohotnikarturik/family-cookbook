@@ -55,9 +55,9 @@ export function FamilyMemberAdminSection({
 
   return (
     <section className="space-y-4" aria-labelledby={headingId}>
-      <h3 id={headingId} className="text-base font-semibold text-foreground">
+      <h2 id={headingId} className="text-base font-semibold text-foreground">
         {sectionTitle}
-      </h3>
+      </h2>
       <ul className="list-none space-y-2 p-0">
         {members.map((member) => (
           <MemberAdminPanel
@@ -109,9 +109,9 @@ function MemberAdminPanel({
   return (
     <li className="rounded-lg border border-border bg-card">
       <div className="flex min-h-11 flex-wrap items-center justify-between gap-2 px-4 py-2">
-        <h4 id={headingId} className="text-sm font-semibold text-foreground">
+        <h3 id={headingId} className="text-sm font-semibold text-foreground">
           {member.label}
-        </h4>
+        </h3>
         <p className="text-sm text-muted-foreground">{adminLabels.roleLabels[member.role]}</p>
       </div>
       {error ? (

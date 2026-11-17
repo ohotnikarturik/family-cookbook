@@ -80,86 +80,83 @@ export function StepListEditor({
       </legend>
       <ol className="list-none space-y-4 p-0">
         {steps.map((row, index) => (
-          <li
-            key={row.clientKey}
-            className="space-y-3 rounded-lg border border-border bg-card p-4"
-            role="group"
-            aria-label={labels.rowLabel(index + 1)}
-          >
-            <div className="flex flex-wrap gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                className="min-h-11"
-                disabled={disabled || index === 0}
-                aria-label={`${labels.moveUp}, ${labels.rowLabel(index + 1)}`}
-                onClick={() => moveRow(index, -1)}
+          <li key={row.clientKey} className="rounded-lg border border-border bg-card p-4">
+            <div role="group" aria-label={labels.rowLabel(index + 1)} className="space-y-3">
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="min-h-11"
+                  disabled={disabled || index === 0}
+                  aria-label={`${labels.moveUp}, ${labels.rowLabel(index + 1)}`}
+                  onClick={() => moveRow(index, -1)}
+                >
+                  {labels.moveUp}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="min-h-11"
+                  disabled={disabled || index === steps.length - 1}
+                  aria-label={`${labels.moveDown}, ${labels.rowLabel(index + 1)}`}
+                  onClick={() => moveRow(index, 1)}
+                >
+                  {labels.moveDown}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="h-auto min-h-11 max-w-full whitespace-normal py-2 text-start"
+                  disabled={disabled}
+                  onClick={() => removeRow(index)}
+                >
+                  {labels.remove(index + 1)}
+                </Button>
+              </div>
+              <EditorField
+                id={`${row.clientKey}-instruction`}
+                label={labels.instruction}
+                error={fieldErrors?.[`steps.${index}.instruction`]}
               >
-                {labels.moveUp}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                className="min-h-11"
-                disabled={disabled || index === steps.length - 1}
-                aria-label={`${labels.moveDown}, ${labels.rowLabel(index + 1)}`}
-                onClick={() => moveRow(index, 1)}
+                <Textarea
+                  value={row.instruction}
+                  onChange={(event) => updateRow(index, { instruction: event.target.value })}
+                  disabled={disabled}
+                  className="min-h-24 text-base"
+                  rows={4}
+                />
+              </EditorField>
+              <EditorField
+                id={`${row.clientKey}-duration`}
+                label={labels.durationMinutes}
+                hint={labels.durationHint}
+                error={fieldErrors?.[`steps.${index}.durationMinutes`]}
               >
-                {labels.moveDown}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                className="h-auto min-h-11 max-w-full whitespace-normal py-2 text-start"
-                disabled={disabled}
-                onClick={() => removeRow(index)}
-              >
-                {labels.remove(index + 1)}
-              </Button>
+                <Input
+                  value={row.durationMinutes}
+                  onChange={(event) => updateRow(index, { durationMinutes: event.target.value })}
+                  disabled={disabled}
+                  className="min-h-11"
+                  inputMode="numeric"
+                  autoComplete="off"
+                />
+              </EditorField>
+              {mediaContext ? (
+                <RecipeStepPhotoUpload
+                  familyId={mediaContext.familyId}
+                  recipeId={mediaContext.recipeId}
+                  stepIndex={index}
+                  mediaAssetId={row.mediaAssetId}
+                  atAssetLimit={atAssetLimit}
+                  disabled={disabled === true}
+                  onLinked={(assetId) => {
+                    updateRow(index, { mediaAssetId: assetId });
+                    mediaContext.onAssetUploaded(assetId);
+                  }}
+                  onClear={() => updateRow(index, { mediaAssetId: null })}
+                />
+              ) : null}
             </div>
-            <EditorField
-              id={`${row.clientKey}-instruction`}
-              label={labels.instruction}
-              error={fieldErrors?.[`steps.${index}.instruction`]}
-            >
-              <Textarea
-                value={row.instruction}
-                onChange={(event) => updateRow(index, { instruction: event.target.value })}
-                disabled={disabled}
-                className="min-h-24 text-base"
-                rows={4}
-              />
-            </EditorField>
-            <EditorField
-              id={`${row.clientKey}-duration`}
-              label={labels.durationMinutes}
-              hint={labels.durationHint}
-              error={fieldErrors?.[`steps.${index}.durationMinutes`]}
-            >
-              <Input
-                value={row.durationMinutes}
-                onChange={(event) => updateRow(index, { durationMinutes: event.target.value })}
-                disabled={disabled}
-                className="min-h-11"
-                inputMode="numeric"
-                autoComplete="off"
-              />
-            </EditorField>
-            {mediaContext ? (
-              <RecipeStepPhotoUpload
-                familyId={mediaContext.familyId}
-                recipeId={mediaContext.recipeId}
-                stepIndex={index}
-                mediaAssetId={row.mediaAssetId}
-                atAssetLimit={atAssetLimit}
-                disabled={disabled === true}
-                onLinked={(assetId) => {
-                  updateRow(index, { mediaAssetId: assetId });
-                  mediaContext.onAssetUploaded(assetId);
-                }}
-                onClear={() => updateRow(index, { mediaAssetId: null })}
-              />
-            ) : null}
           </li>
         ))}
       </ol>

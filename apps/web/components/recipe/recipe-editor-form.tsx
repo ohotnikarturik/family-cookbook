@@ -218,7 +218,7 @@ function RecipeEditorFormBody({
         ) : null}
 
         <section className="space-y-4 rounded-xl border border-border bg-card p-4 shadow-sm">
-          <h3 className="text-base font-semibold text-foreground">{t('sections.basics')}</h3>
+          <h2 className="text-base font-semibold text-foreground">{t('sections.basics')}</h2>
           <FormField
             id={titleId}
             label={t('fields.title')}

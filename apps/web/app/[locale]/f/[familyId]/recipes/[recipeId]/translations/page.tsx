@@ -6,6 +6,7 @@ import { getTranslations } from 'next-intl/server';
 import { connection } from 'next/server';
 import { notFound, redirect } from 'next/navigation';
 
+import { PageHeader } from '@/components/product/page-header';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 import { locales, type AppLocale } from '@/i18n/routing';
@@ -55,15 +56,14 @@ export default async function RecipeTranslationsIndexPage({ params }: Props) {
 
   return (
     <section className="mx-auto max-w-2xl space-y-6">
-      <div className="space-y-2">
-        <h2 className="font-serif-display text-2xl font-semibold">{t('indexTitle')}</h2>
-        <p className="text-sm text-muted-foreground">
-          {t.rich('indexSubtitle', {
-            title: recipe.title,
-            recipeTitle: (chunks) => <span lang={recipe.sourceLanguage}>{chunks}</span>,
-          })}
-        </p>
-      </div>
+      <PageHeader
+        title={t('indexTitle')}
+        back={{ href: `/f/${familyId}/recipes/${recipeId}`, label: t('backToRecipe') }}
+        description={t.rich('indexSubtitle', {
+          title: recipe.title,
+          recipeTitle: (chunks) => <span lang={recipe.sourceLanguage}>{chunks}</span>,
+        })}
+      />
 
       {recipe.translations.length > 0 ? (
         <ul className="list-none space-y-2 p-0">
@@ -88,7 +88,7 @@ export default async function RecipeTranslationsIndexPage({ params }: Props) {
 
       {available.length > 0 ? (
         <div className="space-y-2">
-          <h3 className="text-lg font-semibold">{t('addHeading')}</h3>
+          <h2 className="text-lg font-semibold">{t('addHeading')}</h2>
           <ul className="list-none space-y-2 p-0">
             {available.map((language) => (
               <li key={language}>
@@ -107,10 +107,6 @@ export default async function RecipeTranslationsIndexPage({ params }: Props) {
           </ul>
         </div>
       ) : null}
-
-      <Button type="button" variant="outline" className="min-h-11" asChild>
-        <Link href={`/f/${familyId}/recipes/${recipeId}`}>{t('backToRecipe')}</Link>
-      </Button>
     </section>
   );
 }

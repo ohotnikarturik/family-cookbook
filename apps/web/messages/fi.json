@@ -8,6 +8,9 @@
       "uk": "Українська"
     }
   },
+  "common": {
+    "loading": "Ladataan…"
+  },
   "uiPreferences": {
     "legend": "Kieli ja ulkoasu",
     "hint": "Kieli ja teema koskevat tätä laitetta. Sisäänkirjautuneena valinnat synkronoituvat myös tiliisi."
@@ -154,7 +157,6 @@
       "save": "Tallenna asetukset",
       "saving": "Tallennetaan…",
       "saved": "Asetukset tallennettu.",
-      "backDashboard": "Takaisin kojelaudalle",
       "errors": {
         "validation": "Tarkista nimi ja kieli, yritä uudelleen.",
         "forbidden": "Et voi muuttaa perheen asetuksia.",
@@ -170,7 +172,6 @@
       "suspendedBadge": "Keskeytetty",
       "empty": "Jäseniä ei löytynyt.",
       "privacyNote": "Vain näyttönimet näytetään. Kirjautumissähköposteja ei koskaan näytetä muille.",
-      "backDashboard": "Takaisin kojelaudalle",
       "errors": {
         "loadFailed": "Jäsenlistaa ei voitu ladata. Yritä hetken kuluttua uudelleen."
       },
@@ -219,8 +220,7 @@
       "memberCount": "Aktiiviset jäsenet",
       "browseRecipes": "Selaa kaikkia reseptejä",
       "addRecipe": "Lisää resepti",
-      "recentRecipes": "Viimeksi päivitetty",
-      "loading": "Ladataan perhettä…"
+      "recentRecipes": "Viimeksi päivitetty"
     },
     "roles": {
       "owner": "Omistaja",
@@ -233,7 +233,6 @@
   "invitations": {
     "title": "Kutsu sukulaisia",
     "subtitle": "Lähetä kertakäyttöinen linkki. Kutsutun on kirjauduttava samalla osoitteella.",
-    "backDashboard": "Takaisin etusivulle",
     "form": {
       "emailLabel": "Sähköpostiosoite",
       "roleLabel": "Rooli",
@@ -523,7 +522,6 @@
       }
     },
     "status": {
-      "loading": "Ladataan reseptejä…",
       "emptyTitle": "Ei reseptejä",
       "empty": "Mikään resepti ei vastaa suodattimia. Tyhjennä suodattimet tai lisää uusi resepti.",
       "errorTitle": "Reseptejä ei voitu ladata",

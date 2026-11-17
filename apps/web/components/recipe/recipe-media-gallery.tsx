@@ -48,13 +48,13 @@ export function RecipeMediaGallery({ familyId, recipeId, assets, labels }: Props
 
   return (
     <section aria-labelledby="recipe-media-heading" className="space-y-6">
-      <h3 id="recipe-media-heading" className="text-lg font-semibold text-foreground">
+      <h2 id="recipe-media-heading" className="text-lg font-semibold text-foreground">
         {labels.sectionHeading}
-      </h3>
+      </h2>
 
       {photos.length > 0 ? (
         <div className="space-y-3">
-          <h4 className="text-sm font-medium text-muted-foreground">{labels.photosHeading}</h4>
+          <h3 className="text-sm font-medium text-muted-foreground">{labels.photosHeading}</h3>
           <ul className="grid list-none gap-4 p-0 sm:grid-cols-2">
             {photos.map((asset) => (
               <li key={asset.id}>
@@ -72,7 +72,7 @@ export function RecipeMediaGallery({ familyId, recipeId, assets, labels }: Props
 
       {documents.length > 0 ? (
         <div className="space-y-3">
-          <h4 className="text-sm font-medium text-muted-foreground">{labels.documentsHeading}</h4>
+          <h3 className="text-sm font-medium text-muted-foreground">{labels.documentsHeading}</h3>
           <ul className="list-none space-y-3 p-0">
             {documents.map((asset) => (
               <li

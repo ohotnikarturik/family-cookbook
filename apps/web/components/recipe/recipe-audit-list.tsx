@@ -31,9 +31,9 @@ export function RecipeAuditList({
         className="space-y-2 rounded-xl border border-border bg-card p-5 shadow-sm"
         aria-labelledby="audit-heading"
       >
-        <h3 id="audit-heading" className="font-serif-display text-xl font-semibold text-foreground">
+        <h2 id="audit-heading" className="font-serif-display text-xl font-semibold text-foreground">
           {heading}
-        </h3>
+        </h2>
         <p className="font-medium text-foreground">{emptyTitle}</p>
         <p className="text-sm text-muted-foreground">{emptyDescription}</p>
       </section>
@@ -42,9 +42,9 @@ export function RecipeAuditList({
 
   return (
     <section aria-labelledby="audit-heading" className="space-y-3">
-      <h3 id="audit-heading" className="font-serif-display text-xl font-semibold text-foreground">
+      <h2 id="audit-heading" className="font-serif-display text-xl font-semibold text-foreground">
         {heading}
-      </h3>
+      </h2>
       <ol className="divide-y divide-border rounded-xl border border-border bg-card shadow-sm">
         {items.map((item) => {
           const actorLabel =

@@ -9,10 +9,11 @@ import { Suspense } from 'react';
 
 import { RecipeBrowseStates } from '@/components/recipe/recipe-browse-states';
 import { RecipeList } from '@/components/recipe/recipe-list';
-import { RecipeLoading } from '@/components/recipe/recipe-loading';
 import { RecipePagination } from '@/components/recipe/recipe-pagination';
 import { RecipeSearchActiveChips } from '@/components/recipe/recipe-search-active-chips';
 import { RecipeSearchForm } from '@/components/recipe/recipe-search-form';
+import { LoadingState } from '@/components/product/loading-state';
+import { PageHeader } from '@/components/product/page-header';
 import { UnavailablePage } from '@/components/product/unavailable-page';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
@@ -35,7 +36,7 @@ export default function RecipesPage(props: Props) {
 }
 
 function RecipesFallback() {
-  return <RecipeLoading />;
+  return <LoadingState />;
 }
 
 async function RecipesContent({ params, searchParams }: Props) {
@@ -52,8 +53,8 @@ async function RecipesContent({ params, searchParams }: Props) {
   const parsed = parseRecipeSearchFromUrl(familyId, sp);
   if (parsed.input === null) {
     return (
-      <section className="space-y-4" aria-labelledby="recipes-heading">
-        <RecipesHeader title={t('list.title')} subtitle={t('list.subtitle')} />
+      <section className="space-y-4">
+        <PageHeader title={t('list.title')} description={t('list.subtitle')} />
         <RecipeBrowseStates
           variant="invalidFilters"
           title={t('status.invalidFiltersTitle')}
@@ -74,12 +75,12 @@ async function RecipesContent({ params, searchParams }: Props) {
     redirect(`/${locale}/auth/sign-in?next=/${locale}/f/${familyId}/recipes`);
   }
   if (result.status === 'forbidden') {
-    return <UnavailablePage locale={locale} headingLevel="h2" embedded />;
+    return <UnavailablePage locale={locale} headingLevel="h1" embedded />;
   }
   if (result.status === 'validation_error') {
     return (
-      <section className="space-y-4" aria-labelledby="recipes-heading">
-        <RecipesHeader title={t('list.title')} subtitle={t('list.subtitle')} />
+      <section className="space-y-4">
+        <PageHeader title={t('list.title')} description={t('list.subtitle')} />
         <RecipeBrowseStates
           variant="invalidFilters"
           title={t('status.invalidFiltersTitle')}
@@ -93,8 +94,8 @@ async function RecipesContent({ params, searchParams }: Props) {
   }
   if (result.status === 'rate_limited') {
     return (
-      <section className="space-y-4" aria-labelledby="recipes-heading">
-        <RecipesHeader title={t('list.title')} subtitle={t('list.subtitle')} />
+      <section className="space-y-4">
+        <PageHeader title={t('list.title')} description={t('list.subtitle')} />
         <RecipeBrowseStates
           variant="error"
           title={t('status.rateLimitedTitle')}
@@ -105,8 +106,8 @@ async function RecipesContent({ params, searchParams }: Props) {
   }
   if (result.status === 'query_failed') {
     return (
-      <section className="space-y-4" aria-labelledby="recipes-heading">
-        <RecipesHeader title={t('list.title')} subtitle={t('list.subtitle')} />
+      <section className="space-y-4">
+        <PageHeader title={t('list.title')} description={t('list.subtitle')} />
         <RecipeBrowseStates
           variant="error"
           title={t('status.errorTitle')}
@@ -148,8 +149,8 @@ async function RecipesContent({ params, searchParams }: Props) {
       : [];
 
   return (
-    <section className="space-y-6" aria-labelledby="recipes-heading">
-      <RecipesHeader title={t('list.title')} subtitle={t('list.subtitle')} />
+    <section className="space-y-6">
+      <PageHeader title={t('list.title')} description={t('list.subtitle')} />
       <RecipeSearchForm
         key={buildRecipeSearchQuery(parsed.input) || 'all'}
         familyId={familyId}
@@ -227,22 +228,5 @@ async function RecipesContent({ params, searchParams }: Props) {
         />
       ) : null}
     </section>
-  );
-}
-
-function RecipesHeader({
-  title,
-  subtitle,
-}: Readonly<{
-  title: string;
-  subtitle: string;
-}>) {
-  return (
-    <header className="space-y-1">
-      <h2 id="recipes-heading" className="text-xl font-semibold text-foreground">
-        {title}
-      </h2>
-      <p className="text-sm text-muted-foreground">{subtitle}</p>
-    </header>
   );
 }

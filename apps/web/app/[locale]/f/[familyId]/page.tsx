@@ -6,7 +6,8 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { RecipeBrowseStates } from '@/components/recipe/recipe-browse-states';
 import { RecipeCard } from '@/components/recipe/recipe-card';
-import { RecipeLoading } from '@/components/recipe/recipe-loading';
+import { LoadingState } from '@/components/product/loading-state';
+import { PageHeader } from '@/components/product/page-header';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 import { recipeContentLang, recipeTimingLabel } from '@/lib/format-recipe-meta';
@@ -23,7 +24,7 @@ export default function FamilyDashboardPage(props: Props) {
 }
 
 function DashboardFallback() {
-  return <RecipeLoading namespace="family.dashboard" />;
+  return <LoadingState />;
 }
 
 async function DashboardContent({ params }: Props) {
@@ -54,25 +55,20 @@ async function DashboardContent({ params }: Props) {
 
   return (
     <div className="space-y-6">
-      <section
-        aria-labelledby="family-dashboard-heading"
-        className="space-y-4 rounded-xl border border-border bg-card p-6 shadow-sm"
-      >
-        <h2 id="family-dashboard-heading" className="text-lg font-semibold text-foreground">
-          {t('dashboard.title')}
-        </h2>
-        <p className="text-sm text-muted-foreground">{t('dashboard.subtitle')}</p>
-        <div className="flex flex-col gap-3 sm:flex-row">
+      <PageHeader
+        title={t('dashboard.title')}
+        description={t('dashboard.subtitle')}
+        actions={
           <Button type="button" className="min-h-11 w-full sm:w-auto" asChild>
             <Link href={`/f/${familyId}/recipes`}>{t('dashboard.browseRecipes')}</Link>
           </Button>
-        </div>
-      </section>
+        }
+      />
 
       <section aria-labelledby="recent-recipes-heading" className="space-y-4">
-        <h3 id="recent-recipes-heading" className="text-base font-semibold text-foreground">
+        <h2 id="recent-recipes-heading" className="text-lg font-semibold text-foreground">
           {t('dashboard.recentRecipes')}
-        </h3>
+        </h2>
         {recentFailed ? (
           <RecipeBrowseStates
             variant="error"
@@ -105,7 +101,7 @@ async function DashboardContent({ params }: Props) {
                     servings: (servings) =>
                       tRecipes('list.servings', { servings: format.number(servings) }),
                   })}
-                  headingLevel="h4"
+                  headingLevel="h3"
                   {...(contentLang ? { contentLang } : {})}
                 />
               );

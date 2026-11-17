@@ -8,9 +8,8 @@ import { Suspense } from 'react';
 
 import { RecipeBrowseStates } from '@/components/recipe/recipe-browse-states';
 import { RecipeEditorForm } from '@/components/recipe/recipe-editor-form';
-import { RecipeLoading } from '@/components/recipe/recipe-loading';
-import { Button } from '@/components/ui/button';
-import { Link } from '@/i18n/navigation';
+import { LoadingState } from '@/components/product/loading-state';
+import { PageHeader } from '@/components/product/page-header';
 import { emptyRecipeEditorDraft } from '@/lib/recipe-editor';
 import { locales, type AppLocale } from '@/i18n/routing';
 
@@ -20,7 +19,7 @@ export const instant = false;
 
 export default function NewRecipePage(props: Props) {
   return (
-    <Suspense fallback={<RecipeLoading />}>
+    <Suspense fallback={<LoadingState />}>
       <NewRecipeContent params={props.params} />
     </Suspense>
   );
@@ -49,22 +48,22 @@ async function NewRecipeContent({ params }: Props) {
   if (!canCreateRecipe(family.role)) {
     return (
       <section className="space-y-4">
-        <EditorHeader title={t('createTitle')} />
+        <PageHeader
+          title={t('createTitle')}
+          back={{ href: `/f/${familyId}/recipes`, label: t('backToList') }}
+        />
         <RecipeBrowseStates
           variant="forbidden"
           title={t('forbiddenTitle')}
           description={t('forbiddenDescription')}
         />
-        <Button type="button" variant="outline" className="min-h-11" asChild>
-          <Link href={`/f/${familyId}/recipes`}>{t('backToList')}</Link>
-        </Button>
       </section>
     );
   }
 
   return (
     <section className="space-y-6">
-      <EditorHeader title={t('createTitle')} subtitle={t('createSubtitle')} />
+      <PageHeader title={t('createTitle')} description={t('createSubtitle')} />
       <RecipeEditorForm
         mode={{ kind: 'create', familyId, defaultSourceLanguage: family.defaultLanguage }}
         initialDraft={emptyRecipeEditorDraft(family.defaultLanguage)}
@@ -74,16 +73,5 @@ async function NewRecipeContent({ params }: Props) {
         cancelHref={`/f/${familyId}/recipes`}
       />
     </section>
-  );
-}
-
-function EditorHeader({ title, subtitle }: Readonly<{ title: string; subtitle?: string }>) {
-  return (
-    <header className="space-y-1">
-      <h2 className="font-serif-display text-2xl font-semibold tracking-tight text-foreground">
-        {title}
-      </h2>
-      {subtitle ? <p className="text-sm text-muted-foreground">{subtitle}</p> : null}
-    </header>
   );
 }

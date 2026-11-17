@@ -31,12 +31,12 @@ export function RecipeHistoryList({
         className="space-y-2 rounded-xl border border-border bg-card p-5 shadow-sm"
         aria-labelledby="history-heading"
       >
-        <h3
+        <h2
           id="history-heading"
           className="font-serif-display text-xl font-semibold text-foreground"
         >
           {heading}
-        </h3>
+        </h2>
         <p className="font-medium text-foreground">{emptyTitle}</p>
         <p className="text-sm text-muted-foreground">{emptyDescription}</p>
       </section>
@@ -45,9 +45,9 @@ export function RecipeHistoryList({
 
   return (
     <section aria-labelledby="history-heading" className="space-y-3">
-      <h3 id="history-heading" className="font-serif-display text-xl font-semibold text-foreground">
+      <h2 id="history-heading" className="font-serif-display text-xl font-semibold text-foreground">
         {heading}
-      </h3>
+      </h2>
       <ol className="divide-y divide-border rounded-xl border border-border bg-card shadow-sm">
         {items.map((item) => {
           const actorLabel =

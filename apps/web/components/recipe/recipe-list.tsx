@@ -48,7 +48,7 @@ export function RecipeList({
             categoryFallback={cardLabels.categoryFallback}
             imageLoadingLabel={cardLabels.imageLoadingLabel}
             metaLabel={cardLabels.metaLabelFor(recipe)}
-            headingLevel="h3"
+            headingLevel="h2"
             {...(contentLang ? { contentLang } : {})}
           />
         );

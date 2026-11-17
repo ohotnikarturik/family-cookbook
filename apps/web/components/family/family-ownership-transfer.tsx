@@ -86,9 +86,9 @@ export function FamilyOwnershipTransferSection({
   return (
     <section className="space-y-3" aria-labelledby={headingId}>
       <div className="space-y-1">
-        <h3 id={headingId} className="text-base font-semibold text-foreground">
+        <h2 id={headingId} className="text-base font-semibold text-foreground">
           {labels.sectionTitle}
-        </h3>
+        </h2>
         <p className="text-sm text-muted-foreground">{labels.sectionDescription}</p>
       </div>
       {!open && errorMessage ? (

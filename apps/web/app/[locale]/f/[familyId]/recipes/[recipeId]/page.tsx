@@ -9,13 +9,13 @@ import { connection } from 'next/server';
 import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
-import { TextLink } from '@/components/product/text-link';
+import { PageHeader } from '@/components/product/page-header';
 import { UnavailablePage } from '@/components/product/unavailable-page';
 import { RecipeBrowseStates } from '@/components/recipe/recipe-browse-states';
 import { RecipeDetailToolbar } from '@/components/recipe/recipe-detail-toolbar';
 import { RecipeDetailView } from '@/components/recipe/recipe-detail-view';
 import { RecipeLanguageSelector } from '@/components/recipe/recipe-language-selector';
-import { RecipeLoading } from '@/components/recipe/recipe-loading';
+import { LoadingState } from '@/components/product/loading-state';
 import { RecipeMediaUploadPanel } from '@/components/recipe/recipe-media-upload-panel';
 import { formatIngredientAmount } from '@/lib/format-recipe-meta';
 import { locales, type AppLocale } from '@/i18n/routing';
@@ -36,7 +36,7 @@ export default function RecipeDetailPage(props: Props) {
 }
 
 function DetailFallback() {
-  return <RecipeLoading />;
+  return <LoadingState />;
 }
 
 async function RecipeDetailContent({ params, searchParams }: Props) {
@@ -49,6 +49,8 @@ async function RecipeDetailContent({ params, searchParams }: Props) {
   const locale = localeParam as AppLocale;
   const t = await getTranslations({ locale, namespace: 'recipes' });
 
+  const backToList = { href: `/f/${familyId}/recipes`, label: t('detail.backToList') };
+
   const supabase = await createServerSupabaseClient();
   const sessionUser = await getSessionUser(supabase);
   const workspace = await resolveAccessibleFamily(supabase, familyId);
@@ -60,27 +62,19 @@ async function RecipeDetailContent({ params, searchParams }: Props) {
   if (result.status === 'forbidden') {
     return (
       <section className="space-y-4">
-        <BackLink familyId={familyId} label={t('detail.backToList')} />
-        <RecipeBrowseStates
-          variant="forbidden"
-          title={t('status.forbiddenTitle')}
-          description={t('status.forbidden')}
-        />
+        <PageHeader title={t('status.forbiddenTitle')} back={backToList} />
+        <RecipeBrowseStates variant="forbidden" description={t('status.forbidden')} />
       </section>
     );
   }
   if (result.status === 'not_found') {
-    return <UnavailablePage locale={locale} headingLevel="h2" embedded />;
+    return <UnavailablePage locale={locale} headingLevel="h1" embedded />;
   }
   if (result.status === 'validation_error' || result.status === 'query_failed') {
     return (
       <section className="space-y-4">
-        <BackLink familyId={familyId} label={t('detail.backToList')} />
-        <RecipeBrowseStates
-          variant="error"
-          title={t('status.errorTitle')}
-          description={t('status.error')}
-        />
+        <PageHeader title={t('status.errorTitle')} back={backToList} />
+        <RecipeBrowseStates variant="error" description={t('status.error')} />
       </section>
     );
   }
@@ -128,17 +122,24 @@ async function RecipeDetailContent({ params, searchParams }: Props) {
 
   return (
     <section className="space-y-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <BackLink familyId={familyId} label={t('detail.backToList')} />
-        <RecipeDetailToolbar
-          familyId={familyId}
-          recipeId={recipeId}
-          expectedVersion={recipe.version}
-          status={recipe.status}
-          showEdit={showEdit}
-          showHistory={showHistory}
-        />
-      </div>
+      <PageHeader
+        title={display.title}
+        titleLang={display.contentLang}
+        id={`recipe-title-${recipe.id}`}
+        back={backToList}
+        actions={
+          showEdit || showHistory ? (
+            <RecipeDetailToolbar
+              familyId={familyId}
+              recipeId={recipeId}
+              expectedVersion={recipe.version}
+              status={recipe.status}
+              showEdit={showEdit}
+              showHistory={showHistory}
+            />
+          ) : undefined
+        }
+      />
       <RecipeDetailView
         recipe={recipe}
         familyId={familyId}
@@ -216,8 +217,4 @@ function canonicalViewLanguage(
     recipe.translations.find((item) => item.languageTag.trim().toLowerCase() === normalized)
       ?.languageTag ?? recipe.sourceLanguage
   );
-}
-
-function BackLink({ familyId, label }: Readonly<{ familyId: string; label: string }>) {
-  return <TextLink href={`/f/${familyId}/recipes`}>{label}</TextLink>;
 }

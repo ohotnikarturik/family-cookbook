@@ -16,9 +16,9 @@ import { RecipeAuditList } from '@/components/recipe/recipe-audit-list';
 import { RecipeBrowseStates } from '@/components/recipe/recipe-browse-states';
 import { RecipeHistoryList } from '@/components/recipe/recipe-history-list';
 import { RecipeHistoryPagination } from '@/components/recipe/recipe-history-pagination';
-import { RecipeLoading } from '@/components/recipe/recipe-loading';
+import { LoadingState } from '@/components/product/loading-state';
 import { UnavailablePage } from '@/components/product/unavailable-page';
-import { TextLink } from '@/components/product/text-link';
+import { PageHeader } from '@/components/product/page-header';
 import { locales, type AppLocale } from '@/i18n/routing';
 import { recipeContentLang } from '@/lib/format-recipe-meta';
 import { recipeHistoryHref, type HistoryQuery } from '@/lib/recipe-history/query';
@@ -32,7 +32,7 @@ export const instant = false;
 
 export default function RecipeHistoryPage(props: Props) {
   return (
-    <Suspense fallback={<RecipeLoading />}>
+    <Suspense fallback={<LoadingState />}>
       <RecipeHistoryContent params={props.params} searchParams={props.searchParams} />
     </Suspense>
   );
@@ -62,6 +62,10 @@ async function RecipeHistoryContent({ params, searchParams }: Props) {
   }
   const locale = localeParam as AppLocale;
   const t = await getTranslations({ locale, namespace: 'recipes' });
+  const backToDetail = {
+    href: `/f/${familyId}/recipes/${recipeId}`,
+    label: t('history.backToDetail'),
+  };
   const format = await getFormatter({ locale });
   const sp = await searchParams;
   const cursor = parseCursor(sp.cursor);
@@ -80,7 +84,7 @@ async function RecipeHistoryContent({ params, searchParams }: Props) {
   if (recipeResult.status === 'forbidden') {
     return (
       <section className="space-y-4">
-        <BackToDetail familyId={familyId} recipeId={recipeId} label={t('history.backToDetail')} />
+        <PageHeader title={t('history.title')} back={backToDetail} />
         <RecipeBrowseStates
           variant="forbidden"
           title={t('status.forbiddenTitle')}
@@ -90,12 +94,12 @@ async function RecipeHistoryContent({ params, searchParams }: Props) {
     );
   }
   if (recipeResult.status === 'not_found') {
-    return <UnavailablePage locale={locale} headingLevel="h2" embedded />;
+    return <UnavailablePage locale={locale} headingLevel="h1" embedded />;
   }
   if (recipeResult.status === 'validation_error' || recipeResult.status === 'query_failed') {
     return (
       <section className="space-y-4">
-        <BackToDetail familyId={familyId} recipeId={recipeId} label={t('history.backToDetail')} />
+        <PageHeader title={t('history.title')} back={backToDetail} />
         <RecipeBrowseStates
           variant="error"
           title={t('status.errorTitle')}
@@ -114,7 +118,7 @@ async function RecipeHistoryContent({ params, searchParams }: Props) {
   if (!allowedHistory) {
     return (
       <section className="space-y-4">
-        <BackToDetail familyId={familyId} recipeId={recipeId} label={t('history.backToDetail')} />
+        <PageHeader title={t('history.title')} back={backToDetail} />
         <RecipeBrowseStates
           variant="forbidden"
           title={t('history.forbiddenTitle')}
@@ -131,7 +135,7 @@ async function RecipeHistoryContent({ params, searchParams }: Props) {
   if (historyResult.status === 'forbidden') {
     return (
       <section className="space-y-4">
-        <BackToDetail familyId={familyId} recipeId={recipeId} label={t('history.backToDetail')} />
+        <PageHeader title={t('history.title')} back={backToDetail} />
         <RecipeBrowseStates
           variant="forbidden"
           title={t('history.forbiddenTitle')}
@@ -141,12 +145,12 @@ async function RecipeHistoryContent({ params, searchParams }: Props) {
     );
   }
   if (historyResult.status === 'not_found') {
-    return <UnavailablePage locale={locale} headingLevel="h2" embedded />;
+    return <UnavailablePage locale={locale} headingLevel="h1" embedded />;
   }
   if (historyResult.status !== 'ok') {
     return (
       <section className="space-y-4">
-        <BackToDetail familyId={familyId} recipeId={recipeId} label={t('history.backToDetail')} />
+        <PageHeader title={t('history.title')} back={backToDetail} />
         <RecipeBrowseStates
           variant="error"
           title={t('status.errorTitle')}
@@ -193,19 +197,15 @@ async function RecipeHistoryContent({ params, searchParams }: Props) {
 
   return (
     <section className="mx-auto flex max-w-2xl flex-col gap-8 py-2">
-      <header className="space-y-2">
-        <BackToDetail familyId={familyId} recipeId={recipeId} label={t('history.backToDetail')} />
-        <h2 className="font-serif-display text-3xl font-semibold tracking-tight text-foreground">
-          {t('history.title')}
-        </h2>
-        <p className="text-muted-foreground">
-          {t.rich('history.subtitle', {
-            title: recipe.title,
-            recipeTitle: (chunks) =>
-              contentLang ? <span lang={contentLang}>{chunks}</span> : <span>{chunks}</span>,
-          })}
-        </p>
-      </header>
+      <PageHeader
+        title={t('history.title')}
+        back={backToDetail}
+        description={t.rich('history.subtitle', {
+          title: recipe.title,
+          recipeTitle: (chunks) =>
+            contentLang ? <span lang={contentLang}>{chunks}</span> : <span>{chunks}</span>,
+        })}
+      />
 
       <RecipeHistoryList
         items={items}
@@ -277,12 +277,4 @@ async function RecipeHistoryContent({ params, searchParams }: Props) {
       ) : null}
     </section>
   );
-}
-
-function BackToDetail({
-  familyId,
-  recipeId,
-  label,
-}: Readonly<{ familyId: string; recipeId: string; label: string }>) {
-  return <TextLink href={`/f/${familyId}/recipes/${recipeId}`}>{label}</TextLink>;
 }

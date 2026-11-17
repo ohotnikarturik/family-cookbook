@@ -22,14 +22,15 @@ import { FamilyMemberAdminSection } from '@/components/family/family-member-dire
 import { FamilySettingsSubnav } from '@/components/shell/family-settings-subnav';
 import { FamilyMemberList } from '@/components/family/family-member-list';
 import { FamilyOwnershipTransferSection } from '@/components/family/family-ownership-transfer';
-import { TextLink } from '@/components/product/text-link';
+import { LoadingState } from '@/components/product/loading-state';
+import { PageHeader } from '@/components/product/page-header';
 import { locales, type AppLocale } from '@/i18n/routing';
 
 type Props = Readonly<{ params: Promise<{ locale: string; familyId: string }> }>;
 
 export default function FamilyMembersPage(props: Props) {
   return (
-    <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}>
+    <Suspense fallback={<LoadingState />}>
       <MembersContent params={props.params} />
     </Suspense>
   );
@@ -63,14 +64,7 @@ async function MembersContent({ params }: Props) {
     redirect(`/${locale}/auth/sign-in?next=/${locale}/f/${familyId}/settings/members`);
   }
   if (listed.status !== 'ok') {
-    return (
-      <MembersFailedState
-        familyId={familyId}
-        title={t('title')}
-        message={t('errors.loadFailed')}
-        backLabel={t('backDashboard')}
-      />
-    );
+    return <MembersFailedState title={t('title')} message={t('errors.loadFailed')} />;
   }
 
   const memberRows = listed.members.map((member) => ({
@@ -108,10 +102,7 @@ async function MembersContent({ params }: Props) {
 
   return (
     <div className="space-y-6">
-      <header className="space-y-2">
-        <h2 className="text-xl font-semibold text-foreground">{t('title')}</h2>
-        <p className="text-sm text-muted-foreground">{t('subtitle')}</p>
-      </header>
+      <PageHeader title={t('title')} description={t('subtitle')} />
       <FamilySettingsSubnav familyId={familyId} showInvitations={canManageInvitations(actorRole)} />
       <FamilyMemberList
         members={memberRows}
@@ -176,24 +167,17 @@ async function MembersContent({ params }: Props) {
         />
       ) : null}
       <p className="text-sm text-muted-foreground">{t('privacyNote')}</p>
-      <TextLink href={`/f/${familyId}`}>{t('backDashboard')}</TextLink>
     </div>
   );
 }
 
-function MembersFailedState({
-  familyId,
-  title,
-  message,
-  backLabel,
-}: Readonly<{ familyId: string; title: string; message: string; backLabel: string }>) {
+function MembersFailedState({ title, message }: Readonly<{ title: string; message: string }>) {
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold text-foreground">{title}</h2>
+      <PageHeader title={title} />
       <p className="text-sm text-destructive" role="alert">
         {message}
       </p>
-      <TextLink href={`/f/${familyId}`}>{backLabel}</TextLink>
     </div>
   );
 }

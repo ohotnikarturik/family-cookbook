@@ -14,14 +14,15 @@ import { invitableRolesForActor } from '@/lib/invitable-roles';
 import { InviteMemberForm } from '@/components/invitations/invite-member-form';
 import { FamilySettingsSubnav } from '@/components/shell/family-settings-subnav';
 import { PendingInvitationsList } from '@/components/invitations/pending-invitations-list';
-import { TextLink } from '@/components/product/text-link';
+import { LoadingState } from '@/components/product/loading-state';
+import { PageHeader } from '@/components/product/page-header';
 import { locales, type AppLocale } from '@/i18n/routing';
 
 type Props = Readonly<{ params: Promise<{ locale: string; familyId: string }> }>;
 
 export default function FamilyInvitationsPage(props: Props) {
   return (
-    <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}>
+    <Suspense fallback={<LoadingState />}>
       <InvitationsContent params={props.params} />
     </Suspense>
   );
@@ -51,19 +52,16 @@ async function InvitationsContent({ params }: Props) {
 
   return (
     <div className="space-y-8">
-      <div className="space-y-2">
-        <h2 className="text-xl font-semibold text-foreground">{t('title')}</h2>
-        <p className="text-sm text-muted-foreground">{t('subtitle')}</p>
-      </div>
+      <PageHeader title={t('title')} description={t('subtitle')} />
       <FamilySettingsSubnav familyId={familyId} showInvitations />
       <InviteMemberForm
         familyId={familyId}
         invitableRoles={invitableRolesForActor(workspace.workspace.role)}
       />
       <section className="space-y-3" aria-labelledby="pending-invites-heading">
-        <h3 id="pending-invites-heading" className="text-base font-semibold">
+        <h2 id="pending-invites-heading" className="text-lg font-semibold">
           {t('list.heading')}
-        </h3>
+        </h2>
         {listed.status === 'ok' ? (
           <PendingInvitationsList familyId={familyId} invitations={listed.invitations} />
         ) : (
@@ -72,7 +70,6 @@ async function InvitationsContent({ params }: Props) {
           </p>
         )}
       </section>
-      <TextLink href={`/f/${familyId}`}>{t('backDashboard')}</TextLink>
     </div>
   );
 }

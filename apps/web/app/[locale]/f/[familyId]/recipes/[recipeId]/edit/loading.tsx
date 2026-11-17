@@ -1,5 +1,5 @@
-import { RecipeLoading } from '@/components/recipe/recipe-loading';
+import { LoadingState } from '@/components/product/loading-state';
 
 export default function EditRecipeLoading() {
-  return <RecipeLoading />;
+  return <LoadingState />;
 }

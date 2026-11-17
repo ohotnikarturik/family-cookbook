@@ -362,3 +362,17 @@ Approved for implementation without re-confirmation:
 2. **Nav sections:** `familyNavSectionFromPathname` returns `home | recipes | family | other`. Paths outside `/f/{id}` return `other`, so account and family-list pages highlight nothing.
 3. **Compact theme options** stack in the account menu only (`ThemeSwitcher stacked`); the auth footer keeps its row.
 4. **Fixed on the way:** the logo link had no accessible name on phones (axe `link-name`); the product name is now `sr-only` below `sm`. The recipe editor overflowed at 320px because the "Remove <ingredient>" button was `whitespace-nowrap`; both list editors let it wrap. W38.15 reworks the editor and may replace this.
+
+## W38.2a — Page header and heading hierarchy (2026-11-17)
+
+1. **One `PageHeader`** ([`components/product/page-header.tsx`](../apps/web/components/product/page-header.tsx)) renders the page's only `<h1>`. The back link goes above the title, `description` accepts rich text, `actions` wraps under the title on narrow screens. Error and forbidden states use it too, so every signed-in family route has exactly one `h1`. On recipe history the `h1` stays "Recipe history" and the status goes in the alert title; on recipe detail, where no recipe title is available, the status title is the `h1`. The recipe detail `<article>` is labelled by the page `h1` (`recipe-title-<recipeId>`; the id carries the recipe id because Next.js keeps the previous route hidden in the DOM).
+2. **Hierarchy rule:** page `h1`; sections `h2`; sub-sections and cards inside a section `h3`. Recipe cards are `h2` in the full list and `h3` under Home's "Recently updated". On recipe detail the recipe title is the `h1`.
+3. **`LoadingState`** (`components/product/loading-state.tsx`, copy `common.loading`) replaces `RecipeLoading` and the inline pulse placeholders.
+4. **Editor rows:** ingredient and step rows keep `<li>` as the list item and put `role="group"` on an inner `div`. `<li role="group">` failed axe `list`; no earlier test covered the new/edit routes.
+5. **No component unit test:** web Vitest only includes `lib/**/*.test.ts` with no DOM environment; adding one means a new dependency. Playwright covers the header contract.
+6. **Screenshot labels:** `SCREENS_LABEL` accepts only `[a-z0-9_-]`; a label with a dot silently falls back to `current`. Use `W38-2a`, not `W38.2a`.
+
+## CI — Audit ignore and pgTAP reset retry (2026-11-17)
+
+1. **Audit ignore:** the Security job runs `pnpm audit --audit-level high --ignore GHSA-fc5q-39xc-vjpf`. The advisory is a picomatch ReDoS (`<=4.0.7`, published 2026-10-19) with no patched version; 4.0.7 is the latest release. picomatch is reached only through dev tooling (eslint, typescript-eslint, vite) with developer-controlled glob patterns, and no shipped app code uses it. The user approved ignoring this one advisory. Do not use `--ignore-unfixable`, so new unfixable advisories still fail CI. **Remove the ignore when picomatch ships a fix** (and bump the lockfile).
+2. **pgTAP reset retry:** `supabase db reset` recreates the DB container, and on GitHub runners host port 54322 is sometimes still bound ("address already in use"). The "Reset database" step retries up to 3 times, running `supabase stop --no-backup` and `db start` between attempts. Migrations still apply to a clean database.

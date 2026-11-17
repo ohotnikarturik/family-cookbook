@@ -163,7 +163,7 @@ export function RecipeTranslationForm(props: Props) {
       </FieldBlock>
 
       <section className="space-y-4">
-        <h3 className="text-lg font-semibold">{props.labels.ingredientsHeading}</h3>
+        <h2 className="text-lg font-semibold">{props.labels.ingredientsHeading}</h2>
         {props.recipe.ingredients.map((ingredient) => {
           const showNotes =
             (ingredient.notes ?? '').trim().length > 0 ||
@@ -219,7 +219,7 @@ export function RecipeTranslationForm(props: Props) {
       </section>
 
       <section className="space-y-4">
-        <h3 className="text-lg font-semibold">{props.labels.stepsHeading}</h3>
+        <h2 className="text-lg font-semibold">{props.labels.stepsHeading}</h2>
         {props.recipe.steps.map((step) => (
           <FieldBlock
             key={step.position}

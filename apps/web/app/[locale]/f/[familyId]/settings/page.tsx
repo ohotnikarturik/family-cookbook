@@ -9,14 +9,15 @@ import { Suspense } from 'react';
 
 import { FamilySettingsForm } from '@/components/family/family-settings-form';
 import { FamilySettingsSubnav } from '@/components/shell/family-settings-subnav';
-import { TextLink } from '@/components/product/text-link';
+import { LoadingState } from '@/components/product/loading-state';
+import { PageHeader } from '@/components/product/page-header';
 import { locales, type AppLocale } from '@/i18n/routing';
 
 type Props = Readonly<{ params: Promise<{ locale: string; familyId: string }> }>;
 
 export default function FamilySettingsPage(props: Props) {
   return (
-    <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-muted" />}>
+    <Suspense fallback={<LoadingState />}>
       <SettingsContent params={props.params} />
     </Suspense>
   );
@@ -49,10 +50,7 @@ async function SettingsContent({ params }: Props) {
 
   return (
     <div className="space-y-6">
-      <header className="space-y-2">
-        <h2 className="text-xl font-semibold text-foreground">{t('title')}</h2>
-        <p className="text-sm text-muted-foreground">{t('subtitle')}</p>
-      </header>
+      <PageHeader title={t('title')} description={t('subtitle')} />
       <FamilySettingsSubnav
         familyId={familyId}
         showInvitations={canManageInvitations(workspace.workspace.role)}
@@ -63,7 +61,6 @@ async function SettingsContent({ params }: Props) {
         defaultLanguage={workspace.workspace.defaultLanguage}
         canEdit={canEdit}
       />
-      <TextLink href={`/f/${familyId}`}>{t('backDashboard')}</TextLink>
     </div>
   );
 }

@@ -8,6 +8,9 @@
       "uk": "Ukrainian"
     }
   },
+  "common": {
+    "loading": "Loading…"
+  },
   "uiPreferences": {
     "legend": "Language and appearance",
     "hint": "Language and theme apply on this device. When you are signed in, choices also sync to your account."
@@ -154,7 +157,6 @@
       "save": "Save settings",
       "saving": "Saving…",
       "saved": "Settings saved.",
-      "backDashboard": "Back to dashboard",
       "errors": {
         "validation": "Check the name and language, then try again.",
         "forbidden": "You cannot change family settings.",
@@ -170,7 +172,6 @@
       "suspendedBadge": "Suspended",
       "empty": "No members found for this family.",
       "privacyNote": "Only display names are shown. Sign-in emails are never listed for other members.",
-      "backDashboard": "Back to dashboard",
       "errors": {
         "loadFailed": "We could not load the member list. Try again in a moment."
       },
@@ -219,8 +220,7 @@
       "memberCount": "Active members",
       "browseRecipes": "Browse all recipes",
       "addRecipe": "Add recipe",
-      "recentRecipes": "Recently updated",
-      "loading": "Loading this family…"
+      "recentRecipes": "Recently updated"
     },
     "roles": {
       "owner": "Owner",
@@ -233,7 +233,6 @@
   "invitations": {
     "title": "Invite relatives",
     "subtitle": "Send a single-use email link. The invitee must sign in with the same address.",
-    "backDashboard": "Back to dashboard",
     "form": {
       "emailLabel": "Email address",
       "roleLabel": "Role",
@@ -523,7 +522,6 @@
       }
     },
     "status": {
-      "loading": "Loading recipes…",
       "emptyTitle": "No recipes yet",
       "empty": "No recipes match your filters yet. Clear filters or add a new recipe.",
       "errorTitle": "Could not load recipes",

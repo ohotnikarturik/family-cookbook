@@ -14,7 +14,7 @@ type Props = Readonly<{
   imageLoadingLabel: string;
   metaLabel?: string | null;
   contentLang?: string;
-  headingLevel?: 'h3' | 'h4';
+  headingLevel?: 'h2' | 'h3';
 }>;
 
 export function RecipeCard({
@@ -26,7 +26,7 @@ export function RecipeCard({
   imageLoadingLabel,
   metaLabel,
   contentLang,
-  headingLevel = 'h3',
+  headingLevel = 'h2',
 }: Props) {
   const Heading = headingLevel;
   return (

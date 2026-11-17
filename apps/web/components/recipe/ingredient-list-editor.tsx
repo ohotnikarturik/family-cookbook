@@ -75,103 +75,100 @@ export function IngredientListEditor({
       </legend>
       <ul className="list-none space-y-4 p-0">
         {ingredients.map((row, index) => (
-          <li
-            key={row.clientKey}
-            className="space-y-3 rounded-lg border border-border bg-card p-4"
-            role="group"
-            aria-label={labels.rowLabel(index + 1)}
-          >
-            <div className="flex flex-wrap gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                className="min-h-11"
-                disabled={disabled || index === 0}
-                aria-label={`${labels.moveUp}, ${labels.rowLabel(index + 1)}`}
-                onClick={() => moveRow(index, -1)}
-              >
-                {labels.moveUp}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                className="min-h-11"
-                disabled={disabled || index === ingredients.length - 1}
-                aria-label={`${labels.moveDown}, ${labels.rowLabel(index + 1)}`}
-                onClick={() => moveRow(index, 1)}
-              >
-                {labels.moveDown}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                className="h-auto min-h-11 max-w-full whitespace-normal py-2 text-start"
-                disabled={disabled}
-                onClick={() => removeRow(index)}
-              >
-                {labels.remove(row.name || labels.rowLabel(index + 1))}
-              </Button>
-            </div>
-            <EditorField
-              id={`${row.clientKey}-name`}
-              label={labels.name}
-              error={fieldErrors?.[`ingredients.${index}.name`]}
-            >
-              <Input
-                value={row.name}
-                onChange={(event) => updateRow(index, { name: event.target.value })}
-                disabled={disabled}
-                className="min-h-11"
-                autoComplete="off"
-              />
-            </EditorField>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <EditorField
-                id={`${row.clientKey}-quantity`}
-                label={labels.quantity}
-                error={fieldErrors?.[`ingredients.${index}.quantity`]}
-              >
-                <Input
-                  value={row.quantity}
-                  onChange={(event) => updateRow(index, { quantity: event.target.value })}
-                  disabled={disabled}
+          <li key={row.clientKey} className="rounded-lg border border-border bg-card p-4">
+            <div role="group" aria-label={labels.rowLabel(index + 1)} className="space-y-3">
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
                   className="min-h-11"
-                  inputMode="decimal"
-                  autoComplete="off"
-                />
-              </EditorField>
+                  disabled={disabled || index === 0}
+                  aria-label={`${labels.moveUp}, ${labels.rowLabel(index + 1)}`}
+                  onClick={() => moveRow(index, -1)}
+                >
+                  {labels.moveUp}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="min-h-11"
+                  disabled={disabled || index === ingredients.length - 1}
+                  aria-label={`${labels.moveDown}, ${labels.rowLabel(index + 1)}`}
+                  onClick={() => moveRow(index, 1)}
+                >
+                  {labels.moveDown}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="h-auto min-h-11 max-w-full whitespace-normal py-2 text-start"
+                  disabled={disabled}
+                  onClick={() => removeRow(index)}
+                >
+                  {labels.remove(row.name || labels.rowLabel(index + 1))}
+                </Button>
+              </div>
               <EditorField
-                id={`${row.clientKey}-quantity-text`}
-                label={labels.quantityText}
-                hint={labels.quantityTextHint}
+                id={`${row.clientKey}-name`}
+                label={labels.name}
+                error={fieldErrors?.[`ingredients.${index}.name`]}
               >
                 <Input
-                  value={row.quantityText}
-                  onChange={(event) => updateRow(index, { quantityText: event.target.value })}
+                  value={row.name}
+                  onChange={(event) => updateRow(index, { name: event.target.value })}
                   disabled={disabled}
                   className="min-h-11"
                   autoComplete="off"
                 />
               </EditorField>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <EditorField
+                  id={`${row.clientKey}-quantity`}
+                  label={labels.quantity}
+                  error={fieldErrors?.[`ingredients.${index}.quantity`]}
+                >
+                  <Input
+                    value={row.quantity}
+                    onChange={(event) => updateRow(index, { quantity: event.target.value })}
+                    disabled={disabled}
+                    className="min-h-11"
+                    inputMode="decimal"
+                    autoComplete="off"
+                  />
+                </EditorField>
+                <EditorField
+                  id={`${row.clientKey}-quantity-text`}
+                  label={labels.quantityText}
+                  hint={labels.quantityTextHint}
+                >
+                  <Input
+                    value={row.quantityText}
+                    onChange={(event) => updateRow(index, { quantityText: event.target.value })}
+                    disabled={disabled}
+                    className="min-h-11"
+                    autoComplete="off"
+                  />
+                </EditorField>
+              </div>
+              <EditorField id={`${row.clientKey}-unit`} label={labels.unit}>
+                <Input
+                  value={row.unit}
+                  onChange={(event) => updateRow(index, { unit: event.target.value })}
+                  disabled={disabled}
+                  className="min-h-11"
+                  autoComplete="off"
+                />
+              </EditorField>
+              <EditorField id={`${row.clientKey}-notes`} label={labels.notes}>
+                <Input
+                  value={row.notes}
+                  onChange={(event) => updateRow(index, { notes: event.target.value })}
+                  disabled={disabled}
+                  className="min-h-11"
+                  autoComplete="off"
+                />
+              </EditorField>
             </div>
-            <EditorField id={`${row.clientKey}-unit`} label={labels.unit}>
-              <Input
-                value={row.unit}
-                onChange={(event) => updateRow(index, { unit: event.target.value })}
-                disabled={disabled}
-                className="min-h-11"
-                autoComplete="off"
-              />
-            </EditorField>
-            <EditorField id={`${row.clientKey}-notes`} label={labels.notes}>
-              <Input
-                value={row.notes}
-                onChange={(event) => updateRow(index, { notes: event.target.value })}
-                disabled={disabled}
-                className="min-h-11"
-                autoComplete="off"
-              />
-            </EditorField>
           </li>
         ))}
       </ul>

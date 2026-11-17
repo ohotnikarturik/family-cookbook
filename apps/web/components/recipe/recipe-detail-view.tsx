@@ -89,10 +89,18 @@ export function RecipeDetailView({
   const galleryAssets = recipe.assets
     .filter((asset) => asset.id !== heroAssetId && !inlineStepAssetIds.has(asset.id))
     .map(toMediaCard);
+  const archivedOrSelector =
+    recipe.status === 'archived' || languageSelector ? (
+      <>
+        <ArchivedBadge recipe={recipe} archivedLabel={labels.archived} />
+        {languageSelector}
+      </>
+    ) : null;
   const amountByPosition = new Map(ingredients.map((item) => [item.position, item.amount]));
 
   return (
-    <article className="space-y-8">
+    <article aria-labelledby={`recipe-title-${recipe.id}`} className="space-y-8">
+      {archivedOrSelector ? <div className="space-y-3">{archivedOrSelector}</div> : null}
       {heroAssetId ? (
         <div className="-mx-2 overflow-hidden rounded-xl border border-border md:mx-0">
           <RecipeCardCover
@@ -106,19 +114,11 @@ export function RecipeDetailView({
         </div>
       ) : null}
       <header className="space-y-3 border-b border-border pb-6">
-        <ArchivedBadge recipe={recipe} archivedLabel={labels.archived} />
-        {languageSelector}
-        <h2
-          className="font-serif-display text-3xl font-semibold tracking-tight text-foreground"
-          lang={bodyLang}
-        >
-          {display.title}
-        </h2>
         {display.description ? (
           <section aria-labelledby="recipe-description-heading">
-            <h3 id="recipe-description-heading" className="sr-only">
+            <h2 id="recipe-description-heading" className="sr-only">
               {labels.descriptionHeading}
-            </h3>
+            </h2>
             <p
               className="text-base leading-relaxed text-foreground"
               lang={display.descriptionFallback ? recipe.sourceLanguage : bodyLang}
@@ -141,12 +141,12 @@ export function RecipeDetailView({
 
       {ingredients.length > 0 ? (
         <section aria-labelledby="recipe-ingredients-heading">
-          <h3
+          <h2
             id="recipe-ingredients-heading"
             className="mb-3 text-lg font-semibold text-foreground"
           >
             {labels.ingredientsHeading}
-          </h3>
+          </h2>
           <ul className="list-none space-y-2 p-0">
             {display.ingredients.map((ingredient) => {
               const amount = amountByPosition.get(ingredient.position);
@@ -180,9 +180,9 @@ export function RecipeDetailView({
 
       {display.steps.length > 0 ? (
         <section aria-labelledby="recipe-steps-heading">
-          <h3 id="recipe-steps-heading" className="mb-3 text-lg font-semibold text-foreground">
+          <h2 id="recipe-steps-heading" className="mb-3 text-lg font-semibold text-foreground">
             {labels.stepsHeading}
-          </h3>
+          </h2>
           <ol className="list-none space-y-4 p-0">
             {display.steps.map((step) => {
               const sourceStep = recipe.steps.find((item) => item.position === step.position);
@@ -225,9 +225,9 @@ export function RecipeDetailView({
 
       {recipe.tags.length > 0 ? (
         <section aria-labelledby="recipe-tags-heading">
-          <h3 id="recipe-tags-heading" className="mb-2 text-lg font-semibold text-foreground">
+          <h2 id="recipe-tags-heading" className="mb-2 text-lg font-semibold text-foreground">
             {labels.tagsHeading}
-          </h3>
+          </h2>
           <ul className="flex list-none flex-wrap gap-2 p-0">
             {recipe.tags.map((tag) => (
               <li
@@ -243,9 +243,9 @@ export function RecipeDetailView({
 
       {display.notes ? (
         <section aria-labelledby="recipe-notes-heading">
-          <h3 id="recipe-notes-heading" className="mb-2 text-lg font-semibold text-foreground">
+          <h2 id="recipe-notes-heading" className="mb-2 text-lg font-semibold text-foreground">
             {labels.notesHeading}
-          </h3>
+          </h2>
           <p
             className="leading-relaxed text-foreground"
             lang={display.notesFallback ? recipe.sourceLanguage : bodyLang}
