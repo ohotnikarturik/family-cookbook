@@ -382,6 +382,226 @@ Cohesive navigation, compact preferences, photo-led browse, and polish from the 
 
 **Follow-up (2026-11-10):** fixed save bar, stable dish-photo covers, thumbnail error state, contributor and sort chips, compact family switcher, mobile recipe actions, collapsible editor sections, reading width, `TextLink` sweep, `FormField` on the control, save notice, skeleton loading, and card prep/cook/servings. See `docs/DECISIONS.md` EPIC 3.7.
 
+## EPIC 3.8 — Ready for the family (web UX before real use)
+
+Audit of 2026-11-16 (code review + Playwright screenshots of `main` at 360px/1280px, light/dark, `ru`). Findings and scope boundary: [`docs/DECISIONS.md`](docs/DECISIONS.md) "EPIC 3.8 — scope". Screenshot reference: [`docs/fixtures/ui-baseline/README.md`](docs/fixtures/ui-baseline/README.md).
+
+Measured on `main` before this epic: Home has no highlighted nav item; no page inside the family shell has an `<h1>`; Members scrolls sideways at 360px.
+
+**Execution order:** one task per session, on its own branch `w38-<n>`.
+1. P0: W38.0 → W38.1 → W38.2 → W38.3 → W38.4
+2. P1: W38.19 → W38.13 → W38.14 → W38.6 → W38.15 → W38.16 → W38.5 → W38.17 → W38.7 → W38.18 → W38.8
+3. P2: W38.9 → W38.10 → W38.11 → W38.12
+4. Then resume EPIC 4 at T4.2.
+
+W38.14 and W38.5 share `listFamilyCategories`; whichever runs first adds it. W38.7 role descriptions are reused by W38.17.
+
+### Rules for every EPIC 3.8 task
+- Read `AGENTS.md`, `apps/web/AGENTS.md` (Next.js 16: read `apps/web/node_modules/next/dist/docs/` before using an unfamiliar API), `DESIGN_SYSTEM.md`, this task, and the EPIC 3.8 entry in `docs/DECISIONS.md`. Inspect the named files and their tests before editing.
+- All user-facing copy in `apps/web/messages/{en,fi,ru,uk}.json`. Semantic tokens only, no raw colours. 44px primary targets. Check 320px/360px and both themes.
+- Server Components pass `locale` explicitly: `getTranslations({ locale, namespace })`.
+- No permission logic in client components; the server decides what a role may see or do. RLS stays authoritative.
+- After changing `packages/*`, rebuild and restart `pnpm dev:web`.
+- Finish with `pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm --filter @family-cookbook/web build`; add `pnpm supabase:reset && pnpm supabase:test` if a migration or seed changed, and `pnpm test:e2e` for changed UI journeys. Re-run the screenshot spec (from W38.0) and look at the 360px and 1280px images of every changed page.
+- Report: summary, files changed, commands run with results, what was not run, open issues. Set `**Status:** Done (date)` here. Stop at any approval boundary named in the task.
+
+### P0 — navigation and consistency
+
+### W38.0 — Clean data and screenshot baseline
+- **Approval boundary:** `pnpm supabase:reset` wipes the local database — ask the user first.
+- Extend `supabase/seed-recipes.sql` so Family A has ~8 realistic recipes: real titles, categories, tags, servings, prep/cook times, ingredients with numeric `quantity` + `unit` (not text in `quantity_text`), steps; recipe text written in its declared language, at least one each in `fi`, `ru`, `uk`; one with a translation. Rename "Family A filler recipe n" to plausible dish names, keeping IDs and the 30 active + 1 archived pagination fixture. Update `docs/fixtures/TEST_IDENTITIES.md`.
+- `apps/web/e2e/critical-journeys.spec.ts`: recipes created by tests are archived in cleanup, and the archived fixture is re-archived if a test restores it, so manual testing in Family A stays clean.
+- Add `apps/web/e2e/screenshots.spec.ts`, excluded from CI and default runs (tag + `grepInvert`, or a separate Playwright project run by `pnpm --filter @family-cookbook/web test:screens`). Use `loginAs`. Full-page JPEGs of the routes in `docs/fixtures/ui-baseline/README.md` at 360px and 1280px, light and dark, as `owner-a` and `viewer-a`, into a gitignored folder. Also write a JSON summary per page: `h1` count, visible `nav [aria-current="page"]` labels, horizontal overflow.
+- Give 3–4 seeded recipes a dish photo through the normal slot → PUT → finalize flow in a setup script (no direct storage-row writes); small CC0/self-made images committed under `supabase/seed/`.
+
+**Acceptance:** Home and Recipes show real-looking recipes, some with photos; summary JSON produced; pgTAP and Playwright pass with the new seed.
+
+**Status:** Not started.
+
+### W38.1 — Home in navigation and a clear active state
+- `apps/web/lib/family-shell-nav.ts`: sections `home` (`/f/{id}`), `recipes`, `family`; `other` highlights nothing.
+- `components/shell/primary-navigation.tsx`, `mobile-navigation.tsx`: items Home (`Home` icon) · Recipes · Family (`Users` icon). Mobile: Home · Recipes · Add recipe (only if allowed; otherwise not rendered) · Family. "Add recipe" is a normal item with a green icon circle, not a wide filled block.
+- Active style: desktop filled `bg-primary text-primary-foreground` pill; mobile top indicator bar + bold label + primary colour (not colour alone). Keep `aria-current="page"`.
+- Logo links to Home. Message keys: rename `family.shell.settings` → `family.shell.family`, add `family.shell.home` (four locales).
+- `components/shell/family-settings-subnav.tsx`: same active treatment; fix the 360px page overflow on Members (chips wrap or scroll inside their own container).
+- `components/shell/account-menu.tsx`: first item labelled with `account.title` (not `account.signedInAs`); theme options laid out cleanly (one row or all stacked); show the "Account" text on the trigger when width allows, accessible name always.
+
+**Tests:** extend `lib/family-shell-nav.test.ts`; Playwright asserts exactly one `aria-current="page"` in the primary nav on Home, Recipes, recipe detail, edit, settings, members, invitations (desktop and mobile); no horizontal overflow at 320px; contrast of new active styles in both themes.
+
+**Status:** Not started.
+
+### W38.2 — One page header and one shell everywhere
+Split into two sessions if large: (a) PageHeader + family pages, (b) account/auth shells.
+- New `components/product/page-header.tsx`: `<h1>` in the serif display font, optional description, optional back link (always above the title), optional actions slot; one size scale (`text-2xl sm:text-3xl`).
+- Use it on: family home, recipes list (replace `RecipesHeader`), recipe detail (recipe title becomes the `h1`; inner headings shift up one level), new/edit/history/translations, settings, members, invitations. Remove the bottom "Back to dashboard/home" links.
+- Account area (`/account`, `/account/preferences`, `/families`): shared shell with the same sticky header (logo → `resolveSignedInLandingPath`, `AccountMenu`), `max-w-3xl`, top-aligned (no vertical centring). Merge account and preferences into one "Account" page (name, email in normal type, language, theme, sign out); `/account/preferences` redirects to it.
+- Signed-out pages (home, sign-in, onboarding, invite accept) share one `AuthShell` (logo, content column, footer preferences).
+- One `LoadingState` component replacing per-page pulse placeholders.
+
+**Tests:** Playwright: every signed-in route has exactly one `h1` and a visible link to Recipes; axe on changed routes; no overflow at 320px. Update existing e2e selectors that depended on old headings.
+
+**Status:** Not started.
+
+### W38.3 — Sign-in by code, link as a fallback
+- **Approval boundary:** Supabase Auth email template change (local now; hosted projects need the same change by the user).
+- `components/auth/sign-in-form.tsx`: two steps. Step 1: email + "Email me a sign-in code". Step 2: "We sent a message to {email}", large 6-digit field (numeric keyboard, paste, auto-submit at 6 digits), "or open the link in the email", "Use a different email", resend with countdown. Focus moves to the code field; status announced via `role="status"`.
+- Add `supabase/templates/magic_link.html` with both `{{ .Token }}` and the confirmation link; wire `[auth.email.template.magic_link]` in `supabase/config.toml` (restart stack). Update `docs/LOCAL_SUPABASE.md`, `docs/DEPLOYMENT.md` (hosted template step), DECISIONS T1.3 item 6.
+- Plain-language copy in four locales (no "magic link").
+- No change to session handling, redirect sanitising (`sanitizeAuthRedirect`) or rate limits.
+
+**Tests:** Playwright signs in with the code read from Mailpit (`http://127.0.0.1:54324/api/v1/messages`); link journey still works; invalid/expired code and rate-limit messages shown; axe on sign-in.
+
+**Status:** Not started.
+
+### W38.4 — Cyrillic body font
+- `apps/web/app/layout.tsx`: add the `cyrillic` subset to the sans font if `next/font/google` supports it for Geist (check generated types); otherwise switch the sans token to a family with Latin + Cyrillic coverage. Keep the `--font-sans` token name.
+- Verify і ї є ґ and Finnish diacritics in the design gallery (`/uk/design`, `/fi/design`). Update DECISIONS T0.3 item 7 and `DESIGN_SYSTEM.md` §2 decision note.
+
+**Tests:** build; screenshot comparison of `ru`/`uk` pages.
+
+**Status:** Not started.
+
+### P1 — clarity and guidance
+
+### W38.19 — Recipe cards that work without photos
+- `components/recipe/recipe-card.tsx`, `recipe-card-cover.tsx`, `recipe-list.tsx`.
+- With a photo: cover at fixed 4:3. Without a photo: no tall empty block — small tinted square with category initial/icon beside the text.
+- Phones (<640px): compact horizontal rows (72–88px thumbnail left, text right), 5–6 per screen. Grid with covers from `sm` up.
+- Meta: omit zero/missing values (no "0 min cook"); show total time; "Updated" shows date only (relative within a week).
+- Home shows at most six recent recipes using the same card.
+
+**Tests:** Vitest for the meta formatter; Playwright at 360px: at least four recipe cards above the fold on Recipes; axe.
+
+**Status:** Not started.
+
+### W38.13 — Language names, not codes
+- `apps/web/lib/language-label.ts` using `Intl.DisplayNames(uiLocale, { type: 'language' })`, raw tag as fallback.
+- Use it in recipe detail facts, `recipe-language-selector.tsx` ("Original — Finnish"), translations pages ("Add Ukrainian"), editor source-language select, family settings, search filter and chips.
+- Hide the view-language selector when a recipe has no translations.
+
+**Tests:** Vitest for the helper in all four UI locales and an unknown tag.
+
+**Status:** Not started.
+
+### W38.14 — Search-first recipe browse
+- `components/recipe/recipe-search-form.tsx`: one large always-visible search field with icon and a primary "Search" button. It matches title, description and ingredient names. If the search contract cannot OR `query` and `ingredient`, add an `anyText` filter to the shared Zod contract and data-access query (family-scoped, same length bounds and indexes) and use it here.
+- "Filters" button reveals the rest, collapsed by default on all widths: category and tag as selects of values the family actually uses (`listFamilyCategories` — distinct non-null categories, family-scoped, max 50 — and the existing family tags), language as a select of languages used (names from W38.13), author, sort, show archived.
+- Category chips under the search field for one-tap browsing. Keep URL params and active-filter chips. Show a result count. Empty result offers "Clear filters".
+
+**Tests:** update `recipe-search-params` / `build-recipe-search-query` tests; contract tests for any new filter bounds; data-access integration test for combined text search including cross-family isolation; Playwright search journey.
+
+**Status:** Not started.
+
+### W38.6 — Recipe detail readability
+- Actions: "Edit" is the one visible button on all widths; History, Translations, Print (W38.12) and Archive go into a "More" menu.
+- Facts as one row with icons + text: "Prep 20 min · Cook 45 min · Total 1 h 5 min · Serves 4" (ICU plurals, shared duration formatter in `lib/format-recipe-meta.ts`).
+- Show "Added by {name}" and "Updated {date}" via `resolveMemberDisplayLabel`; never email.
+- Ingredients as one list: amount + unit in a fixed left column, name right; no bordered card per ingredient.
+- After creating a recipe, land on its detail page with a visible "Add photos" prompt (replaces the easy-to-miss note on the create form).
+
+**Tests:** Vitest for duration formatting (incl. hours, missing values, four locales); Playwright detail + create journey; axe.
+
+**Status:** Not started.
+
+### W38.15 — Lighter recipe editor
+- `components/recipe/ingredient-list-editor.tsx`, `step-list-editor.tsx`, `lib/recipe-editor/*`.
+- One row per ingredient: Amount (single text field) · Unit (`<datalist>` of common units per locale) · Ingredient; "Add note" reveals notes. On phones the row wraps to two lines.
+- `lib/recipe-editor/map-payload.ts` + `parse-numbers.ts`: `2`, `1.5`, `1,5`, `1/2`, `1 1/2` → `quantity`; anything else (`to taste`) → `quantityText`. Existing rows load back into the single field. No contract or schema change.
+- "Add several at once": textarea, one ingredient per line.
+- Reorder with arrow icon buttons that keep accessible names; "Remove" button.
+- Steps: numbered; step time and step photo behind "More options".
+- Category field with `<datalist>` of family categories.
+- Edit page order: basics → ingredients → steps → details (servings, times, category, tags, notes) → photos. Keep the fixed save bar and value preservation on errors.
+
+**Tests:** Vitest mapping/parsing round-trips; Playwright create/edit at 360px; axe.
+
+**Status:** Not started.
+
+### W38.16 — One-step photo upload
+- `components/recipe/recipe-media-upload-panel.tsx`, `recipe-step-photo-upload.tsx`: native input hidden behind localized buttons "Add photo" and "Add scan or PDF" (replaces the file-type select); upload starts on selection; thumbnail preview, progress and result announced in a live region. On touch devices an extra "Take photo" button (`capture="environment"`); the normal picker is always available.
+- No change to slot → signed PUT → finalize, MIME/size limits, asset kinds or server validation.
+
+**Tests:** Vitest for helpers; Playwright upload journey (photo + PDF, oversize error); axe.
+
+**Status:** Not started.
+
+### W38.5 — Home that helps
+- `app/[locale]/f/[familyId]/page.tsx`: greeting with family name; search field submitting to `/recipes?query=`; "Add recipe" (if `canCreateRecipe`); recent recipes (W38.19 cards); category chips linking to filtered browse (`listFamilyCategories`).
+- Empty cookbook: `EmptyState` with numbered steps (add first recipe → add a photo → invite family), each a button, shown only for roles that can do them.
+
+**Tests:** Playwright empty and populated Home for owner and viewer; axe.
+
+**Status:** Not started.
+
+### W38.17 — Calmer confirmations, history, members, translations
+- Archive dialog: remove the checkbox; dialog text states the consequence; the "Archive" button confirms (still sends `confirm: true` + `expectedVersion`). Archive uses the secondary style; `destructive` only for irreversible actions. Update DECISIONS W35.2 and `recipe-lifecycle-form` tests.
+- History: one "Changes" timeline; the audit list only for owner/admin, collapsed, titled "Activity log".
+- Members: one list; each row name, role as plain text, status. Owner/admin see "Change" on manageable rows → dialog with role select (role descriptions from W38.7) and suspend/reactivate. Remove the duplicate "Roles and access" cards. The server still computes which members are manageable.
+- Translations page: one explanation line; existing translations as rows with "Edit"; one "Add translation" button opening a language select.
+
+**Tests:** Vitest form mapping; pgTAP unchanged and passing; Playwright archive/restore, member role change, translation add; axe.
+
+**Status:** Not started.
+
+### W38.7 — Short contextual tips
+- `components/product/hint.tsx`: inline help text plus optional "What is this?" `<details>`; no hover-only tooltips.
+- Use for: role descriptions under role selects (invite form, member change dialog); source language vs translation in the editor; amount examples ("2", "1/2", "to taste"); archive vs delete.
+
+**Tests:** axe; locale completeness.
+
+**Status:** Not started.
+
+### W38.18 — Plain-language copy pass
+- Replace engineering terms in all four catalogs: workspace/пространство/робочий простір, isolated/изолированы, session/сеанс, context, tenant. Account card "Your details". Read every string as a non-technical relative would. Keep keys stable.
+
+**Tests:** locale completeness tests; e2e selectors updated where text changed.
+
+**Status:** Not started.
+
+### W38.8 — Leave family and clear no-access pages
+- **Approval boundary:** new RPC + membership status change touch authorization. Present the migration design (status value, RPC rules, audit event, RLS effect) to the user before writing it.
+- `leaveFamily` application use case + RPC: a member removes their own active membership; the sole owner is blocked with a pointer to ownership transfer; audit event without email. UI on the Family page with an explicit confirmation.
+- `UnavailablePage`: distinct copy for suspended, not a member, and not found.
+
+**Tests:** pgTAP (leave, sole-owner block, access lost on next request, cross-family); application unit tests; Playwright leave journey.
+
+**Status:** Not started.
+
+### P2 — cooking features
+
+### W38.9 — Serving scaler
+- Pure `scaleIngredientQuantity(quantity, baseServings, targetServings)` in `packages/domain`; numeric quantities only; `quantityText` unchanged; friendly rounding (fractions for small kitchen amounts).
+- Detail page stepper (− / value / +, "Reset to original"), `?servings=` URL param, note "Scaled from {n} servings". Stored recipe never changes (spec §8.3).
+
+**Tests:** Vitest rounding/passthrough/edge cases; Playwright stepper; axe.
+
+**Status:** Not started.
+
+### W38.10 — Cook mode
+- "Start cooking" on detail → `?cook=1`: chrome hidden, larger type, ingredient checkboxes, one highlighted step with Previous/Next buttons, Screen Wake Lock (`navigator.wakeLock`, feature-detected, released on exit/visibility change). State is local only. Reduced motion respected; keyboard operable; Escape exits.
+
+**Tests:** Playwright navigation and exit; axe.
+
+**Status:** Not started.
+
+### W38.11 — Favourites
+- **Approval boundary:** new table and RLS — present the migration to the user before applying.
+- Migration `recipe_favorites (family_id, recipe_id, user_id, created_at)`, PK `(recipe_id, user_id)`, composite family FK to recipes, RLS: active members read/insert/delete only their own rows in their families. Not a recipe mutation (no revision/version bump).
+- Contract + use cases: `setRecipeFavorite`, `favoritesOnly` search filter, `isFavorite` on summaries/detail.
+- UI: toggle with text label on detail and cards; "Favourites" chip on browse and Home.
+
+**Tests:** pgTAP (own rows only, cross-family, cross-user, viewer allowed, suspended denied); application tests; Playwright toggle + filter.
+
+**Status:** Not started.
+
+### W38.12 — Print and documentation cleanup
+- `@media print` rules in `apps/web/app/globals.css` (hide shell, nav, actions; single column; ink on white); "Print" in the detail "More" menu.
+- Docs: `PROJECT_SPEC.md` §19.2 status, `docs/MCP_HANDOFF.md` status table, T5.2 "four initial locales", status lines for T0.1–T1.2, dead `docs/MCP.md` link in `docs/MCP_ROADMAP.md`.
+
+**Tests:** manual print preview; format check.
+
+**Status:** Not started.
+
 ## EPIC 4 — MCP service and OAuth
 
 ### T4.1 MCP service bootstrap

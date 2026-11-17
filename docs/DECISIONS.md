@@ -332,3 +332,13 @@ Approved for implementation without re-confirmation:
 3. **Application:** `setFamilyMemberRole` / `setFamilyMemberStatus` check `@family-cookbook/permissions` before the RPC. The RPC remains the authority.
 4. **UI:** owner/admin **Manage roles and access** on the members page. The server decides who can be managed and passes only those people, with role labels as text, into the client forms.
 5. **Access:** a suspended user fails `is_active_member` on the next request (pgTAP `96_family_member_admin.sql`).
+
+## EPIC 3.8 — scope (2026-11-16)
+
+1. **Why.** The web MVP gate passed, but a review before real family use found navigation, consistency and everyday-cooking gaps. Evidence: code review plus Playwright screenshots of `main` (360px and 1280px, light and dark, `ru`, `owner-a`). Screenshots from builds older than EPIC 3.7 are not evidence. Method and routes: [`fixtures/ui-baseline/README.md`](fixtures/ui-baseline/README.md). Tasks: [`TASKS.md`](../TASKS.md) EPIC 3.8.
+2. **Measured on `main`:** Home has no highlighted nav item (the shell nav has only Recipes and Family). No page inside the family shell has an `<h1>`. Members scrolls sideways at 360px. Account and family-list pages sit outside the shell, with no header.
+3. **Main UX findings:** tall empty photo placeholders on cards without photos; raw language codes (`fi`, `en`) shown to people; browse opens with an eight-field filter form; facts shown as "Prep (min) 45"; ingredient editor with two quantity fields that people cannot tell apart; native "Choose File" control in English plus a three-step upload; members listed twice; archive asks for a checkbox and then a confirm button; engineering words ("workspace", "isolated", "session"); test recipes in Family A; the sans font has no Cyrillic.
+4. **In scope:** navigation and page-header consistency, sign-in by code, Cyrillic font, card/detail/editor/upload/search simplification, contextual tips, plain copy, leave family, serving scaler (presentation only, spec §8.3), cook mode, favourites, print, doc cleanup.
+5. **Out of scope** (spec non-goals or later phases): OCR/AI import, URL import, AI translation, meal planning, shopping lists, unit conversion, public sharing, native app.
+6. **Approval boundaries:** local `supabase:reset` (W38.0); the Supabase Auth email template, local and hosted (W38.3); the leave-family RPC and membership status (W38.8); the `recipe_favorites` table and RLS (W38.11).
+7. **Execution:** one task per session, each on its own branch, in the order listed in `TASKS.md`. EPIC 4 resumes at T4.2 after EPIC 3.8.
