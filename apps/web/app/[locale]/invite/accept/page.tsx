@@ -9,7 +9,8 @@ import { Suspense } from 'react';
 import { signOutAction } from '@/app/actions/auth';
 import { AcceptInvitationForm } from '@/components/invitations/accept-invitation-form';
 import { TextLink } from '@/components/product/text-link';
-import { AuthFooterPreferences } from '@/components/preferences/auth-footer-preferences';
+import { LoadingState } from '@/components/product/loading-state';
+import { AuthShell } from '@/components/shell/auth-shell';
 import { Button } from '@/components/ui/button';
 import { locales, type AppLocale } from '@/i18n/routing';
 
@@ -28,10 +29,9 @@ export default function InviteAcceptPage(props: Props) {
 
 function AcceptFallback() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-lg flex-col justify-center gap-6 px-6 py-16">
-      <div className="h-10 w-56 animate-pulse rounded-md bg-muted" />
-      <div className="h-16 animate-pulse rounded-xl bg-muted" />
-    </main>
+    <AuthShell>
+      <LoadingState />
+    </AuthShell>
   );
 }
 
@@ -50,7 +50,7 @@ async function AcceptContent({ params, searchParams }: Props) {
 
   if (!parsedToken.success) {
     return (
-      <main className="mx-auto flex min-h-screen max-w-lg flex-col justify-center gap-6 px-6 py-16 font-sans">
+      <AuthShell>
         <div className="space-y-2">
           <h1 className="font-serif-display text-3xl font-semibold tracking-tight text-foreground">
             {t('title')}
@@ -58,8 +58,7 @@ async function AcceptContent({ params, searchParams }: Props) {
           <p className="text-muted-foreground">{t('missingToken')}</p>
         </div>
         <TextLink href="/families">{t('backFamilies')}</TextLink>
-        <AuthFooterPreferences />
-      </main>
+      </AuthShell>
     );
   }
 
@@ -72,7 +71,7 @@ async function AcceptContent({ params, searchParams }: Props) {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-lg flex-col justify-center gap-8 px-6 py-16 font-sans">
+    <AuthShell>
       <div className="space-y-2">
         <h1 className="font-serif-display text-3xl font-semibold tracking-tight text-foreground">
           {t('title')}
@@ -98,7 +97,6 @@ async function AcceptContent({ params, searchParams }: Props) {
       </div>
       <AcceptInvitationForm token={parsedToken.data} />
       <TextLink href="/families">{t('backFamilies')}</TextLink>
-      <AuthFooterPreferences />
-    </main>
+    </AuthShell>
   );
 }

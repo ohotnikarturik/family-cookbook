@@ -41,7 +41,6 @@ SCREENS_LABEL=after  pnpm test:screens              # after your change
 | invitations | `/ru/f/{A}/settings/invitations` |
 | families | `/ru/families` |
 | account | `/ru/account` |
-| prefs | `/ru/account/preferences` (redirects after W38.2) |
 | account-menu | `/ru/f/{A}/recipes` with the account menu open (viewport only) |
 
 For each page, `summary.json` records:
@@ -61,5 +60,7 @@ For each page, `summary.json` records:
 | recipes, detail, detail-photo, edit, new, history, translations | 0 | Recipes | no |
 | settings, members, invitations | 0 | Family + sub-nav chip | **yes** (sub-nav chip row) |
 | families, account, prefs, landing, sign-in | 1 | n/a (no shell) | no |
+
+`prefs` (`/ru/account/preferences`) was in the 2026-11-17 baseline; W38.2b merged it into `account` and the old address redirects, so it is no longer captured.
 
 Viewer: `translations` and `invitations` render the full-page "not available" screen (one `h1`, no family navigation), and `edit`/`new` stay inside the shell. W38.2 and W38.8 make the no-access states consistent.

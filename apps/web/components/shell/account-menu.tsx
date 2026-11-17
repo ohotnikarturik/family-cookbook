@@ -54,11 +54,6 @@ export function AccountMenu({ locale }: Props) {
             {t('allFamilies')}
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/account/preferences" className="min-h-11 w-full cursor-pointer">
-            {tAccount('preferencesLink')}
-          </Link>
-        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <div className="space-y-3 px-1 py-2" role="group" aria-label={tPrefs('legend')}>
           <LanguageSwitcher className="max-w-none" variant="compact" />

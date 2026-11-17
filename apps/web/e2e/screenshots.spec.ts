@@ -52,7 +52,6 @@ const SIGNED_IN_ROUTES: readonly Route[] = [
   { name: 'invitations', path: `${family}/settings/invitations` },
   { name: 'families', path: `/${LOCALE}/families` },
   { name: 'account', path: `/${LOCALE}/account` },
-  { name: 'prefs', path: `/${LOCALE}/account/preferences` },
 ];
 
 const VIEWPORTS = {

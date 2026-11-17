@@ -6,10 +6,12 @@ import { connection } from 'next/server';
 import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
-import { TextLink } from '@/components/product/text-link';
-import { AuthFooterPreferences } from '@/components/preferences/auth-footer-preferences';
+import { LoadingState } from '@/components/product/loading-state';
+import { PageHeader } from '@/components/product/page-header';
+import { AccountShell } from '@/components/shell/account-shell';
 import { Link } from '@/i18n/navigation';
 import { locales, type AppLocale } from '@/i18n/routing';
+import { resolveSignedInLandingPath } from '@/lib/post-auth-path';
 
 type Props = Readonly<{ params: Promise<{ locale: string }> }>;
 
@@ -23,10 +25,9 @@ export default function FamiliesPage(props: Props) {
 
 function FamiliesFallback() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-lg flex-col gap-6 px-6 py-16">
-      <div className="h-10 w-56 animate-pulse rounded-md bg-muted" />
-      <div className="h-32 animate-pulse rounded-xl bg-muted" />
-    </main>
+    <div className="mx-auto min-h-screen max-w-3xl px-6 py-8 font-sans">
+      <LoadingState />
+    </div>
   );
 }
 
@@ -55,14 +56,11 @@ async function FamiliesContent({ params }: Props) {
     redirect(`/${locale}/onboarding`);
   }
 
+  const homeHref = await resolveSignedInLandingPath(supabase, locale);
+
   return (
-    <main className="mx-auto flex min-h-screen max-w-lg flex-col gap-8 px-6 py-16 font-sans">
-      <div className="space-y-2">
-        <h1 className="font-serif-display text-3xl font-semibold tracking-tight text-foreground">
-          {t('list.title')}
-        </h1>
-        <p className="text-muted-foreground">{t('list.subtitle')}</p>
-      </div>
+    <AccountShell locale={locale} homeHref={homeHref}>
+      <PageHeader title={t('list.title')} description={t('list.subtitle')} />
       <ul className="divide-y divide-border rounded-xl border border-border bg-card shadow-sm">
         {listed.families.map((family) => (
           <li key={family.id}>
@@ -76,8 +74,6 @@ async function FamiliesContent({ params }: Props) {
           </li>
         ))}
       </ul>
-      <TextLink href="/account">{t('list.backAccount')}</TextLink>
-      <AuthFooterPreferences />
-    </main>
+    </AccountShell>
   );
 }

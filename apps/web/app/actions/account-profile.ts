@@ -12,8 +12,8 @@ import { LOCALE_COOKIE, parseAppLocale } from '@/lib/locale';
 import { writeProfilePreferenceCookies } from '@/lib/profile-preference-cookies';
 import { type ThemePreference } from '@/lib/theme';
 
-function preferencesPath(locale: string): string {
-  return `/${locale}/account/preferences`;
+function accountPath(locale: string): string {
+  return `/${locale}/account`;
 }
 
 export type AccountProfileActionState =
@@ -57,7 +57,7 @@ export async function updateAccountProfileAction(
   const result = await updateOwnProfile(supabase, parsed.data);
 
   if (result.status === 'auth_required') {
-    redirect(`/${locale}/auth/sign-in?next=${preferencesPath(locale)}`);
+    redirect(`/${locale}/auth/sign-in?next=${accountPath(locale)}`);
   }
   if (result.status === 'validation_error') {
     return { ok: false, message: t('errors.validation') };
@@ -73,13 +73,11 @@ export async function updateAccountProfileAction(
   writeProfilePreferenceCookies(jar, parsed.data);
 
   const nextLocale = parsed.data.preferredLanguage;
-  revalidatePath(preferencesPath(locale));
-  revalidatePath(preferencesPath(nextLocale));
-  revalidatePath(`/${locale}/account`);
-  revalidatePath(`/${nextLocale}/account`);
+  revalidatePath(accountPath(locale));
+  revalidatePath(accountPath(nextLocale));
 
   if (nextLocale !== locale) {
-    redirect(preferencesPath(nextLocale));
+    redirect(accountPath(nextLocale));
   }
 
   return { ok: true, themePreference: parsed.data.themePreference };

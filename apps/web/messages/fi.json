@@ -49,16 +49,11 @@
   "account": {
     "title": "Tilisi",
     "subtitle": "Olet kirjautunut Family Cookbookiin.",
-    "signedInAs": "Istunto",
-    "displayName": "Näyttönimi",
+    "signedInAs": "Kirjautuneena",
     "email": "Sähköposti",
-    "unknownMember": "Jäsen",
-    "preferencesLink": "Kieli ja ulkoasu",
     "signOut": "Kirjaudu ulos",
-    "backHome": "Takaisin etusivulle",
     "preferences": {
       "title": "Kieli ja ulkoasu",
-      "subtitle": "Nämä asetukset ovat samat kaikissa perhetyötiloissa.",
       "displayNameLabel": "Näyttönimi",
       "displayNameHint": "Näkyy perheen jäsenille sähköpostisi sijaan.",
       "languageLabel": "Sovelluksen kieli",
@@ -68,7 +63,6 @@
       "save": "Tallenna asetukset",
       "saving": "Tallennetaan…",
       "saved": "Asetukset tallennettu.",
-      "backAccount": "Takaisin tiliin",
       "errors": {
         "validation": "Tarkista kentät ja yritä uudelleen.",
         "notFound": "Profiilia ei voitu ladata.",
@@ -123,8 +117,7 @@
     },
     "list": {
       "title": "Perheesi",
-      "subtitle": "Valitse työtila. Reseptit ja jäsenet pysyvät perheen sisällä.",
-      "backAccount": "Takaisin tiliin"
+      "subtitle": "Valitse työtila. Reseptit ja jäsenet pysyvät perheen sisällä."
     },
     "shell": {
       "kicker": "Perheen keittokirja",

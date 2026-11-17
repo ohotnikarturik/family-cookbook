@@ -372,6 +372,13 @@ Approved for implementation without re-confirmation:
 5. **No component unit test:** web Vitest only includes `lib/**/*.test.ts` with no DOM environment; adding one means a new dependency. Playwright covers the header contract.
 6. **Screenshot labels:** `SCREENS_LABEL` accepts only `[a-z0-9_-]`; a label with a dot silently falls back to `current`. Use `W38-2a`, not `W38.2a`.
 
+## W38.2b — Account shell and auth shell (2026-11-17)
+
+1. **Two shells, not one.** `AccountShell` (`components/shell/account-shell.tsx`) is for signed-in pages outside a family: the family shell's sticky header with the logo going to `resolveSignedInLandingPath` and the account menu, `max-w-3xl`, top-aligned. `AuthShell` (`auth-shell.tsx`) is for landing, sign-in, onboarding and invite accept: logo, one column, the language and appearance footer rendered once. Both render the page's `<main>`; pages no longer add their own footer or `<main>`. `BrandLink` is the shared logo link, also used by the family header.
+2. **One Account page.** `/account` holds email, display name, language, theme and sign out. `/account/preferences` is a small redirect page rather than a `next.config` redirect, so the locale segment is checked in one place. The "Language and appearance" menu item is gone because the page it linked to is gone; the menu still offers the language and theme switchers.
+3. **Screenshots:** the `prefs` page is no longer captured, so before/after `summary.json` files from W38.2a and earlier list one more page.
+4. **Onboarding** uses `AuthShell` as the spec lists, although it is signed-in; the test owner is redirected away from it, so Playwright cannot open it without a user with no family.
+
 ## CI — Audit ignore and pgTAP reset retry (2026-11-17)
 
 1. **Audit ignore:** the Security job runs `pnpm audit --audit-level high --ignore GHSA-fc5q-39xc-vjpf`. The advisory is a picomatch ReDoS (`<=4.0.7`, published 2026-10-19) with no patched version; 4.0.7 is the latest release. picomatch is reached only through dev tooling (eslint, typescript-eslint, vite) with developer-controlled glob patterns, and no shipped app code uses it. The user approved ignoring this one advisory. Do not use `--ignore-unfixable`, so new unfixable advisories still fail CI. **Remove the ignore when picomatch ships a fix** (and bump the lockfile).

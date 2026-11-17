@@ -1,10 +1,11 @@
 'use client';
 
-import { ChefHat, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { FamilySwitcher } from '@/components/family/family-switcher';
 import { AccountMenu } from '@/components/shell/account-menu';
+import { BrandLink } from '@/components/shell/brand-link';
 import { PrimaryNavigation } from '@/components/shell/primary-navigation';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
@@ -40,20 +41,7 @@ export function FamilyShellHeader({
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-3">
-          <Link
-            href={`/f/${familyId}`}
-            className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-lg px-1 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <span
-              className="flex size-9 items-center justify-center rounded-lg bg-primary/12 text-primary"
-              aria-hidden
-            >
-              <ChefHat className="size-5" />
-            </span>
-            <span className="sr-only font-serif-display text-base font-semibold sm:not-sr-only">
-              {t('productName')}
-            </span>
-          </Link>
+          <BrandLink href={`/f/${familyId}`} />
           {multiFamily ? (
             <FamilySwitcher
               families={families}

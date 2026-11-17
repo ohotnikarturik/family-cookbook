@@ -49,16 +49,11 @@
   "account": {
     "title": "Your account",
     "subtitle": "You are signed in to Family Cookbook.",
-    "signedInAs": "Session",
-    "displayName": "Display name",
+    "signedInAs": "Signed in as",
     "email": "Email",
-    "unknownMember": "Member",
-    "preferencesLink": "Language and appearance",
     "signOut": "Sign out",
-    "backHome": "Back to home",
     "preferences": {
       "title": "Language and appearance",
-      "subtitle": "These settings follow you across every family workspace.",
       "displayNameLabel": "Display name",
       "displayNameHint": "Shown to family members instead of your email.",
       "languageLabel": "App language",
@@ -68,7 +63,6 @@
       "save": "Save preferences",
       "saving": "Saving…",
       "saved": "Preferences saved.",
-      "backAccount": "Back to account",
       "errors": {
         "validation": "Check the fields and try again.",
         "notFound": "We could not load your profile.",
@@ -123,8 +117,7 @@
     },
     "list": {
       "title": "Your families",
-      "subtitle": "Choose a workspace. Recipes and members stay inside each family.",
-      "backAccount": "Back to account"
+      "subtitle": "Choose a workspace. Recipes and members stay inside each family."
     },
     "shell": {
       "kicker": "Family cookbook",

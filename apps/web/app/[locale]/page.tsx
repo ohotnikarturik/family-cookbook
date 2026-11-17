@@ -9,7 +9,8 @@ import { resolveSignedInLandingPath } from '@/lib/post-auth-path';
 
 import { HomeAuthLinks } from '@/components/home/home-auth-links';
 import { TextLink } from '@/components/product/text-link';
-import { AuthFooterPreferences } from '@/components/preferences/auth-footer-preferences';
+import { LoadingState } from '@/components/product/loading-state';
+import { AuthShell } from '@/components/shell/auth-shell';
 import { type AppLocale, locales } from '@/i18n/routing';
 
 type Props = Readonly<{ params: Promise<{ locale: string }> }>;
@@ -24,14 +25,9 @@ export default function HomePage(props: Props) {
 
 function HomeFallback() {
   return (
-    <main
-      aria-busy="true"
-      className="mx-auto flex min-h-screen max-w-lg flex-col justify-center gap-8 px-6 py-16"
-    >
-      <div className="h-9 w-48 animate-pulse rounded-md bg-muted" />
-      <div className="h-24 animate-pulse rounded-xl bg-muted" />
-      <div className="h-36 animate-pulse rounded-xl bg-muted" />
-    </main>
+    <AuthShell width="wide">
+      <LoadingState />
+    </AuthShell>
   );
 }
 
@@ -55,7 +51,7 @@ async function HomeContent(props: Props) {
   const bullets = [t('bulletCollect'), t('bulletTogether'), t('bulletLanguages')];
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-2xl flex-col justify-center gap-10 px-6 py-16 font-sans">
+    <AuthShell width="wide">
       <div className="min-w-0 space-y-4">
         <h1 className="font-serif-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
           {t('title')}
@@ -79,12 +75,11 @@ async function HomeContent(props: Props) {
         <p className="text-sm text-muted-foreground">{t('inviteHint')}</p>
       </div>
 
-      <AuthFooterPreferences />
       {showDesignLink ? (
         <p>
           <TextLink href="/design">{t('designGalleryLink')}</TextLink>
         </p>
       ) : null}
-    </main>
+    </AuthShell>
   );
 }

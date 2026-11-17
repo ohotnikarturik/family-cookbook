@@ -1,5 +1,6 @@
 import { SignInForm } from '@/components/auth/sign-in-form';
-import { AuthFooterPreferences } from '@/components/preferences/auth-footer-preferences';
+import { LoadingState } from '@/components/product/loading-state';
+import { AuthShell } from '@/components/shell/auth-shell';
 import { locales, type AppLocale } from '@/i18n/routing';
 import { sanitizeAuthRedirect } from '@family-cookbook/data-access/auth/redirect';
 import { getTranslations } from 'next-intl/server';
@@ -21,10 +22,9 @@ export default function SignInPage(props: Props) {
 
 function SignInFallback() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-lg flex-col justify-center gap-6 px-6 py-16">
-      <div className="h-10 w-48 animate-pulse rounded-md bg-muted" />
-      <div className="h-40 animate-pulse rounded-xl bg-muted" />
-    </main>
+    <AuthShell>
+      <LoadingState />
+    </AuthShell>
   );
 }
 
@@ -43,7 +43,7 @@ async function SignInContent({ params, searchParams }: Props) {
       : '';
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-lg flex-col justify-center gap-6 px-6 py-16 font-sans">
+    <AuthShell>
       <div className="space-y-2">
         <h1 className="font-serif-display text-3xl font-semibold tracking-tight text-foreground">
           {t('title')}
@@ -51,7 +51,6 @@ async function SignInContent({ params, searchParams }: Props) {
         <p className="text-muted-foreground">{t('subtitle')}</p>
       </div>
       <SignInForm locale={locale} nextPath={nextPath} callbackError={sp.error === 'callback'} />
-      <AuthFooterPreferences />
-    </main>
+    </AuthShell>
   );
 }
