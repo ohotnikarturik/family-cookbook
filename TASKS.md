@@ -2,6 +2,8 @@
 
 Work in order. A task is complete only when its acceptance criteria and relevant tests pass. Keep the sprint focused on the MVP in `PROJECT_SPEC.md`.
 
+Agent procedure for executing any task here: [`docs/TASK_RUNBOOK.md`](docs/TASK_RUNBOOK.md).
+
 ## EPIC 0 — Repository and developer workflow
 
 ### T0.1 Bootstrap monorepo
@@ -388,7 +390,7 @@ Audit of 2026-11-16 (code review + Playwright screenshots of `main` at 360px/128
 
 Measured on `main` before this epic: Home has no highlighted nav item; no page inside the family shell has an `<h1>`; Members scrolls sideways at 360px.
 
-**Execution order:** one task per session, on its own branch `w38-<n>`.
+**Execution order:** one task per fresh session.
 1. P0: W38.0 → W38.1 → W38.2 → W38.3 → W38.4
 2. P1: W38.19 → W38.13 → W38.14 → W38.6 → W38.15 → W38.16 → W38.5 → W38.17 → W38.7 → W38.18 → W38.8
 3. P2: W38.9 → W38.10 → W38.11 → W38.12
