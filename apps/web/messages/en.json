@@ -385,7 +385,7 @@
       "ingredient": "Ingredient",
       "ingredientHint": "Matches ingredient names",
       "language": "Recipe language",
-      "languagePlaceholder": "e.g. en or fi",
+      "anyLanguage": "Any language",
       "contributor": "Contributor",
       "contributorAny": "Anyone",
       "contributorHint": "Recipes added by this family member",

@@ -553,7 +553,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 
 **Tests:** Vitest for the helper in all four UI locales and an unknown tag.
 
-**Status:** Not started.
+**Status:** Done (2026-11-18). `lib/language-label.ts` (`Intl.DisplayNames`, first letter capitalised, raw tag as fallback) used in the detail "Source language" fact, the reading-language selector ("Original (English)"), translations pages ("Add Ukrainian"; fi/ru/uk use a colon form, "Добавить перевод: Украинский", to avoid declension), family settings, and the search filter (now a select with "Any language") and its chip. The selector is hidden when a recipe has no translations. Format, lint, typecheck, unit tests (web 71, all packages), build, Playwright 102 passed/2 skipped (new `e2e/language-names.spec.ts`, 4 pass, axe on detail) and `test:screens` 12/12 (summaries identical to before) pass. Not run: `supabase:test` and MCP tests (no migration or shared contract change); manual keyboard/screen-reader check. **Open:** the editor source-language select already showed names and is unchanged; the filter lists only en/fi/ru/uk until W38.14 makes it "languages the family uses".
 
 ### W38.14 — Search-first recipe browse
 

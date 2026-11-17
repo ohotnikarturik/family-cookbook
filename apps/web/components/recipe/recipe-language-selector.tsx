@@ -4,11 +4,13 @@ import type { RecipeDetail } from '@family-cookbook/contracts';
 import type { TranslationReviewStatus } from '@family-cookbook/contracts';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
+import { languageLabel } from '@/lib/language-label';
 import { cn } from '@/lib/utils';
 
 type Props = Readonly<{
   recipe: RecipeDetail;
   viewLanguage: string;
+  uiLocale: string;
   labels: {
     label: string;
     originalOptionLabel: string;
@@ -24,7 +26,7 @@ function reviewStatusFor(
   return match?.reviewStatus ?? null;
 }
 
-export function RecipeLanguageSelector({ recipe, viewLanguage, labels }: Props) {
+export function RecipeLanguageSelector({ recipe, viewLanguage, uiLocale, labels }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -33,7 +35,7 @@ export function RecipeLanguageSelector({ recipe, viewLanguage, labels }: Props) 
     { value: recipe.sourceLanguage, label: labels.originalOptionLabel },
     ...recipe.translations.map((item) => ({
       value: item.languageTag,
-      label: item.languageTag,
+      label: languageLabel(item.languageTag, uiLocale),
     })),
   ];
 

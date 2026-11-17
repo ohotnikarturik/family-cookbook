@@ -1,7 +1,7 @@
 'use client';
 
 import type { RecipeSearchSort } from '@family-cookbook/contracts';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 import type {
   RecipeSearchContributorOption,
@@ -9,6 +9,7 @@ import type {
 } from '@/components/recipe/recipe-search-form';
 import { Link } from '@/i18n/navigation';
 import { buildRecipeSearchQuery } from '@/lib/build-recipe-search-query';
+import { languageLabel } from '@/lib/language-label';
 import { buildRecipeSearchChips } from '@/lib/recipe-search-chips';
 
 type Props = Readonly<{
@@ -18,6 +19,7 @@ type Props = Readonly<{
 }>;
 
 export function RecipeSearchActiveChips({ familyId, values, contributorOptions }: Props) {
+  const locale = useLocale();
   const t = useTranslations('recipes.filters');
   const tSort = useTranslations('recipes.sort');
   const names = new Map(contributorOptions.map((option) => [option.userId, option.label]));
@@ -33,6 +35,7 @@ export function RecipeSearchActiveChips({ familyId, values, contributorOptions }
     sort: t('sort'),
     sortValue: (sort: Exclude<RecipeSearchSort, 'updatedAt'>) => tSort(sort),
     contributorName: (userId) => names.get(userId) ?? userId,
+    languageName: (tag) => languageLabel(tag, locale),
   });
 
   if (chips.length === 0) {

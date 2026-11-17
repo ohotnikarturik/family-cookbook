@@ -2,7 +2,7 @@
 
 import type { UpdateFamilyInput } from '@family-cookbook/contracts';
 import { useActionState, useId } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 import {
   updateFamilySettingsAction,
@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { locales } from '@/i18n/routing';
+import { languageLabel } from '@/lib/language-label';
 
 type Props = Readonly<{
   familyId: string;
@@ -21,6 +22,7 @@ type Props = Readonly<{
 }>;
 
 export function FamilySettingsForm({ familyId, name, defaultLanguage, canEdit }: Props) {
+  const locale = useLocale();
   const t = useTranslations('family.settings');
   const tLocale = useTranslations('locale.languages');
   const [state, action, pending] = useActionState<FamilySettingsActionState | null, FormData>(
@@ -40,7 +42,9 @@ export function FamilySettingsForm({ familyId, name, defaultLanguage, canEdit }:
         </div>
         <div className="space-y-1">
           <dt className="text-sm text-muted-foreground">{t('defaultLanguageLabel')}</dt>
-          <dd className="text-base font-medium text-foreground">{tLocale(defaultLanguage)}</dd>
+          <dd className="text-base font-medium text-foreground">
+            {languageLabel(defaultLanguage, locale)}
+          </dd>
         </div>
         <p className="text-sm text-muted-foreground">{t('readOnlyNote')}</p>
       </dl>

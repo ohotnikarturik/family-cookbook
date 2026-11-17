@@ -14,6 +14,7 @@ import { UnavailablePage } from '@/components/product/unavailable-page';
 import { RecipeBrowseStates } from '@/components/recipe/recipe-browse-states';
 import { RecipeDetailToolbar } from '@/components/recipe/recipe-detail-toolbar';
 import { RecipeDetailView } from '@/components/recipe/recipe-detail-view';
+import { languageLabel } from '@/lib/language-label';
 import { RecipeLanguageSelector } from '@/components/recipe/recipe-language-selector';
 import { LoadingState } from '@/components/product/loading-state';
 import { RecipeMediaUploadPanel } from '@/components/recipe/recipe-media-upload-panel';
@@ -99,8 +100,7 @@ async function RecipeDetailContent({ params, searchParams }: Props) {
   const facts: { label: string; value: string; valueLang?: string }[] = [
     {
       label: t('detail.sourceLanguage'),
-      value: recipe.sourceLanguage,
-      valueLang: recipe.sourceLanguage,
+      value: languageLabel(recipe.sourceLanguage, locale),
     },
   ];
   if (recipe.category) {
@@ -145,19 +145,22 @@ async function RecipeDetailContent({ params, searchParams }: Props) {
         familyId={familyId}
         display={display}
         languageSelector={
-          <Suspense fallback={null}>
-            <RecipeLanguageSelector
-              recipe={recipe}
-              viewLanguage={viewLanguage}
-              labels={{
-                label: t('detail.translation.selectorLabel'),
-                originalOptionLabel: t('detail.translation.originalOption', {
-                  language: recipe.sourceLanguage,
-                }),
-                unreviewedBadge: t('detail.translation.unreviewedBadge'),
-              }}
-            />
-          </Suspense>
+          recipe.translations.length > 0 ? (
+            <Suspense fallback={null}>
+              <RecipeLanguageSelector
+                recipe={recipe}
+                viewLanguage={viewLanguage}
+                uiLocale={locale}
+                labels={{
+                  label: t('detail.translation.selectorLabel'),
+                  originalOptionLabel: t('detail.translation.originalOption', {
+                    language: languageLabel(recipe.sourceLanguage, locale),
+                  }),
+                  unreviewedBadge: t('detail.translation.unreviewedBadge'),
+                }}
+              />
+            </Suspense>
+          ) : undefined
         }
         facts={facts}
         ingredients={recipe.ingredients.map((ingredient) => ({

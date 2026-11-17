@@ -10,6 +10,7 @@ import { notFound, redirect } from 'next/navigation';
 import { PageHeader } from '@/components/product/page-header';
 import { RecipeTranslationForm } from '@/components/recipe/recipe-translation-form';
 import { locales, type AppLocale } from '@/i18n/routing';
+import { languageLabel } from '@/lib/language-label';
 
 type Props = Readonly<{
   params: Promise<{ locale: string; familyId: string; recipeId: string; languageTag: string }>;
@@ -102,7 +103,7 @@ export default async function RecipeTranslationEditPage({ params }: Props) {
   return (
     <section className="mx-auto max-w-3xl space-y-6">
       <PageHeader
-        title={t('pageTitle', { language: languageTag })}
+        title={t('pageTitle', { language: languageLabel(languageTag, locale) })}
         back={{ href: `/f/${familyId}/recipes/${recipeId}/translations`, label: t('backToList') }}
         description={t.rich('pageSubtitle', {
           title: recipe.title,

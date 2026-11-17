@@ -10,6 +10,7 @@ import { PageHeader } from '@/components/product/page-header';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 import { locales, type AppLocale } from '@/i18n/routing';
+import { languageLabel } from '@/lib/language-label';
 
 const ADD_LANGUAGES = ['en', 'fi', 'ru', 'uk'] as const;
 
@@ -76,7 +77,7 @@ export default async function RecipeTranslationsIndexPage({ params }: Props) {
                 asChild
               >
                 <Link href={`/f/${familyId}/recipes/${recipeId}/translations/${item.languageTag}`}>
-                  {t('editLanguage', { language: item.languageTag })}
+                  {t('editLanguage', { language: languageLabel(item.languageTag, locale) })}
                 </Link>
               </Button>
             </li>
@@ -99,7 +100,7 @@ export default async function RecipeTranslationsIndexPage({ params }: Props) {
                   asChild
                 >
                   <Link href={`/f/${familyId}/recipes/${recipeId}/translations/${language}`}>
-                    {t('addLanguage', { language })}
+                    {t('addLanguage', { language: languageLabel(language, locale) })}
                   </Link>
                 </Button>
               </li>

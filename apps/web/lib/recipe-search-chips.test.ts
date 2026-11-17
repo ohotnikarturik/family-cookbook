@@ -13,6 +13,7 @@ const labels = {
   sort: 'Sort by',
   sortValue: (sort: 'createdAt' | 'title') => (sort === 'title' ? 'Title' : 'Date added'),
   contributorName: (userId: string) => (userId === 'user-1' ? 'Ada' : userId),
+  languageName: (tag: string) => (tag === 'fi' ? 'Finnish' : tag),
 };
 
 describe('buildRecipeSearchChips', () => {
@@ -26,6 +27,11 @@ describe('buildRecipeSearchChips', () => {
       'Contributor: Ada',
       'Sort by: Title',
     ]);
+  });
+
+  it('shows the language by name, not by code', () => {
+    const chips = buildRecipeSearchChips({ language: 'fi' }, labels);
+    expect(chips.map((chip) => chip.label)).toEqual(['Language: Finnish']);
   });
 
   it('omits the default sort', () => {

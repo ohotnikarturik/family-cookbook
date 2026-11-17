@@ -2,13 +2,14 @@
 
 import type { RecipeSearchSort } from '@family-cookbook/contracts';
 import { ChevronDown } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useId, useState } from 'react';
 
 import { FormField } from '@/components/product/form-field';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Link } from '@/i18n/navigation';
+import { languageLabel } from '@/lib/language-label';
 import { cn } from '@/lib/utils';
 
 export type RecipeSearchContributorOption = Readonly<{
@@ -33,7 +34,10 @@ type Props = Readonly<{
   contributorOptions: readonly RecipeSearchContributorOption[];
 }>;
 
+const FILTER_LANGUAGES = ['en', 'fi', 'ru', 'uk'] as const;
+
 export function RecipeSearchForm({ familyId, defaultValues, contributorOptions }: Props) {
+  const locale = useLocale();
   const t = useTranslations('recipes.filters');
   const tSort = useTranslations('recipes.sort');
   const panelId = useId();
@@ -50,6 +54,12 @@ export function RecipeSearchForm({ familyId, defaultValues, contributorOptions }
     media.addEventListener('change', sync);
     return () => media.removeEventListener('change', sync);
   }, []);
+
+  const currentLanguage = defaultValues.language?.trim();
+  const languageOptions: string[] = [...FILTER_LANGUAGES];
+  if (currentLanguage && !languageOptions.includes(currentLanguage)) {
+    languageOptions.push(currentLanguage);
+  }
 
   return (
     <form method="get" className="space-y-3 rounded-xl border border-border bg-surface-raised p-4">
@@ -110,13 +120,18 @@ export function RecipeSearchForm({ familyId, defaultValues, contributorOptions }
             />
           </FormField>
           <FormField id="recipe-language" label={t('language')}>
-            <Input
+            <select
               name="language"
               defaultValue={defaultValues.language ?? ''}
-              placeholder={t('languagePlaceholder')}
-              autoComplete="off"
-              className="min-h-11"
-            />
+              className="flex min-h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <option value="">{t('anyLanguage')}</option>
+              {languageOptions.map((tag) => (
+                <option key={tag} value={tag}>
+                  {languageLabel(tag, locale)}
+                </option>
+              ))}
+            </select>
           </FormField>
           <FormField id="recipe-contributor" label={t('contributor')} hint={t('contributorHint')}>
             <select

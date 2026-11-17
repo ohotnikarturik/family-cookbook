@@ -19,6 +19,7 @@ type ChipLabels = Readonly<{
   sort: string;
   sortValue: (sort: Exclude<RecipeSearchSort, 'updatedAt'>) => string;
   contributorName: (userId: string) => string;
+  languageName: (tag: string) => string;
 }>;
 
 export function buildRecipeSearchChips(
@@ -44,7 +45,7 @@ export function buildRecipeSearchChips(
     push('tag', labels.tag, values.tag.trim());
   }
   if (values.language?.trim()) {
-    push('language', labels.language, values.language.trim());
+    push('language', labels.language, labels.languageName(values.language.trim()));
   }
   if (values.createdBy) {
     push('createdBy', labels.contributor, labels.contributorName(values.createdBy));
