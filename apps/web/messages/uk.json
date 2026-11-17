@@ -370,10 +370,8 @@
       "resultsLabel": "Результати пошуку",
       "updated": "Оновлено {date}",
       "archivedBadge": "В архіві",
-      "uncategorized": "Без категорії",
       "imageLoading": "Завантаження фото рецепта…",
-      "prepMinutes": "{minutes} хв підготовка",
-      "cookMinutes": "{minutes} хв готування",
+      "totalMinutes": "{minutes} хв",
       "servings": "{servings} порцій"
     },
     "filters": {

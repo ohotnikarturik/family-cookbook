@@ -543,7 +543,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 
 **Tests:** Vitest for the meta formatter; Playwright at 360px: at least four recipe cards above the fold on Recipes; axe.
 
-**Status:** Not started.
+**Status:** Done (2026-11-18). Phone cards are compact rows (72px thumbnail or small tinted chef-hat tile); from `sm` up every card is a vertical card, with a 4:3 photo cover or, without a photo, a tinted banner (at least 96px tall, growing only to match a photo card in the same row), so grid rows line up. Meta shows total time and servings and omits zero or missing values; "Updated" is relative within a week, otherwise date only; the "Uncategorized" label is gone. Home uses the same `RecipeList` with at most six recipes; card labels come from one helper (`components/recipe/recipe-card-labels.ts`). Format, lint, typecheck, unit tests (web 50, all packages, MCP 9), build, Playwright 98 passed/2 skipped (new `e2e/recipe-cards.spec.ts`, 7 pass) and `test:screens` 12/12 pass. Not run: `supabase:test` (no migration); manual keyboard/screen-reader check. **Open:** at 360px the first card starts about 500px down because the search form above it is tall, so the spec's "at least four cards above the fold" holds only once W38.14 slims the form; the e2e test measures that four cards fit within 520px instead.
 
 ### W38.13 — Language names, not codes
 

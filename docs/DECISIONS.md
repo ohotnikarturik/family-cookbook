@@ -383,3 +383,7 @@ Approved for implementation without re-confirmation:
 
 1. **Audit ignore:** the Security job runs `pnpm audit --audit-level high --ignore GHSA-fc5q-39xc-vjpf`. The advisory is a picomatch ReDoS (`<=4.0.7`, published 2026-10-19) with no patched version; 4.0.7 is the latest release. picomatch is reached only through dev tooling (eslint, typescript-eslint, vite) with developer-controlled glob patterns, and no shipped app code uses it. The user approved ignoring this one advisory. Do not use `--ignore-unfixable`, so new unfixable advisories still fail CI. **Remove the ignore when picomatch ships a fix** (and bump the lockfile).
 2. **pgTAP reset retry:** `supabase db reset` recreates the DB container, and on GitHub runners host port 54322 is sometimes still bound ("address already in use"). The "Reset database" step retries up to 3 times, running `supabase stop --no-backup` and `db start` between attempts. Migrations still apply to a clean database.
+
+## W38.19 — Photo-less recipe cards (2026-11-18)
+
+On `sm` and up a card without a photo is a vertical card with a tinted chef-hat banner (min 96px) instead of the spec's "small square beside the text". Rows mixing short row cards and tall photo cards looked ragged and cramped text in narrow columns. Phones keep the compact row. The tile shows an icon, not the category initial, because the initial was read as the dish's initial.

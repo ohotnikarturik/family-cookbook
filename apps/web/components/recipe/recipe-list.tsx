@@ -12,11 +12,11 @@ type Props = Readonly<{
   cardLabels: {
     updatedLabelFor: (recipe: RecipeSummary) => string;
     archivedLabel: string;
-    categoryFallback: string;
     imageLoadingLabel: string;
     metaLabelFor: (recipe: RecipeSummary) => string | null;
   };
   emptyState?: ReactNode;
+  headingLevel?: 'h2' | 'h3';
 }>;
 
 export function RecipeList({
@@ -26,6 +26,7 @@ export function RecipeList({
   listLabel,
   cardLabels,
   emptyState,
+  headingLevel = 'h2',
 }: Props) {
   if (items.length === 0 && emptyState) {
     return <div>{emptyState}</div>;
@@ -34,7 +35,7 @@ export function RecipeList({
   return (
     <ul
       aria-label={listLabel}
-      className="grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3"
+      className="grid list-none grid-cols-1 gap-3 p-0 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3"
     >
       {items.map((recipe) => {
         const contentLang = recipeContentLang(recipe, uiLocale);
@@ -45,10 +46,9 @@ export function RecipeList({
             recipe={recipe}
             updatedLabel={cardLabels.updatedLabelFor(recipe)}
             archivedLabel={cardLabels.archivedLabel}
-            categoryFallback={cardLabels.categoryFallback}
             imageLoadingLabel={cardLabels.imageLoadingLabel}
             metaLabel={cardLabels.metaLabelFor(recipe)}
-            headingLevel="h2"
+            headingLevel={headingLevel}
             {...(contentLang ? { contentLang } : {})}
           />
         );

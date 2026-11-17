@@ -1,5 +1,5 @@
 import type { RecipeSummary } from '@family-cookbook/contracts';
-import { Clock } from 'lucide-react';
+import { ChefHat } from 'lucide-react';
 
 import { RecipeCardCover } from '@/components/recipe/recipe-card-cover';
 import { Link } from '@/i18n/navigation';
@@ -10,49 +10,76 @@ type Props = Readonly<{
   recipe: RecipeSummary;
   updatedLabel: string;
   archivedLabel: string;
-  categoryFallback: string;
   imageLoadingLabel: string;
   metaLabel?: string | null;
   contentLang?: string;
   headingLevel?: 'h2' | 'h3';
 }>;
 
+/**
+ * Phones: a compact row with a square thumbnail on the left. From `sm` up a card with a photo
+ * shows a 4:3 cover above the text. Without a photo it is always a row with a small tinted tile.
+ */
 export function RecipeCard({
   familyId,
   recipe,
   updatedLabel,
   archivedLabel,
-  categoryFallback,
   imageLoadingLabel,
   metaLabel,
   contentLang,
   headingLevel = 'h2',
 }: Props) {
   const Heading = headingLevel;
+  const hasPhoto = Boolean(recipe.coverAssetId);
+  const detailLine = [recipe.category, metaLabel].filter(Boolean).join(' · ');
   return (
     <li className="min-h-full">
       <article
         className={cn(
-          'flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm transition-colors',
+          'h-full overflow-hidden rounded-xl border border-border bg-card shadow-sm transition-colors',
           'hover:border-primary/40 focus-within:border-primary/40',
         )}
       >
         <Link
           href={`/f/${familyId}/recipes/${recipe.id}`}
-          className="flex min-h-11 flex-1 flex-col outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+          className={cn(
+            'flex h-full min-h-11 flex-row items-center gap-3 p-3 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring',
+            'sm:flex-col sm:items-stretch sm:gap-0 sm:p-0',
+          )}
         >
-          <RecipeCardCover
-            familyId={familyId}
-            recipeId={recipe.id}
-            coverAssetId={recipe.coverAssetId ?? null}
-            title={recipe.title}
-            loadingLabel={imageLoadingLabel}
-            decorative
-          />
-          <div className="flex flex-1 flex-col gap-2 p-4">
-            <div className="flex flex-wrap items-start justify-between gap-2">
+          {hasPhoto ? (
+            <div
+              className={cn(
+                'size-[4.5rem] shrink-0 overflow-hidden rounded-lg',
+                'sm:aspect-[4/3] sm:size-auto sm:w-full sm:rounded-none',
+              )}
+            >
+              <RecipeCardCover
+                familyId={familyId}
+                recipeId={recipe.id}
+                coverAssetId={recipe.coverAssetId ?? null}
+                title={recipe.title}
+                loadingLabel={imageLoadingLabel}
+                decorative
+                className="aspect-auto h-full w-full"
+              />
+            </div>
+          ) : (
+            <span
+              className={cn(
+                'flex size-[4.5rem] shrink-0 items-center justify-center rounded-lg bg-primary/12 text-primary',
+                'sm:size-auto sm:min-h-24 sm:w-full sm:flex-1 sm:rounded-none',
+              )}
+              aria-hidden
+            >
+              <ChefHat className="size-7" />
+            </span>
+          )}
+          <div className="min-w-0 flex-1 space-y-1 sm:flex-none sm:p-4">
+            <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1">
               <Heading
-                className="font-serif-display text-lg font-semibold text-foreground"
+                className="line-clamp-2 font-serif-display text-lg font-semibold leading-snug text-foreground"
                 lang={contentLang}
               >
                 {recipe.title}
@@ -63,12 +90,8 @@ export function RecipeCard({
                 </span>
               ) : null}
             </div>
-            <p className="text-sm text-muted-foreground">{recipe.category ?? categoryFallback}</p>
-            {metaLabel ? <p className="text-sm text-foreground">{metaLabel}</p> : null}
-            <p className="mt-auto flex items-center gap-2 text-sm text-muted-foreground">
-              <Clock className="size-4 shrink-0" aria-hidden />
-              <span>{updatedLabel}</span>
-            </p>
+            {detailLine ? <p className="text-sm text-foreground">{detailLine}</p> : null}
+            <p className="text-sm text-muted-foreground">{updatedLabel}</p>
           </div>
         </Link>
       </article>

@@ -2,12 +2,13 @@ import { listFamilyMembers, searchRecipes } from '@family-cookbook/application';
 import { resolveMemberDisplayLabel } from '@family-cookbook/domain';
 import { getSessionUser } from '@family-cookbook/data-access';
 import { createServerSupabaseClient } from '@family-cookbook/data-access/supabase/server';
-import { getFormatter, getTranslations } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 import { connection } from 'next/server';
 import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
 import { RecipeBrowseStates } from '@/components/recipe/recipe-browse-states';
+import { getRecipeCardLabels } from '@/components/recipe/recipe-card-labels';
 import { RecipeList } from '@/components/recipe/recipe-list';
 import { RecipePagination } from '@/components/recipe/recipe-pagination';
 import { RecipeSearchActiveChips } from '@/components/recipe/recipe-search-active-chips';
@@ -18,7 +19,6 @@ import { UnavailablePage } from '@/components/product/unavailable-page';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
 import { buildRecipeSearchQuery } from '@/lib/build-recipe-search-query';
-import { recipeTimingLabel } from '@/lib/format-recipe-meta';
 import { parseRecipeSearchFromUrl } from '@/lib/recipe-search-params';
 import { locales, type AppLocale } from '@/i18n/routing';
 
@@ -47,7 +47,7 @@ async function RecipesContent({ params, searchParams }: Props) {
   }
   const locale = localeParam as AppLocale;
   const t = await getTranslations({ locale, namespace: 'recipes' });
-  const format = await getFormatter({ locale });
+  const cardLabels = await getRecipeCardLabels(locale);
   const sp = await searchParams;
 
   const parsed = parseRecipeSearchFromUrl(familyId, sp);
@@ -197,24 +197,7 @@ async function RecipesContent({ params, searchParams }: Props) {
             description={t('status.empty')}
           />
         }
-        cardLabels={{
-          updatedLabelFor: (recipe) =>
-            t('list.updated', {
-              date: format.dateTime(new Date(recipe.updatedAt), {
-                dateStyle: 'medium',
-                timeStyle: 'short',
-              }),
-            }),
-          archivedLabel: t('list.archivedBadge'),
-          categoryFallback: t('list.uncategorized'),
-          imageLoadingLabel: t('list.imageLoading'),
-          metaLabelFor: (recipe) =>
-            recipeTimingLabel(recipe, {
-              prep: (minutes) => t('list.prepMinutes', { minutes }),
-              cook: (minutes) => t('list.cookMinutes', { minutes }),
-              servings: (servings) => t('list.servings', { servings: format.number(servings) }),
-            }),
-        }}
+        cardLabels={cardLabels}
       />
       {items.length > 0 ? (
         <RecipePagination

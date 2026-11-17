@@ -370,10 +370,8 @@
       "resultsLabel": "Reseptitulokset",
       "updated": "Päivitetty {date}",
       "archivedBadge": "Arkistoitu",
-      "uncategorized": "Luokittelematon",
       "imageLoading": "Ladataan reseptikuvaa…",
-      "prepMinutes": "{minutes} min esivalmistelu",
-      "cookMinutes": "{minutes} min kypsennys",
+      "totalMinutes": "{minutes} min",
       "servings": "{servings} annosta"
     },
     "filters": {

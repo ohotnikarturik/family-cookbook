@@ -370,10 +370,8 @@
       "resultsLabel": "Recipe results",
       "updated": "Updated {date}",
       "archivedBadge": "Archived",
-      "uncategorized": "Uncategorized",
       "imageLoading": "Loading recipe photo…",
-      "prepMinutes": "{minutes} min prep",
-      "cookMinutes": "{minutes} min cook",
+      "totalMinutes": "{minutes} min",
       "servings": "{servings} servings"
     },
     "filters": {

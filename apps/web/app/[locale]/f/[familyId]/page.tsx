@@ -1,16 +1,16 @@
 import { resolveAccessibleFamily, searchRecipes } from '@family-cookbook/application';
 import { createServerSupabaseClient } from '@family-cookbook/data-access/supabase/server';
-import { getFormatter, getTranslations } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 import { connection } from 'next/server';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { RecipeBrowseStates } from '@/components/recipe/recipe-browse-states';
-import { RecipeCard } from '@/components/recipe/recipe-card';
+import { getRecipeCardLabels } from '@/components/recipe/recipe-card-labels';
+import { RecipeList } from '@/components/recipe/recipe-list';
 import { LoadingState } from '@/components/product/loading-state';
 import { PageHeader } from '@/components/product/page-header';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
-import { recipeContentLang, recipeTimingLabel } from '@/lib/format-recipe-meta';
 import { locales, type AppLocale } from '@/i18n/routing';
 
 type Props = Readonly<{ params: Promise<{ locale: string; familyId: string }> }>;
@@ -36,7 +36,7 @@ async function DashboardContent({ params }: Props) {
   const locale = localeParam as AppLocale;
   const t = await getTranslations({ locale, namespace: 'family' });
   const tRecipes = await getTranslations({ locale, namespace: 'recipes' });
-  const format = await getFormatter({ locale });
+  const cardLabels = await getRecipeCardLabels(locale);
 
   const supabase = await createServerSupabaseClient();
   const workspace = await resolveAccessibleFamily(supabase, familyId);
@@ -47,7 +47,7 @@ async function DashboardContent({ params }: Props) {
   const recent = await searchRecipes(supabase, {
     familyId,
     sort: 'updatedAt',
-    limit: 5,
+    limit: 6,
   });
 
   const recentItems = recent.status === 'ok' ? recent.result.items : [];
@@ -78,35 +78,14 @@ async function DashboardContent({ params }: Props) {
         ) : recentItems.length === 0 ? (
           <p className="text-sm text-muted-foreground">{tRecipes('status.empty')}</p>
         ) : (
-          <ul className="grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2">
-            {recentItems.map((recipe) => {
-              const contentLang = recipeContentLang(recipe, locale);
-              return (
-                <RecipeCard
-                  key={recipe.id}
-                  familyId={familyId}
-                  recipe={recipe}
-                  updatedLabel={tRecipes('list.updated', {
-                    date: format.dateTime(new Date(recipe.updatedAt), {
-                      dateStyle: 'medium',
-                      timeStyle: 'short',
-                    }),
-                  })}
-                  archivedLabel={tRecipes('list.archivedBadge')}
-                  categoryFallback={tRecipes('list.uncategorized')}
-                  imageLoadingLabel={tRecipes('list.imageLoading')}
-                  metaLabel={recipeTimingLabel(recipe, {
-                    prep: (minutes) => tRecipes('list.prepMinutes', { minutes }),
-                    cook: (minutes) => tRecipes('list.cookMinutes', { minutes }),
-                    servings: (servings) =>
-                      tRecipes('list.servings', { servings: format.number(servings) }),
-                  })}
-                  headingLevel="h3"
-                  {...(contentLang ? { contentLang } : {})}
-                />
-              );
-            })}
-          </ul>
+          <RecipeList
+            familyId={familyId}
+            items={recentItems}
+            uiLocale={locale}
+            listLabel={t('dashboard.recentRecipes')}
+            cardLabels={cardLabels}
+            headingLevel="h3"
+          />
         )}
       </section>
     </div>

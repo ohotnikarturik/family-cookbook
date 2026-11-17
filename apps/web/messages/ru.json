@@ -370,10 +370,8 @@
       "resultsLabel": "Результаты поиска",
       "updated": "Обновлено {date}",
       "archivedBadge": "В архиве",
-      "uncategorized": "Без категории",
       "imageLoading": "Загрузка фото рецепта…",
-      "prepMinutes": "{minutes} мин подготовка",
-      "cookMinutes": "{minutes} мин готовка",
+      "totalMinutes": "{minutes} мин",
       "servings": "{servings} порций"
     },
     "filters": {
