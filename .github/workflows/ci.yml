@@ -65,8 +65,10 @@ jobs:
       - name: Install (audit)
         run: pnpm install --frozen-lockfile
 
+      # GHSA-fc5q-39xc-vjpf (picomatch ReDoS, <=4.0.7) has no patched release and is reachable
+      # only through dev tooling. Remove --ignore once picomatch ships a fix (docs/DECISIONS.md).
       - name: Dependency audit (high and critical)
-        run: pnpm audit --audit-level high
+        run: pnpm audit --audit-level high --ignore GHSA-fc5q-39xc-vjpf
 
   pgtap:
     name: pgTAP / RLS
@@ -89,8 +91,20 @@ jobs:
       - name: Start Postgres
         run: pnpm supabase:db:start
 
+      # `supabase db reset` recreates the DB container; on GitHub runners the old host port
+      # 54322 is sometimes not released yet ("address already in use"). Retry a bounded
+      # number of times, restarting Postgres between attempts. Migrations still run from clean.
       - name: Reset database
-        run: pnpm supabase:reset
+        run: |
+          for attempt in 1 2 3; do
+            if pnpm supabase:reset; then exit 0; fi
+            echo "supabase reset failed (attempt $attempt/3); restarting Postgres"
+            pnpm supabase:stop --no-backup || true
+            sleep 10
+            pnpm supabase:db:start || true
+          done
+          echo "supabase reset failed after 3 attempts"
+          exit 1
 
       - name: Run pgTAP
         run: pnpm supabase:test
