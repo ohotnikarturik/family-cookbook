@@ -11,7 +11,9 @@
     "test": "vitest run",
     "pretest:e2e": "playwright install chromium",
     "test:e2e": "playwright test",
-    "test:e2e:install": "playwright install --with-deps chromium"
+    "test:e2e:install": "playwright install --with-deps chromium",
+    "test:screens": "PW_SCREENS=1 playwright test",
+    "seed:photos": "node scripts/seed-recipe-photos.mjs"
   },
   "dependencies": {
     "@family-cookbook/application": "workspace:*",

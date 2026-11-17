@@ -12,28 +12,28 @@ select
         'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'::uuid,
         'eeeeeeee-eeee-4eee-8eee-eeeeeeee0101'::uuid,
         1,
-        'en',
+        'fi',
         jsonb_build_object(
           'title',
-          'Grandma''s cardamom buns (EN)',
+          'Mummon kardemummapullat (FI)',
           'description',
-          'Soft pulla-style buns.',
+          'Pehmeät pullat.',
           'ingredients',
           jsonb_build_array(
-            jsonb_build_object('position', 1, 'name', 'Flour'),
-            jsonb_build_object('position', 2, 'name', 'Cardamom')
+            jsonb_build_object('position', 1, 'name', 'Jauhot'),
+            jsonb_build_object('position', 2, 'name', 'Kardemumma')
           ),
           'steps',
           jsonb_build_array(
-            jsonb_build_object('position', 1, 'instruction', 'Warm the milk.'),
-            jsonb_build_object('position', 2, 'instruction', 'Knead and shape.')
+            jsonb_build_object('position', 1, 'instruction', 'Lämmitä maito.'),
+            jsonb_build_object('position', 2, 'instruction', 'Vaivaa ja muotoile.')
           ),
           'reviewStatus',
           'reviewed'
         )
       )
     $$,
-    'Editor can upsert English translation'
+    'Editor can upsert Finnish translation'
   );
 
 select
@@ -71,19 +71,19 @@ select
         'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'::uuid,
         'eeeeeeee-eeee-4eee-8eee-eeeeeeee0101'::uuid,
         2,
-        'EN',
+        'FI',
         jsonb_build_object(
           'title',
-          'Grandma''s cardamom buns (EN)',
+          'Mummon kardemummapullat (FI)',
           'ingredients',
           jsonb_build_array(
-            jsonb_build_object('position', 1, 'name', 'Flour'),
-            jsonb_build_object('position', 2, 'name', 'Cardamom')
+            jsonb_build_object('position', 1, 'name', 'Jauhot'),
+            jsonb_build_object('position', 2, 'name', 'Kardemumma')
           ),
           'steps',
           jsonb_build_array(
-            jsonb_build_object('position', 1, 'instruction', 'Warm the milk.'),
-            jsonb_build_object('position', 2, 'instruction', 'Knead and shape.')
+            jsonb_build_object('position', 1, 'instruction', 'Lämmitä maito.'),
+            jsonb_build_object('position', 2, 'instruction', 'Vaivaa ja muotoile.')
           )
         )
       )
@@ -100,10 +100,10 @@ select
         public.recipe_translations
       where
         recipe_id = 'eeeeeeee-eeee-4eee-8eee-eeeeeeee0101'::uuid
-        and lower(language_tag) = 'en'
+        and lower(language_tag) = 'fi'
     ),
     1,
-    'EN and en are one translation row'
+    'FI and fi are one translation row'
   );
 
 select
@@ -113,7 +113,7 @@ select
         'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'::uuid,
         'eeeeeeee-eeee-4eee-8eee-eeeeeeee0101'::uuid,
         3,
-        'FI',
+        'EN',
         jsonb_build_object(
           'title',
           'Same as source',

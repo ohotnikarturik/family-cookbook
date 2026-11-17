@@ -30,7 +30,9 @@
     "supabase:migrate": "supabase migration up",
     "supabase:test": "node scripts/supabase-test.mjs",
     "supabase:backup-restore-drill": "node scripts/local-backup-restore-drill.mjs",
-    "test:e2e": "pnpm --filter @family-cookbook/web test:e2e"
+    "supabase:seed-photos": "pnpm --filter \"./packages/*\" build && pnpm --filter @family-cookbook/web seed:photos",
+    "test:e2e": "pnpm --filter @family-cookbook/web test:e2e",
+    "test:screens": "pnpm --filter @family-cookbook/web test:screens"
   },
   "devDependencies": {
     "only-allow": "1.2.1",

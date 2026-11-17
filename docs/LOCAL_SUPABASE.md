@@ -17,6 +17,7 @@ pnpm install
 pnpm supabase:start          # pulls images on first run
 pnpm supabase:reset          # migrations + seed from empty DB
 pnpm supabase:sync-env       # writes NEXT_PUBLIC_* into apps/web/.env.local
+pnpm supabase:seed-photos    # optional: dish pictures on four seeded recipes (see "Seed data")
 ```
 
 `pnpm supabase:sync-env` maps local Supabase **`API_URL`** / **`ANON_KEY`** into:
@@ -43,7 +44,8 @@ Do **not** commit `service_role` keys. For rare local admin tasks, read `SUPABAS
 | `pnpm supabase:query -- "<sql>"` | Run SQL against local DB (no Studio needed) |
 | `pnpm supabase:stop` | Stop containers |
 | `pnpm supabase:status` | URLs, ports, health |
-| `pnpm supabase:reset` | Drop DB, re-run migrations + [`seed.sql`](../supabase/seed.sql) |
+| `pnpm supabase:reset` | Drop DB, re-run migrations + [`seed.sql`](../supabase/seed.sql) + [`seed-recipes.sql`](../supabase/seed-recipes.sql) |
+| `pnpm supabase:seed-photos` | After a reset: upload generated dish pictures to four Family A recipes through the real upload use cases (local only) |
 | `pnpm supabase:migrate` | Apply pending migrations without full reset |
 
 **Canonical clean slate:** `pnpm supabase:reset` (not `supabase:migrate` alone).
@@ -62,7 +64,11 @@ New `public` tables are not granted to the Data API automatically (`auto_expose_
 
 ## Seed data
 
-Test users, profiles, families, and memberships: [`docs/fixtures/TEST_IDENTITIES.md`](fixtures/TEST_IDENTITIES.md).
+Test users, profiles, families, memberships and recipes: [`docs/fixtures/TEST_IDENTITIES.md`](fixtures/TEST_IDENTITIES.md).
+
+Family A holds realistic recipes in English, Finnish, Russian and Ukrainian. `pnpm supabase:seed-photos` adds a drawn dish picture to four of them (borscht, syrniki, Karelian pies, blueberry pie). It signs in as Owner A with the local seed password and calls the same `createRecipeUploadSlot` → signed PUT → `finalizeRecipeUpload` path as the web app. It refuses to run against a non-local Supabase URL and skips recipes that already have a dish photo. Do not put a photo on recipe `0101`: pgTAP `92_recipe_assets_rls.sql` fills that recipe up to the 10-asset limit.
+
+The Playwright journeys archive the recipes they create and re-archive "Archived beet salad" after restoring it, so Family A stays tidy between runs.
 
 ## Auth (T1.3)
 

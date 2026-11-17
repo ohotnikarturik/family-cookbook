@@ -40,11 +40,19 @@ Seeded from [`supabase/seed-recipes.sql`](../../supabase/seed-recipes.sql). Fami
 
 | Recipe ID | Family | Title | Filters / notes |
 | --- | --- | --- | --- |
-| `eeeeeeee-eeee-4eee-8eee-eeeeeeee0101` | A | Grandma's cardamom buns | `fi`, Baking, tag `dessert` |
-| `eeeeeeee-eeee-4eee-8eee-eeeeeeee0102` | A | Weeknight salmon soup | `en`, Main, tag `fish`, ingredient salmon |
-| `eeeeeeee-eeee-4eee-8eee-eeeeeeee0103` | A | Archived beet salad | **archived** |
-| `eeeeeeee-eeee-4eee-8eee-eeeeeeee0104`–`0131` | A | Family A filler recipe *n* (`n` = 4…31) | pagination fillers |
-| `eeeeeeee-eeee-4eee-8eee-eeeeeeee0201` | B | Contributor's pancakes | `ru`, Contributor B |
+| `eeeeeeee-eeee-4eee-8eee-eeeeeeee0101` | A | Grandma's cardamom buns | `en`, Baking, tag `dessert`; translations `fi` (reviewed, complete) and `uk` (unreviewed, partial); no media (pgTAP 92 asset limit) |
+| `eeeeeeee-eeee-4eee-8eee-eeeeeeee0102` | A | Weeknight salmon soup | `en`, Soup, tags `fish` `quick`, ingredient salmon |
+| `eeeeeeee-eeee-4eee-8eee-eeeeeeee0103` | A | Archived beet salad | `en`, **archived** |
+| `eeeeeeee-eeee-4eee-8eee-eeeeeeee0104` | A | Український борщ | `uk`, Soup; dish photo via `supabase:seed-photos` |
+| `eeeeeeee-eeee-4eee-8eee-eeeeeeee0105` | A | Сырники со сметаной | `ru`, Breakfast, tags `quick` `vegetarian`; dish photo |
+| `eeeeeeee-eeee-4eee-8eee-eeeeeeee0106` | A | Karjalanpiirakat | `fi`, Baking, tags `vegetarian` `holiday`; dish photo |
+| `eeeeeeee-eeee-4eee-8eee-eeeeeeee0107` | A | Mustikkapiirakka | `fi`, Dessert, tags `dessert` `vegetarian`; dish photo |
+| `eeeeeeee-eeee-4eee-8eee-eeeeeeee0108` | A | Вареники з картоплею | `uk`, Main, tag `vegetarian` |
+| `eeeeeeee-eeee-4eee-8eee-eeeeeeee0109` | A | Салат Оливье | `ru`, Salad, tag `holiday` |
+| `eeeeeeee-eeee-4eee-8eee-eeeeeeee0110`–`0131` | A | 22 dishes in all four languages (title, description, timings; no ingredients yet) | pagination beyond 25 |
+| `eeeeeeee-eeee-4eee-8eee-eeeeeeee0201` | B | Contributor's pancakes | `en`, Contributor B |
 | `eeeeeeee-eeee-4eee-8eee-eeeeeeee0202` | B | Owner B house bread | Baking |
+
+Family A: 30 active + 1 archived, all created by Owner A. Family A tags: `dessert`, `fish`, `quick`, `vegetarian`, `holiday`.
 
 UI steps: [`UI_TEST_T2_4.md`](./UI_TEST_T2_4.md) (browse), [`UI_TEST_T2_5.md`](./UI_TEST_T2_5.md) (editor).

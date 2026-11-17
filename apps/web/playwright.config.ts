@@ -7,6 +7,10 @@ hydrateWebEnvFromLocalFile();
 const port = process.env.CI ? 3099 : 3003;
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${port}`;
 
+/** Screenshot baseline (EPIC 3.8): only with `pnpm test:screens`, never in CI or `test:e2e`. */
+const SCREENSHOT_SPEC = /screenshots\.spec\.ts/;
+const screensRun = process.env.PW_SCREENS === '1';
+
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
@@ -19,18 +23,28 @@ export default defineConfig({
     baseURL,
     trace: 'on-first-retry',
   },
-  projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-      grepInvert: /narrow viewport/,
-    },
-    {
-      name: 'mobile-chrome',
-      grep: /narrow viewport/,
-      use: { ...devices['Pixel 5'] },
-    },
-  ],
+  projects: screensRun
+    ? [
+        {
+          name: 'screens',
+          testMatch: SCREENSHOT_SPEC,
+          use: { ...devices['Desktop Chrome'] },
+        },
+      ]
+    : [
+        {
+          name: 'chromium',
+          use: { ...devices['Desktop Chrome'] },
+          grepInvert: /narrow viewport/,
+          testIgnore: SCREENSHOT_SPEC,
+        },
+        {
+          name: 'mobile-chrome',
+          grep: /narrow viewport/,
+          use: { ...devices['Pixel 5'] },
+          testIgnore: SCREENSHOT_SPEC,
+        },
+      ],
   webServer: process.env.CI
     ? {
         command: `pnpm exec next build && pnpm exec next start -p ${port}`,

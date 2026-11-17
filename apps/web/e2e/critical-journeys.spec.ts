@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test';
 import { loginAs } from './fixtures/auth';
 import { FAMILY_A_ID, FAMILY_B_ID, RECIPE_ARCHIVED_ID, TEST_USERS } from './fixtures/constants';
 import { isLocalE2eStackReady } from './fixtures/env';
+import { archiveRecipeFromDetail } from './fixtures/recipe-lifecycle';
 
 const familyRecipesPath = (familyId: string) => `/en/f/${familyId}/recipes`;
 
@@ -68,6 +69,9 @@ test.describe('critical journeys', () => {
     });
     await expect(page.getByRole('heading', { level: 2, name: title })).toBeVisible();
     await expect(page.getByRole('status').filter({ hasText: 'Recipe saved.' })).toBeVisible();
+
+    // Archive it again so repeated runs do not fill the active Family A list.
+    await archiveRecipeFromDetail(page);
   });
 
   test('owner restores an archived recipe and edit view supports uploads', async ({ page }) => {
@@ -87,6 +91,10 @@ test.describe('critical journeys', () => {
     await expect(
       page.getByRole('heading', { name: 'Add photos or sources', level: 3 }),
     ).toBeVisible();
+
+    // The seed keeps this recipe archived; put it back for the next run and other tests.
+    await page.goto(`/en/f/${FAMILY_A_ID}/recipes/${RECIPE_ARCHIVED_ID}`);
+    await archiveRecipeFromDetail(page);
   });
 });
 

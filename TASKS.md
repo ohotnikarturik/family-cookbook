@@ -416,7 +416,7 @@ W38.14 and W38.5 share `listFamilyCategories`; whichever runs first adds it. W38
 
 **Acceptance:** Home and Recipes show real-looking recipes, some with photos; summary JSON produced; pgTAP and Playwright pass with the new seed.
 
-**Status:** Not started.
+**Status:** Done (2026-11-17). pgTAP 175/175, application tests 51/51 including the 30-recipe integration count, Playwright 11/12: the family-switch failure was already on `main` and moved to W38.1. `pnpm test:screens` 12/12.
 
 ### W38.1 — Home in navigation and a clear active state
 - `apps/web/lib/family-shell-nav.ts`: sections `home` (`/f/{id}`), `recipes`, `family`; `other` highlights nothing.
@@ -425,6 +425,7 @@ W38.14 and W38.5 share `listFamilyCategories`; whichever runs first adds it. W38
 - Logo links to Home. Message keys: rename `family.shell.settings` → `family.shell.family`, add `family.shell.home` (four locales).
 - `components/shell/family-settings-subnav.tsx`: same active treatment; fix the 360px page overflow on Members (chips wrap or scroll inside their own container).
 - `components/shell/account-menu.tsx`: first item labelled with `account.title` (not `account.signedInAs`); theme options laid out cleanly (one row or all stacked); show the "Account" text on the trigger when width allows, accessible name always.
+- Fix the family switcher: after switching, the document holds two `#family-shell-switcher` selects and `e2e/critical-journeys.spec.ts` "multi-family member switches workspaces" fails (3/3 against `next dev`, already on `main` before W38.0). Exactly one switcher must exist after the redirect.
 
 **Tests:** extend `lib/family-shell-nav.test.ts`; Playwright asserts exactly one `aria-current="page"` in the primary nav on Home, Recipes, recipe detail, edit, settings, members, invitations (desktop and mobile); no horizontal overflow at 320px; contrast of new active styles in both themes.
 

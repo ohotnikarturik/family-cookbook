@@ -1,6 +1,20 @@
 # UI screenshot baseline (EPIC 3.8)
 
-This is a reference for **W38.0**, which turns it into `apps/web/e2e/screenshots.spec.ts`. Every later EPIC 3.8 UI task re-runs that spec and compares the images before and after its change. The images are not committed; they go to a gitignored folder.
+[`apps/web/e2e/screenshots.spec.ts`](../../../apps/web/e2e/screenshots.spec.ts) captures every main page so each EPIC 3.8 UI task can compare before and after. The images are not committed.
+
+## How to run
+
+```bash
+pnpm supabase:reset && pnpm supabase:seed-photos   # clean seed with dish photos (local only)
+pnpm dev:web                                        # http://localhost:3003 (reused by Playwright)
+SCREENS_LABEL=before pnpm test:screens              # before your change
+SCREENS_LABEL=after  pnpm test:screens              # after your change
+```
+
+- Output: `apps/web/screenshots/<label>/<viewport>-<theme>-<user>/<page>.jpg` plus `summary.json` per folder. The folder is gitignored.
+- `SCREENS_LABEL` defaults to `current`. `SCREENS_LOCALE` defaults to `ru`; use `fi`, `uk` or `en` for a spot check.
+- It runs only with `pnpm test:screens` (`PW_SCREENS=1`). CI and `pnpm test:e2e` never run it.
+- A full run is 12 tests (2 viewports × 2 themes × signed out / owner / viewer) and takes a few minutes against `next dev`, because the dev server compiles each page on first visit.
 
 ## What to capture
 
@@ -8,7 +22,7 @@ This is a reference for **W38.0**, which turns it into `apps/web/e2e/screenshots
 - **Viewports:** 360×740 (phone) and 1280×900 (desktop). Run 320px once per task to check reflow.
 - **Themes:** light and dark. Set them with the browser `colorScheme`; the default theme preference is `system`.
 - **Users:** `owner-a@family-cookbook.test` (all actions) and `viewer-a@family-cookbook.test` (read-only). See [`../TEST_IDENTITIES.md`](../TEST_IDENTITIES.md).
-- **IDs:** family A is `aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa`. The recipe `eeeeeeee-eeee-4eee-8eee-eeeeeeee0101` has translations.
+- **IDs:** family A is `aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa`. Recipe `…0101` has translations and no photo. Recipe `…0104` has a dish photo after `pnpm supabase:seed-photos`.
 
 | Name | Path |
 |---|---|
@@ -16,7 +30,8 @@ This is a reference for **W38.0**, which turns it into `apps/web/e2e/screenshots
 | signin | `/ru/auth/sign-in` (signed out) |
 | home | `/ru/f/{A}` |
 | recipes | `/ru/f/{A}/recipes` |
-| detail | `/ru/f/{A}/recipes/{R}` |
+| detail | `/ru/f/{A}/recipes/{R}` (`…0101`) |
+| detail-photo | `/ru/f/{A}/recipes/…0104` |
 | edit | `/ru/f/{A}/recipes/{R}/edit` |
 | new | `/ru/f/{A}/recipes/new` |
 | history | `/ru/f/{A}/recipes/{R}/history` |
@@ -27,35 +42,24 @@ This is a reference for **W38.0**, which turns it into `apps/web/e2e/screenshots
 | families | `/ru/families` |
 | account | `/ru/account` |
 | prefs | `/ru/account/preferences` (redirects after W38.2) |
-| accountmenu | `/ru/f/{A}/recipes` with the account menu open |
+| account-menu | `/ru/f/{A}/recipes` with the account menu open (viewport only) |
 
-For each page, also record these values in a JSON summary:
+For each page, `summary.json` records:
 
-```js
-{
-  h1: document.querySelectorAll('h1').length,
-  navCurrent: [...document.querySelectorAll('nav [aria-current="page"]')]
-    .filter((e) => e.offsetParent !== null)
-    .map((e) => e.textContent.trim()),
-  overflowX: document.documentElement.scrollWidth > window.innerWidth,
-}
-```
+- `landed`: the path after redirects (for example, a viewer opening `edit`).
+- `h1`: number of `<h1>` elements.
+- `navCurrent`: the visible text of each `nav [aria-current="page"]` link that is rendered (desktop pills, mobile bottom bar, settings chips).
+- `overflowX`: `true` when the page is wider than the viewport, which means sideways scrolling.
 
 **Target after P0:** on every signed-in page, exactly one `h1`, exactly one highlighted primary-nav item (none only on account pages), and `overflowX: false`.
 
-## Baseline measured on `main` (2026-11-16)
+## Baseline measured on `main` (2026-11-17, first `test:screens` run after W38.0)
 
 | Page | h1 | Highlighted nav | Overflow at 360px |
 |---|---|---|---|
 | home | 0 | none | no |
-| recipes, detail, edit, new, history, translations | 0 | Recipes | no |
-| settings, members, invitations | 0 | Family + sub-nav chip | **members: yes** |
+| recipes, detail, detail-photo, edit, new, history, translations | 0 | Recipes | no |
+| settings, members, invitations | 0 | Family + sub-nav chip | **yes** (sub-nav chip row) |
 | families, account, prefs, landing, sign-in | 1 | n/a (no shell) | no |
 
-## How to implement the spec
-
-- Sign in with the existing [`loginAs`](../../../apps/web/e2e/fixtures/auth.ts) fixture, which seeds cookies with a local password sign-in. Do not use the UI or Mailpit for this.
-- Use `page.goto(url, { waitUntil: 'networkidle' })`, wait about 700 ms for client components, then call `page.screenshot({ fullPage: true, type: 'jpeg', quality: 60 })`.
-- Keep the spec out of CI and out of the default `pnpm test:e2e` run. Give it its own Playwright project or a `@screens` tag with `grepInvert`, and add a script for it: `pnpm --filter @family-cookbook/web test:screens`.
-- Write the output to `apps/web/test-results/screens/<viewport>-<theme>-<user>/<name>.jpg` plus a `summary.json`. `apps/web/.gitignore` already ignores `test-results`.
-- The Next.js dev indicator (the floating "N" button) appears in screenshots. Ignore it, or set `devIndicators: false` only for this run.
+Viewer: `translations` and `invitations` render the full-page "not available" screen (one `h1`, no family navigation), and `edit`/`new` stay inside the shell. W38.2 and W38.8 make the no-access states consistent.

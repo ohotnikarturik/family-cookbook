@@ -5,9 +5,12 @@ export const FAMILY_B_ID = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 
 export const RECIPE_ACTIVE_ID = 'eeeeeeee-eeee-4eee-8eee-eeeeeeee0101';
 export const RECIPE_ARCHIVED_ID = 'eeeeeeee-eeee-4eee-8eee-eeeeeeee0103';
+/** Ukrainian borscht; gets a dish photo from `pnpm supabase:seed-photos`. */
+export const RECIPE_WITH_PHOTO_ID = 'eeeeeeee-eeee-4eee-8eee-eeeeeeee0104';
 
 export const TEST_USERS = {
   ownerA: 'owner-a@family-cookbook.test',
   editorA: 'editor-a@family-cookbook.test',
+  viewerA: 'viewer-a@family-cookbook.test',
   multi: 'multi@family-cookbook.test',
 } as const;

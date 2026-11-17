@@ -41,3 +41,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# EPIC 3.8 screenshot baseline (pnpm test:screens)
+/screenshots
