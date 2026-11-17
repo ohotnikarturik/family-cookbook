@@ -344,6 +344,7 @@
     "typography": {
       "displayLine": "Display — seriffi reseptin otsikoille",
       "bodyLine": "Leipäteksti pysyy sans-perheessä luettavuuden vuoksi. Himmeät rivit käyttävä himmeän etualan väriä.",
+      "glyphLine": "Merkkitesti: ä ö å Ä Ö Å — Yöllä hän söi hyvää leipää.",
       "smallLine": "Pieni tukiteksti vihjeille, metatiedoille ja kuvateksteille.",
       "monoLine": "font-mono — 1.2rem · versiomerkkijonot"
     },

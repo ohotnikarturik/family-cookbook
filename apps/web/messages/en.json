@@ -344,6 +344,7 @@
     "typography": {
       "displayLine": "Display — serif for recipe titles",
       "bodyLine": "Body text stays in the sans family for readability. Muted lines use the muted foreground token.",
+      "glyphLine": "Glyph check: the quick brown fox jumps over the lazy dog, 0123456789.",
       "smallLine": "Small supporting copy for hints, metadata, and captions.",
       "monoLine": "font-mono — 1.2rem · version strings"
     },

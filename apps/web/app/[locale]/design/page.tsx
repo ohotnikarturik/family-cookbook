@@ -100,6 +100,9 @@ async function DesignGallery({ params }: PageProps) {
               <p className="text-base leading-relaxed text-foreground">
                 {t('typography.bodyLine')}
               </p>
+              <p className="text-base leading-relaxed text-foreground">
+                {t('typography.glyphLine')}
+              </p>
               <p className="text-sm leading-relaxed text-muted-foreground">
                 {t('typography.smallLine')}
               </p>

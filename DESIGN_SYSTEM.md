@@ -29,6 +29,8 @@ Initial direction to use as a starting point (fine-tune only through centralized
 - **Shape and depth:** modest, consistent corner-radius scale; subtle surfaces and borders; use shadows sparingly. Avoid every element becoming a rounded card.
 - **Iconography:** one consistent icon library. Icons support comprehension; important actions also have visible text labels.
 
+Decision note (W38.4): body and UI type is Geist, which covers Latin and Cyrillic; display headings use Source Serif 4 (Latin + Cyrillic). Glyph samples for all four locales are in the design gallery.
+
 Do not hard-code a final color palette or typeface before checking real contrast, glyph support, and the appearance of long Finnish, Russian and Ukrainian strings. Make the final decision in token files and record it here after the design preview has been reviewed.
 
 ## 3. Component foundations

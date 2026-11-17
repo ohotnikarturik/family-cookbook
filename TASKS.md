@@ -529,7 +529,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 
 **Tests:** build; screenshot comparison of `ru`/`uk` pages.
 
-**Status:** Not started.
+**Status:** Done (2026-11-18). Added `cyrillic` to the Geist preload list, a `typography.glyphLine` sample in the design gallery (en/fi/ru/uk) and `e2e/fonts.spec.ts` (3 pass). Finding: the premise was wrong, because Next's `subsets` only controls preloading and Geist's Cyrillic was already served, so before/after screenshots (12 profiles, `ru`) are byte-identical with no overflow. Format, lint, typecheck, unit tests (all packages), build, Playwright 91/91 and `test:screens` 12/12 pass. Not run: `supabase:test` and MCP tests (no migration or shared contract change); manual check of the `/uk/design` glyph line by eye; manual keyboard/screen-reader check.
 
 ### P1 — clarity and guidance
 
