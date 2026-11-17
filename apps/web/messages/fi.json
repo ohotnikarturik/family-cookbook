@@ -131,12 +131,13 @@
       "navLabel": "Perhesivuston navigointi",
       "mobileNavLabel": "Pikanavigointi",
       "accountMenuLabel": "Tili ja asetukset",
+      "home": "Koti",
       "recipes": "Reseptit",
       "addRecipe": "Lisää resepti",
       "allFamilies": "Kaikki perheet",
       "invitations": "Kutsut",
       "members": "Jäsenet",
-      "settings": "Perhe",
+      "family": "Perhe",
       "account": "Tili"
     },
     "settings": {

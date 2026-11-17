@@ -105,7 +105,7 @@ export function IngredientListEditor({
               <Button
                 type="button"
                 variant="outline"
-                className="min-h-11"
+                className="h-auto min-h-11 max-w-full whitespace-normal py-2 text-start"
                 disabled={disabled}
                 onClick={() => removeRow(index)}
               >

@@ -31,10 +31,7 @@ export function FamilySettingsSubnav({ familyId, showInvitations }: Props) {
   ];
 
   return (
-    <nav
-      aria-label={t('subnavLabel')}
-      className="-mx-1 flex gap-2 overflow-x-auto pb-1 md:flex-wrap"
-    >
+    <nav aria-label={t('subnavLabel')} className="flex flex-wrap gap-2">
       {links.map((link) => {
         const isActive = active === link.key;
         return (
@@ -43,10 +40,10 @@ export function FamilySettingsSubnav({ familyId, showInvitations }: Props) {
             href={link.href}
             aria-current={isActive ? 'page' : undefined}
             className={cn(
-              'inline-flex min-h-11 shrink-0 items-center rounded-full border px-4 text-sm font-medium',
+              'inline-flex min-h-11 max-w-full items-center rounded-full border px-4 text-sm font-medium',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
               isActive
-                ? 'border-primary/40 bg-primary/12 text-foreground'
+                ? 'border-primary bg-primary text-primary-foreground'
                 : 'border-border bg-card text-primary hover:bg-muted',
             )}
           >

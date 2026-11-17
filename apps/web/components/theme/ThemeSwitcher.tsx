@@ -19,7 +19,8 @@ type SwitcherVariant = 'default' | 'compact';
 export function ThemeSwitcher({
   className,
   variant = 'default',
-}: Readonly<{ className?: string; variant?: SwitcherVariant }>) {
+  stacked = false,
+}: Readonly<{ className?: string; variant?: SwitcherVariant; stacked?: boolean }>) {
   const t = useTranslations('theme');
   const { preference, ready, setPreference } = useTheme();
   const inputSize = variant === 'compact' ? 'size-4' : 'size-6';
@@ -32,7 +33,7 @@ export function ThemeSwitcher({
       >
         {t('label')}
       </legend>
-      <div className="flex flex-wrap gap-1.5">
+      <div className={cn('flex', stacked ? 'flex-col' : 'flex-wrap gap-1.5')}>
         {options.map(({ value, id }) => (
           <Label
             key={value}

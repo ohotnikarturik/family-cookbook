@@ -108,14 +108,14 @@ test.describe('critical journeys — family switch', () => {
   test('multi-family member switches workspaces', async ({ page, baseURL }) => {
     await loginAs(page, TEST_USERS.multi, baseURL);
     await page.goto(`/en/f/${FAMILY_A_ID}/recipes`);
-    await expect(page.getByLabel('Active family')).toBeVisible();
-
-    await page.locator('#family-shell-switcher').selectOption(FAMILY_B_ID);
+    // Next.js keeps earlier shells in the DOM, hidden, so address the switcher by role.
+    const switcher = page.getByRole('combobox', { name: 'Active family' });
+    await expect(switcher).toBeVisible();
+    await switcher.selectOption(FAMILY_B_ID);
     await expect(page).toHaveURL(new RegExp(`/en/f/${FAMILY_B_ID}(?:/|$)`), { timeout: 15_000 });
-    await expect(page.locator('#family-shell-switcher')).toHaveValue(FAMILY_B_ID);
-    await expect(page.locator('#family-shell-switcher option:checked')).toHaveText(
-      'Berg Test Pantry',
-    );
+    await expect(switcher).toHaveCount(1);
+    await expect(switcher).toHaveValue(FAMILY_B_ID);
+    await expect(switcher.locator('option:checked')).toHaveText('Berg Test Pantry');
   });
 });
 

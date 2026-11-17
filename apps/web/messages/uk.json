@@ -131,12 +131,13 @@
       "navLabel": "Навігація сім'єю",
       "mobileNavLabel": "Швидка навігація",
       "accountMenuLabel": "Обліковий запис і налаштування",
+      "home": "Головна",
       "recipes": "Рецепти",
       "addRecipe": "Додати рецепт",
       "allFamilies": "Усі сім'ї",
       "invitations": "Запрошення",
       "members": "Учасники",
-      "settings": "Сім'я",
+      "family": "Сім'я",
       "account": "Обліковий запис"
     },
     "settings": {

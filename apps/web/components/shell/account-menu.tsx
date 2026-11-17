@@ -11,7 +11,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
@@ -41,27 +40,29 @@ export function AccountMenu({ locale }: Props) {
           <ChevronDown className="size-4 opacity-70" aria-hidden />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-72 p-3">
-        <DropdownMenuLabel>{tAccount('title')}</DropdownMenuLabel>
+      <DropdownMenuContent
+        align="end"
+        className="max-h-[var(--radix-dropdown-menu-content-available-height)] w-72 overflow-y-auto p-3"
+      >
         <DropdownMenuItem asChild>
-          <Link href="/account" className="w-full cursor-pointer">
-            {tAccount('signedInAs')}
+          <Link href="/account" className="min-h-11 w-full cursor-pointer">
+            {tAccount('title')}
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/families" className="w-full cursor-pointer">
+          <Link href="/families" className="min-h-11 w-full cursor-pointer">
             {t('allFamilies')}
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/account/preferences" className="w-full cursor-pointer">
+          <Link href="/account/preferences" className="min-h-11 w-full cursor-pointer">
             {tAccount('preferencesLink')}
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <div className="space-y-3 px-1 py-2" role="group" aria-label={tPrefs('legend')}>
           <LanguageSwitcher className="max-w-none" variant="compact" />
-          <ThemeSwitcher className="max-w-none" variant="compact" />
+          <ThemeSwitcher className="max-w-none" variant="compact" stacked />
         </div>
         <DropdownMenuSeparator />
         <form action={signOutAction}>

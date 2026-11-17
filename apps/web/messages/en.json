@@ -131,12 +131,13 @@
       "navLabel": "Family navigation",
       "mobileNavLabel": "Quick navigation",
       "accountMenuLabel": "Account and preferences",
+      "home": "Home",
       "recipes": "Recipes",
       "addRecipe": "Add recipe",
       "allFamilies": "All families",
       "invitations": "Invitations",
       "members": "Members",
-      "settings": "Family",
+      "family": "Family",
       "account": "Account"
     },
     "settings": {

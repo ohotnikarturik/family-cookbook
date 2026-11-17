@@ -8,11 +8,14 @@ import {
 const familyId = '00000000-0000-4000-8000-0000000000aa';
 
 describe('familyNavSectionFromPathname', () => {
-  it('keeps the dashboard distinct from the recipe list', () => {
-    expect(familyNavSectionFromPathname(`/f/${familyId}`, familyId)).toBe('dashboard');
-    expect(familyNavSectionFromPathname(`/f/${familyId}/`, familyId)).toBe('dashboard');
+  it('keeps home distinct from the recipe list', () => {
+    expect(familyNavSectionFromPathname(`/f/${familyId}`, familyId)).toBe('home');
+    expect(familyNavSectionFromPathname(`/f/${familyId}/`, familyId)).toBe('home');
     expect(familyNavSectionFromPathname(`/f/${familyId}/recipes`, familyId)).toBe('recipes');
     expect(familyNavSectionFromPathname(`/f/${familyId}/recipes/new`, familyId)).toBe('recipes');
+    expect(familyNavSectionFromPathname(`/f/${familyId}/recipes/abc/edit`, familyId)).toBe(
+      'recipes',
+    );
   });
 
   it('treats settings routes as the family section', () => {
@@ -27,6 +30,12 @@ describe('familyNavSectionFromPathname', () => {
 
   it('does not mark an unknown family route as recipes', () => {
     expect(familyNavSectionFromPathname(`/f/${familyId}/unknown`, familyId)).toBe('other');
-    expect(familyNavSectionFromPathname('/account', familyId)).toBe('dashboard');
+    expect(familyNavSectionFromPathname(`/f/${familyId}/recipes-archive`, familyId)).toBe('other');
+  });
+
+  it('highlights nothing outside this family', () => {
+    expect(familyNavSectionFromPathname('/account', familyId)).toBe('other');
+    expect(familyNavSectionFromPathname('/families', familyId)).toBe('other');
+    expect(familyNavSectionFromPathname(`/f/${familyId}x/recipes`, familyId)).toBe('other');
   });
 });

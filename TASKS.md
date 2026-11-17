@@ -440,7 +440,7 @@ The MCP commit `ff28db0` left four checks failing before EPIC 3.8 started.
 
 **Tests:** extend `lib/family-shell-nav.test.ts`; Playwright asserts exactly one `aria-current="page"` in the primary nav on Home, Recipes, recipe detail, edit, settings, members, invitations (desktop and mobile); no horizontal overflow at 320px; contrast of new active styles in both themes.
 
-**Status:** Not started.
+**Status:** Done (2026-11-17). Format, lint, typecheck, unit tests (web 42, all packages), full build and Playwright 33/33 pass (3 consecutive full runs), including the new `e2e/shell-navigation.spec.ts` (one `aria-current` on 7 routes at 1280px and 320px, no overflow, axe in light and dark) and the family-switch journey. `test:screens` 12/12; Members, Settings and Invitations no longer overflow at 360px. Not run: `supabase:test` and MCP tests (no migration or shared contract change); manual keyboard/screen-reader check.
 
 ### W38.2 — One page header and one shell everywhere
 Split into two sessions if large: (a) PageHeader + family pages, (b) account/auth shells.

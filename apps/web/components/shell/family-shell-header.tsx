@@ -41,7 +41,7 @@ export function FamilyShellHeader({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-3">
           <Link
-            href={`/f/${familyId}/recipes`}
+            href={`/f/${familyId}`}
             className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-lg px-1 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <span
@@ -50,7 +50,7 @@ export function FamilyShellHeader({
             >
               <ChefHat className="size-5" />
             </span>
-            <span className="hidden font-serif-display text-base font-semibold sm:inline">
+            <span className="sr-only font-serif-display text-base font-semibold sm:not-sr-only">
               {t('productName')}
             </span>
           </Link>
@@ -58,7 +58,7 @@ export function FamilyShellHeader({
             <FamilySwitcher
               families={families}
               currentFamilyId={familyId}
-              selectId="family-shell-switcher"
+              selectId={`family-shell-switcher-${familyId}`}
             />
           ) : (
             <p className="min-w-0 max-w-[9rem] truncate text-sm font-medium text-muted-foreground sm:max-w-[12rem]">

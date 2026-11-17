@@ -355,3 +355,10 @@ Approved for implementation without re-confirmation:
 
 1. **Consent page:** `/oauth/consent` is a thin default export that renders `ConsentContent` inside `<Suspense>`, so Next.js 16 can prerender the shell. The request-time reads (cookies, `authorization_id`, `getUser`, `getAuthorizationDetails`) and the redirects are unchanged.
 2. **Cross-family MCP search** returns `FORBIDDEN`, not an empty list. The integration test now asserts that, in line with the web `searchRecipes` behaviour and spec §17.3 item 10.
+
+## W38.1 — Shell navigation (2026-11-17)
+
+1. **Two `family-shell-switcher` selects were not a race.** Next.js 16 with `cacheComponents` keeps the previous route in the DOM, hidden with `display: none` ([`preserving-ui-state.md`](../apps/web/node_modules/next/dist/docs/01-app/02-guides/preserving-ui-state.md)). After a family switch the old family's shell is still in the document. Do not "fix" it in app code. The select id now includes the family id, and e2e finds shell controls by role or `:visible`, never by a bare `#id` or `nav [aria-current]`.
+2. **Nav sections:** `familyNavSectionFromPathname` returns `home | recipes | family | other`. Paths outside `/f/{id}` return `other`, so account and family-list pages highlight nothing.
+3. **Compact theme options** stack in the account menu only (`ThemeSwitcher stacked`); the auth footer keeps its row.
+4. **Fixed on the way:** the logo link had no accessible name on phones (axe `link-name`); the product name is now `sr-only` below `sm`. The recipe editor overflowed at 320px because the "Remove <ingredient>" button was `whitespace-nowrap`; both list editors let it wrap. W38.15 reworks the editor and may replace this.
