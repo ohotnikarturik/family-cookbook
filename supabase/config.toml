@@ -251,6 +251,12 @@ otp_expiry = 3600
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
 
+# Sign-in email: carries both the 6-digit code ({{ .Token }}) and the link ({{ .ConfirmationURL }}).
+# Hosted projects need the same subject and body pasted into Auth > Email Templates > Magic Link.
+# [auth.email.template.magic_link]
+# subject = "Your Family Cookbook sign-in code"
+# content_path = "./supabase/templates/magic_link.html"
+
 # Uncomment to customize email template
 # [auth.email.template.invite]
 # subject = "You have been invited"

@@ -6,11 +6,11 @@ This is the operator guide for **isolated** hosted environments. It does not cre
 
 ## Isolation rules
 
-| Environment | Supabase | App URL | Seed data | SMTP |
-| --- | --- | --- | --- | --- |
-| Local | Docker CLI project `family-cookbook` | `http://localhost:3003` | [`fixtures/TEST_IDENTITIES.md`](fixtures/TEST_IDENTITIES.md) | Mailpit `127.0.0.1:54325` |
-| Staging | **Dedicated** hosted project | HTTPS staging origin | **No** local seed | Real relay ([`STAGING_INVITATION_EMAIL.md`](fixtures/STAGING_INVITATION_EMAIL.md)) |
-| Production | **Second** hosted project | HTTPS production origin | **No** local seed | Real relay (separate credentials) |
+| Environment | Supabase                             | App URL                 | Seed data                                                    | SMTP                                                                               |
+| ----------- | ------------------------------------ | ----------------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| Local       | Docker CLI project `family-cookbook` | `http://localhost:3003` | [`fixtures/TEST_IDENTITIES.md`](fixtures/TEST_IDENTITIES.md) | Mailpit `127.0.0.1:54325`                                                          |
+| Staging     | **Dedicated** hosted project         | HTTPS staging origin    | **No** local seed                                            | Real relay ([`STAGING_INVITATION_EMAIL.md`](fixtures/STAGING_INVITATION_EMAIL.md)) |
+| Production  | **Second** hosted project            | HTTPS production origin | **No** local seed                                            | Real relay (separate credentials)                                                  |
 
 - Never reuse local anon/service keys, Mailpit, or `.test` personas on a hosted project.
 - Never put `SUPABASE_SERVICE_ROLE_KEY` on the web host. The app uses the **anon** key and RLS only.
@@ -21,18 +21,18 @@ This is the operator guide for **isolated** hosted environments. It does not cre
 
 Canonical placeholders: [`.env.example`](../.env.example). Set the same names in the host’s secret manager.
 
-| Variable | Web | Notes |
-| --- | --- | --- |
-| `NEXT_PUBLIC_SUPABASE_URL` | required | Hosted project URL (`https://<ref>.supabase.co`). **Inlined at Next.js build time.** |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | required | Project **anon** (publishable) key only. Inlined at build time. |
-| `NEXT_PUBLIC_APP_URL` | required | Canonical HTTPS origin, no trailing slash (e.g. `https://staging.example.com`). Used for PKCE callbacks, CSP, CORS, invitation links. |
-| `INVITATION_SMTP_HOST` | required (hosted) | Remote hostname. Loopback is rejected when `NODE_ENV=production`. |
-| `INVITATION_SMTP_PORT` | required (hosted) | Typically `587` (STARTTLS) or `465` (TLS). |
-| `INVITATION_SMTP_FROM` | required (hosted) | Verified sender; not `*@family-cookbook.test`. |
-| `INVITATION_SMTP_USER` | required (hosted) | Provider username. |
-| `INVITATION_SMTP_PASSWORD` | required (hosted) | Provider secret. Never log. |
-| `NEXT_PUBLIC_ENABLE_DESIGN_GALLERY` | optional | `true` on staging only. Omit in production. |
-| `NODE_ENV` | set by `next start` / host | Must be `production` on hosted web (Secure cookies, HSTS, SMTP guards). |
+| Variable                            | Web                        | Notes                                                                                                                                 |
+| ----------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`          | required                   | Hosted project URL (`https://<ref>.supabase.co`). **Inlined at Next.js build time.**                                                  |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY`     | required                   | Project **anon** (publishable) key only. Inlined at build time.                                                                       |
+| `NEXT_PUBLIC_APP_URL`               | required                   | Canonical HTTPS origin, no trailing slash (e.g. `https://staging.example.com`). Used for PKCE callbacks, CSP, CORS, invitation links. |
+| `INVITATION_SMTP_HOST`              | required (hosted)          | Remote hostname. Loopback is rejected when `NODE_ENV=production`.                                                                     |
+| `INVITATION_SMTP_PORT`              | required (hosted)          | Typically `587` (STARTTLS) or `465` (TLS).                                                                                            |
+| `INVITATION_SMTP_FROM`              | required (hosted)          | Verified sender; not `*@family-cookbook.test`.                                                                                        |
+| `INVITATION_SMTP_USER`              | required (hosted)          | Provider username.                                                                                                                    |
+| `INVITATION_SMTP_PASSWORD`          | required (hosted)          | Provider secret. Never log.                                                                                                           |
+| `NEXT_PUBLIC_ENABLE_DESIGN_GALLERY` | optional                   | `true` on staging only. Omit in production.                                                                                           |
+| `NODE_ENV`                          | set by `next start` / host | Must be `production` on hosted web (Secure cookies, HSTS, SMTP guards).                                                               |
 
 `NEXT_PUBLIC_*` values must be present at **`pnpm build`**, not only at runtime. A rebuild is required after changing them.
 
@@ -49,6 +49,7 @@ In **Authentication → URL configuration** for that project:
   - `{NEXT_PUBLIC_APP_URL}/auth/callback`
   - `{NEXT_PUBLIC_APP_URL}/**`
 - Confirm email / magic-link templates stay on the hosted Auth service (not Mailpit).
+- **Sign-in email template (required for code sign-in).** In the hosted project, open Authentication → Email Templates → **Magic Link** and paste the subject and body from [`supabase/templates/magic_link.html`](../supabase/templates/magic_link.html) (subject: _Your Family Cookbook sign-in code_). The body must contain both `{{ .Token }}` and `{{ .ConfirmationURL }}`. Without `{{ .Token }}` the sign-in page asks for a code that never arrives. Repeat for every hosted project (staging, production). Not done by the coding agent.
 - Invitation accept still requires a **verified** email matching the invite (unchanged from T1.5).
 
 ### Database and storage

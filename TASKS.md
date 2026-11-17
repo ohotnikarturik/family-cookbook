@@ -7,6 +7,7 @@ Agent procedure for executing any task here: [`docs/TASK_RUNBOOK.md`](docs/TASK_
 ## EPIC 0 — Repository and developer workflow
 
 ### T0.1 Bootstrap monorepo
+
 - Create pnpm workspace with `apps/web`, `apps/mcp`, and shared packages: `contracts`, `domain`, `permissions`, `application`, `data-access`, `config`.
 - Add strict TypeScript, formatter, lint rules, test scripts, and `.env.example`.
 - Pin compatible stable dependency versions and commit lockfile.
@@ -15,12 +16,14 @@ Agent procedure for executing any task here: [`docs/TASK_RUNBOOK.md`](docs/TASK_
 **Acceptance:** clean install works; all workspace packages resolve; lint/typecheck/build scripts run in CI.
 
 ### T0.2 CI baseline
+
 - Add GitHub Actions workflow for install, lint, typecheck, unit tests, and web/MCP builds.
 - Add secret scanning and dependency audit.
 
 **Acceptance:** workflow passes on clean branch; secrets are not present in repo history or client bundles.
 
 ### T0.3 Design system foundation
+
 - Read `DESIGN_SYSTEM.md` and implement semantic design tokens for color, typography, spacing, layout, radii, elevation, focus, and motion.
 - Add light/dark theme tokens and a `system` / `light` / `dark` preference provider with no avoidable theme flash.
 - Build a small component gallery/design preview showing buttons, form fields, recipe cards, navigation, dialogs, status states, and typography in both themes.
@@ -29,6 +32,7 @@ Agent procedure for executing any task here: [`docs/TASK_RUNBOOK.md`](docs/TASK_
 **Acceptance:** tokens are centralized; no new UI component hard-codes colors; theme switch persists; gallery shows key states in light/dark; UI does not resemble an unmodified shadcn starter.
 
 ### T0.4 Internationalization foundation
+
 - Add `next-intl` App Router integration and message catalogs for `en`, `fi`, `ru`, and `uk`.
 - Add locale routing/detection/fallback and a visible language switcher.
 - Add profile `preferred_language` and `theme_preference` migration fields; keep recipe language metadata separate.
@@ -39,6 +43,7 @@ Agent procedure for executing any task here: [`docs/TASK_RUNBOOK.md`](docs/TASK_
 ## EPIC 1 — Supabase, tenant model, and identity
 
 ### T1.1 Local Supabase setup
+
 - Add local Supabase configuration and documented commands.
 - Add seed fixtures for two families and users/roles for tests (never production data).
 - Add migration reset/apply workflow.
@@ -46,6 +51,7 @@ Agent procedure for executing any task here: [`docs/TASK_RUNBOOK.md`](docs/TASK_
 **Acceptance:** new developer can start local stack from documented steps; migrations apply from empty database.
 
 ### T1.2 Base schema and RLS helpers
+
 - Implement profiles, families, family_members, family_invitations and enums.
 - Add safe role/membership helper functions with fixed search path and narrow grants.
 - Enable RLS and write explicit select/insert/update/delete policies.
@@ -54,6 +60,7 @@ Agent procedure for executing any task here: [`docs/TASK_RUNBOOK.md`](docs/TASK_
 **Acceptance:** pgTAP proves cross-family isolation, role restrictions, and owner uniqueness. No exposed table is left without reviewed RLS.
 
 ### T1.3 Authentication and profile bootstrap
+
 - Implement Supabase email OTP/magic-link sign-in, callback, logout, session refresh.
 - Implement server/client Supabase factories using the documented SSR approach, isolated behind data-access package.
 - Create/update profile from verified auth identity without trusting browser-supplied user ID.
@@ -63,6 +70,7 @@ Agent procedure for executing any task here: [`docs/TASK_RUNBOOK.md`](docs/TASK_
 **Status:** Done (2026-11-07).
 
 ### T1.4 Family lifecycle and selection
+
 - Implement create family + initial owner membership as one transaction.
 - Implement list memberships and family switcher.
 - Store last-selected family as a preference only; every data call still checks membership.
@@ -72,6 +80,7 @@ Agent procedure for executing any task here: [`docs/TASK_RUNBOOK.md`](docs/TASK_
 **Status:** Done (2026-11-07).
 
 ### T1.5 Invitation flow
+
 - Implement invitation create/revoke/accept use cases.
 - Hash random invitation token before storage; expiry 7 days; one-time atomic redemption; verified email match.
 - Add email adapter and local development mode.
@@ -83,6 +92,7 @@ Agent procedure for executing any task here: [`docs/TASK_RUNBOOK.md`](docs/TASK_
 ## EPIC 2 — Recipe domain and core UI
 
 ### T2.1 Recipe schemas and aggregate model
+
 - Add shared Zod schemas for recipe create/update, ingredients, steps, tags, translations, and search filters.
 - Add domain types and role capability matrix.
 
@@ -91,6 +101,7 @@ Agent procedure for executing any task here: [`docs/TASK_RUNBOOK.md`](docs/TASK_
 **Status:** Done (2026-11-07).
 
 ### T2.2 Recipe database schema
+
 - Implement recipes, ingredients, steps, family tags, recipe tags, translations, revision snapshots, audit events.
 - Add composite family foreign keys, RLS, constraints, search indexes.
 
@@ -99,6 +110,7 @@ Agent procedure for executing any task here: [`docs/TASK_RUNBOOK.md`](docs/TASK_
 **Status:** Done (2026-11-08).
 
 ### T2.3 Shared application use cases
+
 - Implement `createRecipe`, `getRecipe`, `searchRecipes`, `updateRecipe`, `archiveRecipe`, `restoreRecipe`, and `getRecipeHistory`.
 - Use request-scoped user-bound repository.
 - Make aggregate write + version bump + revision + audit atomic.
@@ -109,6 +121,7 @@ Agent procedure for executing any task here: [`docs/TASK_RUNBOOK.md`](docs/TASK_
 **Status:** Done (2026-11-08).
 
 ### T2.4 Web dashboard and recipe browsing
+
 - Build family dashboard, family selector, recipe list, filters, pagination, and recipe detail.
 - Use Server Components for protected reads; add Client Components only for interaction.
 - Follow custom product patterns in `DESIGN_SYSTEM.md`; build for mobile first and review light/dark states.
@@ -118,6 +131,7 @@ Agent procedure for executing any task here: [`docs/TASK_RUNBOOK.md`](docs/TASK_
 **Status:** Done (2026-11-08).
 
 ### T2.5 Recipe editor
+
 - Build create/edit form with dynamic ingredients and ordered steps.
 - Add servings, timings, category, notes, tags, source language.
 - Preserve form content on validation errors.
@@ -128,6 +142,7 @@ Agent procedure for executing any task here: [`docs/TASK_RUNBOOK.md`](docs/TASK_
 **Status:** Done (2026-11-08).
 
 ### T2.6 Revision history and audit UI
+
 - Show revision list and change metadata to authorized roles.
 - Ensure audit events omit sensitive content.
 
@@ -138,6 +153,7 @@ Agent procedure for executing any task here: [`docs/TASK_RUNBOOK.md`](docs/TASK_
 ## EPIC 3 — Media, localization, and search
 
 ### T3.1 Private storage and upload workflow
+
 - Create private bucket and storage policies.
 - Implement upload slot, generated object path, size/type allowlist, finalization, signature validation, checksum and asset status.
 - Limit to JPEG, PNG, WebP (15 MiB) and PDF (25 MiB); max 10 assets per recipe.
@@ -147,6 +163,7 @@ Agent procedure for executing any task here: [`docs/TASK_RUNBOOK.md`](docs/TASK_
 **Status:** Done (2026-11-08).
 
 ### T3.2 Media display
+
 - Add recipe photo/source gallery and authorized short-lived signed URLs.
 - Serve PDF as attachment by default; do not render arbitrary content inline.
 - Preserve originals; optionally make sanitized image derivatives.
@@ -156,6 +173,7 @@ Agent procedure for executing any task here: [`docs/TASK_RUNBOOK.md`](docs/TASK_
 **Status:** Done (2026-11-09).
 
 ### T3.3 Manual translations
+
 - Implement recipe/ingredient/step translations and review status.
 - Add translation selector in detail screen.
 
@@ -164,6 +182,7 @@ Agent procedure for executing any task here: [`docs/TASK_RUNBOOK.md`](docs/TASK_
 **Status:** Done (2026-11-09).
 
 ### T3.4 Search improvements
+
 - Implement indexed title/description and ingredient search, categories, tags, language, contributor filters.
 - Add stable pagination and query bounds.
 
@@ -178,6 +197,7 @@ Complete the family-facing web application per approved product decisions (membe
 **Status:** Web gate complete (2026-11-10). EPIC 4 may start; W35.13–W35.17 cover production hardening before §19.3 staging release.
 
 ### W35.1 — Recipe media upload UI
+
 - Recipe edit and detail surfaces for authorized editors: upload recipe photos, original scans (PDF), and step photos; client flow uses existing slot → signed PUT → finalize APIs.
 - Show limits (10 assets/recipe, MIME/size allowlist), progress/status, and errors in all four UI locales.
 - Step photo upload sets `mediaAssetId` on the step draft; saving the recipe persists the link.
@@ -188,6 +208,7 @@ Complete the family-facing web application per approved product decisions (membe
 **Status:** Done (2026-11-09).
 
 ### W35.2 — Archive and restore UI
+
 - Archive/restore actions on recipe detail (and list where appropriate) with `confirm: true` / version checks per existing use cases.
 - Archived badge and list filter behavior unchanged; restore returns recipe to active browsing.
 
@@ -196,6 +217,7 @@ Complete the family-facing web application per approved product decisions (membe
 **Status:** Done (2026-11-09).
 
 ### W35.3 — Search filters and integration tests
+
 - Family member picker for **contributor** filter (no UUID entry); wire to existing search API.
 - Document translation-language search as deferred.
 
@@ -204,6 +226,7 @@ Complete the family-facing web application per approved product decisions (membe
 **Status:** Done (2026-11-09).
 
 ### W35.4 — Family member listing
+
 - Family-scoped member list with display name (or neutral fallback) and role; never expose auth emails to other members.
 
 **Tests:** RLS/pgTAP for member visibility; Vitest for display-name resolver.
@@ -211,6 +234,7 @@ Complete the family-facing web application per approved product decisions (membe
 **Status:** Done (2026-11-09).
 
 ### W35.5 — Role management, suspension and reactivation
+
 - Owner/Admin change roles within matrix; suspend/reactivate members; block suspending the sole active owner.
 - Preserve history and authorship.
 
@@ -219,6 +243,7 @@ Complete the family-facing web application per approved product decisions (membe
 **Status:** Done (2026-11-09).
 
 ### W35.6 — Owner transfer
+
 - Owner-only transfer UI; atomic transfer (exactly one active owner; former owner → admin).
 
 **Tests:** pgTAP owner invariants; negative cases (non-owner, suspended target).
@@ -226,6 +251,7 @@ Complete the family-facing web application per approved product decisions (membe
 **Status:** Done (2026-11-09).
 
 ### W35.7 — Family settings
+
 - Edit family name, default recipe language, and related settings per spec; owner/admin gates.
 
 **Tests:** Vitest + pgTAP for family update policies.
@@ -233,6 +259,7 @@ Complete the family-facing web application per approved product decisions (membe
 **Status:** Done (2026-11-09).
 
 ### W35.8 — Account settings and profile preference persistence
+
 - Profile display name, `preferred_language`, `theme_preference`; sync cookies ↔ profile after auth.
 
 **Tests:** Vitest; persistence across session refresh.
@@ -240,6 +267,7 @@ Complete the family-facing web application per approved product decisions (membe
 **Status:** Done (2026-11-09).
 
 ### W35.9 — Signed-in language/theme controls
+
 - Accessible theme (system/light/dark) and language (en/fi/ru/uk) on auth screens, app shell, and account settings; no route loss on locale change; no theme flash.
 
 **Tests:** Component/integration tests; four locales and both themes on critical routes.
@@ -247,6 +275,7 @@ Complete the family-facing web application per approved product decisions (membe
 **Status:** Done (2026-11-09).
 
 ### W35.10 — Playwright critical journeys
+
 - Auth, family switch, recipe CRUD, upload, archive/restore, members, invitations, settings, search, mobile viewport; fix Chromium install in CI.
 
 **Tests:** Playwright suite green in GHA.
@@ -254,6 +283,7 @@ Complete the family-facing web application per approved product decisions (membe
 **Status:** Done (2026-11-09).
 
 ### W35.11 — pgTAP in GitHub Actions
+
 - Run `pnpm supabase:test` (or equivalent) in CI with local Supabase/Docker.
 
 **Tests:** Workflow job passes on clean branch.
@@ -261,6 +291,7 @@ Complete the family-facing web application per approved product decisions (membe
 **Status:** Done (2026-11-10).
 
 ### W35.12 — Complete web MVP and reconcile backlog
+
 - Mark EPIC 3.5 tasks done only when acceptance criteria verified; update `PROJECT_SPEC` §19 alignment; defer MCP.
 
 **Tests:** Full CI (lint, typecheck, unit, build, pgTAP, Playwright smoke).
@@ -268,6 +299,7 @@ Complete the family-facing web application per approved product decisions (membe
 **Status:** Done (2026-11-10).
 
 ### W35.13 — Rate limiting and secure headers
+
 - Rate limits for login, invitation, upload, search; secure headers, CORS, log redaction per T5.1 scope.
 
 **Tests:** Automated security cases from spec §17.3 where applicable.
@@ -275,6 +307,7 @@ Complete the family-facing web application per approved product decisions (membe
 **Status:** Done (2026-11-10).
 
 ### W35.14 — Production invitation email
+
 - Production-safe email adapter (no local SMTP assumptions).
 
 **Tests:** Staging send with test inbox; no secrets in logs.
@@ -282,6 +315,7 @@ Complete the family-facing web application per approved product decisions (membe
 **Status:** Done (2026-11-10).
 
 ### W35.15 — Deployment and environment documentation
+
 - Staging/production Supabase, secrets, web deploy, env examples.
 
 **Tests:** Staging smoke documented and repeatable.
@@ -289,6 +323,7 @@ Complete the family-facing web application per approved product decisions (membe
 **Status:** Done (2026-11-10).
 
 ### W35.16 — Backup and restoration verification
+
 - Backup schedule and documented restore drill.
 
 **Tests:** Recorded restore verification.
@@ -296,6 +331,7 @@ Complete the family-facing web application per approved product decisions (membe
 **Status:** Done (2026-11-10).
 
 ### W35.17 — Accessibility release review
+
 - axe + manual keyboard/screen-reader pass on critical flows; WCAG 2.2 AA exceptions documented.
 
 **Tests:** Automated axe in CI; checklist in release notes.
@@ -307,6 +343,7 @@ Complete the family-facing web application per approved product decisions (membe
 ## EPIC 3.6 — Product face (local family testing)
 
 ### W36.1 — Profile before create family
+
 - Call `ensureProfile` inside shared `createFamily` before family bootstrap; pass cookie hints from web action.
 
 **Acceptance:** onboarding create-family works without visiting Account first; application test proves profile runs before RPC.
@@ -314,6 +351,7 @@ Complete the family-facing web application per approved product decisions (membe
 **Status:** Done (2026-11-10).
 
 ### W36.2 — Dashboard and shell copy
+
 - Replace engineering dashboard “tenant scope” strings in all UI locales; compact family header with skip link.
 
 **Acceptance:** no rental-tenant wording; single-family switcher does not duplicate the family name; skip link targets `#family-main`.
@@ -321,6 +359,7 @@ Complete the family-facing web application per approved product decisions (membe
 **Status:** Done (2026-11-10).
 
 ### W36.3 — Public landing and metadata
+
 - Signed-out home is editorial cookbook welcome; localized `meta` title/description via `generateMetadata` and `DocumentLangSync`.
 
 **Acceptance:** no bootstrap demo JSON or contracts block on home; description is cookbook copy in each locale.
@@ -328,6 +367,7 @@ Complete the family-facing web application per approved product decisions (membe
 **Status:** Done (2026-11-10).
 
 ### W36.4 — Cook-first recipe detail
+
 - Recipe reading before upload/admin chrome; media gallery after ingredients/steps.
 
 **Acceptance:** viewers never see upload panel; on narrow viewports title and ingredients precede upload UI.
@@ -335,6 +375,7 @@ Complete the family-facing web application per approved product decisions (membe
 **Status:** Done (2026-11-10).
 
 ### W36.5 — Reconcile backlog note
+
 - Document EPIC 3.6 scope; defer PPR duplicate IDs, list thumbnails, and MCP to follow-up epics.
 
 **Acceptance:** `DECISIONS.md` records scope boundary.
@@ -346,36 +387,43 @@ Complete the family-facing web application per approved product decisions (membe
 Cohesive navigation, compact preferences, photo-led browse, and polish from the UI/UX audit. Completes P0 shell work before EPIC 4; P1/P2 may continue alongside MCP.
 
 ### UI-01 — App shell and navigation
+
 - `FamilyAppShell`, `PrimaryNavigation`, `MobileNavigation`, sticky header, account menu.
 
 **Status:** Done (2026-11-10).
 
 ### UI-02–UI-06 — Preferences, active nav, auth CTA, switcher id
+
 - Compact signed-in prefs in account menu; auth footer prefs; landing sign-in button; `#family-shell-switcher`.
 
 **Status:** Done (2026-11-10).
 
 ### UI-04 — Collapsible recipe filters and chips
+
 - Mobile-collapsible filter panel; active filter chips.
 
 **Status:** Done (2026-11-10).
 
 ### UI-07–UI-08 — Recipe cards and list thumbnails
+
 - Gallery-style cards, responsive grid; `coverAssetId` on summaries from search.
 
 **Status:** Done (2026-11-10).
 
 ### UI-09–UI-12 — Detail, language UI, editor sticky save
+
 - Detail hero image; segmented translation selector; translation index hierarchy; sticky save bar.
 
 **Status:** Done (2026-11-10).
 
 ### UI-13–UI-16 — Family and dashboard
+
 - Member admin in `<details>`; dashboard de-emphasizes stats; settings subnav chips.
 
 **Status:** Done (2026-11-10).
 
 ### UI-14–UI-22 — Component polish
+
 - `TextLink`, button `link`/`loading`, `FormField`, `Skeleton`, dropdown menu primitive.
 
 **Status:** Done (2026-11-10).
@@ -391,6 +439,7 @@ Audit of 2026-11-16 (code review + Playwright screenshots of `main` at 360px/128
 Measured on `main` before this epic: Home has no highlighted nav item; no page inside the family shell has an `<h1>`; Members scrolls sideways at 360px.
 
 **Execution order:** one task per fresh session.
+
 1. P0: W38.0 → W38.1 → W38.2 → W38.3 → W38.4
 2. P1: W38.19 → W38.13 → W38.14 → W38.6 → W38.15 → W38.16 → W38.5 → W38.17 → W38.7 → W38.18 → W38.8
 3. P2: W38.9 → W38.10 → W38.11 → W38.12
@@ -399,6 +448,7 @@ Measured on `main` before this epic: Home has no highlighted nav item; no page i
 W38.14 and W38.5 share `listFamilyCategories`; whichever runs first adds it. W38.7 role descriptions are reused by W38.17.
 
 ### Rules for every EPIC 3.8 task
+
 - Read `AGENTS.md`, `apps/web/AGENTS.md` (Next.js 16: read `apps/web/node_modules/next/dist/docs/` before using an unfamiliar API), `DESIGN_SYSTEM.md`, this task, and the EPIC 3.8 entry in `docs/DECISIONS.md`. Inspect the named files and their tests before editing.
 - All user-facing copy in `apps/web/messages/{en,fi,ru,uk}.json`. Semantic tokens only, no raw colours. 44px primary targets. Check 320px/360px and both themes.
 - Server Components pass `locale` explicitly: `getTranslations({ locale, namespace })`.
@@ -410,6 +460,7 @@ W38.14 and W38.5 share `listFamilyCategories`; whichever runs first adds it. W38
 ### P0 — navigation and consistency
 
 ### W38.0 — Clean data and screenshot baseline
+
 - **Approval boundary:** `pnpm supabase:reset` wipes the local database — ask the user first.
 - Extend `supabase/seed-recipes.sql` so Family A has ~8 realistic recipes: real titles, categories, tags, servings, prep/cook times, ingredients with numeric `quantity` + `unit` (not text in `quantity_text`), steps; recipe text written in its declared language, at least one each in `fi`, `ru`, `uk`; one with a translation. Rename "Family A filler recipe n" to plausible dish names, keeping IDs and the 30 active + 1 archived pagination fixture. Update `docs/fixtures/TEST_IDENTITIES.md`.
 - `apps/web/e2e/critical-journeys.spec.ts`: recipes created by tests are archived in cleanup, and the archived fixture is re-archived if a test restores it, so manual testing in Family A stays clean.
@@ -421,7 +472,9 @@ W38.14 and W38.5 share `listFamilyCategories`; whichever runs first adds it. W38
 **Status:** Done (2026-11-17). pgTAP 175/175, application tests 51/51 including the 30-recipe integration count, Playwright 11/12 on the first run: the intermittent family-switch failure was already on `main` and is assigned to W38.1. `pnpm test:screens` 12/12.
 
 ### W38.0a — Restore green checks on `main`
+
 The MCP commit `ff28db0` left four checks failing before EPIC 3.8 started.
+
 - Web build: `/oauth/consent` read cookies, search params and auth outside `<Suspense>` (Next.js 16 prerender error). The page now renders that content inside `<Suspense>`, like other pages. The consent and authorization flow is unchanged. Its hard-coded "Home" link uses `notFound.home`.
 - `format:check`: Prettier applied to 12 MCP files, the consent page and `scripts/oauth-pkce-smoke.mjs`. `.prettierignore` now excludes `apps/web/screenshots` (W38.0 output).
 - MCP lint: two unused imports removed.
@@ -430,6 +483,7 @@ The MCP commit `ff28db0` left four checks failing before EPIC 3.8 started.
 **Status:** Done (2026-11-17). Format, lint, typecheck, all unit tests, full build, client-bundle scan and Playwright 12/12 pass.
 
 ### W38.1 — Home in navigation and a clear active state
+
 - `apps/web/lib/family-shell-nav.ts`: sections `home` (`/f/{id}`), `recipes`, `family`; `other` highlights nothing.
 - `components/shell/primary-navigation.tsx`, `mobile-navigation.tsx`: items Home (`Home` icon) · Recipes · Family (`Users` icon). Mobile: Home · Recipes · Add recipe (only if allowed; otherwise not rendered) · Family. "Add recipe" is a normal item with a green icon circle, not a wide filled block.
 - Active style: desktop filled `bg-primary text-primary-foreground` pill; mobile top indicator bar + bold label + primary colour (not colour alone). Keep `aria-current="page"`.
@@ -443,7 +497,9 @@ The MCP commit `ff28db0` left four checks failing before EPIC 3.8 started.
 **Status:** Done (2026-11-17). Format, lint, typecheck, unit tests (web 42, all packages), full build and Playwright 33/33 pass (3 consecutive full runs), including the new `e2e/shell-navigation.spec.ts` (one `aria-current` on 7 routes at 1280px and 320px, no overflow, axe in light and dark) and the family-switch journey. `test:screens` 12/12; Members, Settings and Invitations no longer overflow at 360px. Not run: `supabase:test` and MCP tests (no migration or shared contract change); manual keyboard/screen-reader check.
 
 ### W38.2 — One page header and one shell everywhere
+
 Split into two sessions if large: (a) PageHeader + family pages, (b) account/auth shells.
+
 - New `components/product/page-header.tsx`: `<h1>` in the serif display font, optional description, optional back link (always above the title), optional actions slot; one size scale (`text-2xl sm:text-3xl`).
 - Use it on: family home, recipes list (replace `RecipesHeader`), recipe detail (recipe title becomes the `h1`; inner headings shift up one level), new/edit/history/translations, settings, members, invitations. Remove the bottom "Back to dashboard/home" links.
 - Account area (`/account`, `/account/preferences`, `/families`): shared shell with the same sticky header (logo → `resolveSignedInLandingPath`, `AccountMenu`), `max-w-3xl`, top-aligned (no vertical centring). Merge account and preferences into one "Account" page (name, email in normal type, language, theme, sign out); `/account/preferences` redirects to it.
@@ -455,6 +511,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 **Status:** Part (a) Done (2026-11-17): `PageHeader`, `LoadingState`, one `h1` on every family page (home, recipes, detail, new, edit, history, translations, settings, members, invitations), bottom back links removed, heading levels shifted. Format, lint, typecheck, unit tests (web 42, all packages), full build and Playwright 59/59 pass (new `e2e/page-headers.spec.ts`: one `h1`, back link above title, no overflow at 320px, axe in light and dark); `test:screens` 12/12 with `h1` 0 → 1 on all family pages. Not run: `supabase:test` and MCP tests (no migration or shared contract change); manual keyboard/screen-reader check. **Part (b) Done (2026-11-17):** `AccountShell` on `/account` and `/families` (same sticky header, `max-w-3xl`, top-aligned), `AuthShell` on landing, sign-in, onboarding and invite accept, `/account` and `/account/preferences` merged into one Account page (the old address redirects), duplicate menu item and bottom back links removed, `LoadingState` in all fallbacks. Format, lint, typecheck, unit tests (all packages), full build and Playwright 80/80 pass (new `e2e/account-shells.spec.ts`: one `h1`, header, top alignment, no overflow at 320px, axe in light and dark, redirect); `test:screens` 12/12 with `h1` 1 and no overflow on account, families, landing and sign-in. Not run: `supabase:test` and MCP tests (no migration or shared contract change); manual keyboard/screen-reader check. Onboarding is covered by screenshots and typecheck only (the test owner is redirected away from it).
 
 ### W38.3 — Sign-in by code, link as a fallback
+
 - **Approval boundary:** Supabase Auth email template change (local now; hosted projects need the same change by the user).
 - `components/auth/sign-in-form.tsx`: two steps. Step 1: email + "Email me a sign-in code". Step 2: "We sent a message to {email}", large 6-digit field (numeric keyboard, paste, auto-submit at 6 digits), "or open the link in the email", "Use a different email", resend with countdown. Focus moves to the code field; status announced via `role="status"`.
 - Add `supabase/templates/magic_link.html` with both `{{ .Token }}` and the confirmation link; wire `[auth.email.template.magic_link]` in `supabase/config.toml` (restart stack). Update `docs/LOCAL_SUPABASE.md`, `docs/DEPLOYMENT.md` (hosted template step), DECISIONS T1.3 item 6.
@@ -463,9 +520,10 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 
 **Tests:** Playwright signs in with the code read from Mailpit (`http://127.0.0.1:54324/api/v1/messages`); link journey still works; invalid/expired code and rate-limit messages shown; axe on sign-in.
 
-**Status:** Not started.
+**Status:** Part Done (2026-11-18): two-step sign-in form (code, link fallback, different email, resend with countdown, focus and live status), copy in en/fi/ru/uk, `supabase/templates/magic_link.html`, hosted-template step and decision recorded, `e2e/sign-in-code.spec.ts` (8 pass, 2 skip). **Open:** the template is NOT active locally. Supabase CLI 3.0.0 fails to start the stack with `[auth.email.template.magic_link]` set, so the block is commented out; the real code email and the type/paste-code sign-in tests are unverified until the CLI is upgraded (needs approval) or the hosted template is applied.
 
 ### W38.4 — Cyrillic body font
+
 - `apps/web/app/layout.tsx`: add the `cyrillic` subset to the sans font if `next/font/google` supports it for Geist (check generated types); otherwise switch the sans token to a family with Latin + Cyrillic coverage. Keep the `--font-sans` token name.
 - Verify і ї є ґ and Finnish diacritics in the design gallery (`/uk/design`, `/fi/design`). Update DECISIONS T0.3 item 7 and `DESIGN_SYSTEM.md` §2 decision note.
 
@@ -476,6 +534,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 ### P1 — clarity and guidance
 
 ### W38.19 — Recipe cards that work without photos
+
 - `components/recipe/recipe-card.tsx`, `recipe-card-cover.tsx`, `recipe-list.tsx`.
 - With a photo: cover at fixed 4:3. Without a photo: no tall empty block — small tinted square with category initial/icon beside the text.
 - Phones (<640px): compact horizontal rows (72–88px thumbnail left, text right), 5–6 per screen. Grid with covers from `sm` up.
@@ -487,6 +546,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 **Status:** Not started.
 
 ### W38.13 — Language names, not codes
+
 - `apps/web/lib/language-label.ts` using `Intl.DisplayNames(uiLocale, { type: 'language' })`, raw tag as fallback.
 - Use it in recipe detail facts, `recipe-language-selector.tsx` ("Original — Finnish"), translations pages ("Add Ukrainian"), editor source-language select, family settings, search filter and chips.
 - Hide the view-language selector when a recipe has no translations.
@@ -496,6 +556,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 **Status:** Not started.
 
 ### W38.14 — Search-first recipe browse
+
 - `components/recipe/recipe-search-form.tsx`: one large always-visible search field with icon and a primary "Search" button. It matches title, description and ingredient names. If the search contract cannot OR `query` and `ingredient`, add an `anyText` filter to the shared Zod contract and data-access query (family-scoped, same length bounds and indexes) and use it here.
 - "Filters" button reveals the rest, collapsed by default on all widths: category and tag as selects of values the family actually uses (`listFamilyCategories` — distinct non-null categories, family-scoped, max 50 — and the existing family tags), language as a select of languages used (names from W38.13), author, sort, show archived.
 - Category chips under the search field for one-tap browsing. Keep URL params and active-filter chips. Show a result count. Empty result offers "Clear filters".
@@ -505,6 +566,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 **Status:** Not started.
 
 ### W38.6 — Recipe detail readability
+
 - Actions: "Edit" is the one visible button on all widths; History, Translations, Print (W38.12) and Archive go into a "More" menu.
 - Facts as one row with icons + text: "Prep 20 min · Cook 45 min · Total 1 h 5 min · Serves 4" (ICU plurals, shared duration formatter in `lib/format-recipe-meta.ts`).
 - Show "Added by {name}" and "Updated {date}" via `resolveMemberDisplayLabel`; never email.
@@ -516,6 +578,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 **Status:** Not started.
 
 ### W38.15 — Lighter recipe editor
+
 - `components/recipe/ingredient-list-editor.tsx`, `step-list-editor.tsx`, `lib/recipe-editor/*`.
 - One row per ingredient: Amount (single text field) · Unit (`<datalist>` of common units per locale) · Ingredient; "Add note" reveals notes. On phones the row wraps to two lines.
 - `lib/recipe-editor/map-payload.ts` + `parse-numbers.ts`: `2`, `1.5`, `1,5`, `1/2`, `1 1/2` → `quantity`; anything else (`to taste`) → `quantityText`. Existing rows load back into the single field. No contract or schema change.
@@ -530,6 +593,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 **Status:** Not started.
 
 ### W38.16 — One-step photo upload
+
 - `components/recipe/recipe-media-upload-panel.tsx`, `recipe-step-photo-upload.tsx`: native input hidden behind localized buttons "Add photo" and "Add scan or PDF" (replaces the file-type select); upload starts on selection; thumbnail preview, progress and result announced in a live region. On touch devices an extra "Take photo" button (`capture="environment"`); the normal picker is always available.
 - No change to slot → signed PUT → finalize, MIME/size limits, asset kinds or server validation.
 
@@ -538,6 +602,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 **Status:** Not started.
 
 ### W38.5 — Home that helps
+
 - `app/[locale]/f/[familyId]/page.tsx`: greeting with family name; search field submitting to `/recipes?query=`; "Add recipe" (if `canCreateRecipe`); recent recipes (W38.19 cards); category chips linking to filtered browse (`listFamilyCategories`).
 - Empty cookbook: `EmptyState` with numbered steps (add first recipe → add a photo → invite family), each a button, shown only for roles that can do them.
 
@@ -546,6 +611,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 **Status:** Not started.
 
 ### W38.17 — Calmer confirmations, history, members, translations
+
 - Archive dialog: remove the checkbox; dialog text states the consequence; the "Archive" button confirms (still sends `confirm: true` + `expectedVersion`). Archive uses the secondary style; `destructive` only for irreversible actions. Update DECISIONS W35.2 and `recipe-lifecycle-form` tests.
 - History: one "Changes" timeline; the audit list only for owner/admin, collapsed, titled "Activity log".
 - Members: one list; each row name, role as plain text, status. Owner/admin see "Change" on manageable rows → dialog with role select (role descriptions from W38.7) and suspend/reactivate. Remove the duplicate "Roles and access" cards. The server still computes which members are manageable.
@@ -556,6 +622,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 **Status:** Not started.
 
 ### W38.7 — Short contextual tips
+
 - `components/product/hint.tsx`: inline help text plus optional "What is this?" `<details>`; no hover-only tooltips.
 - Use for: role descriptions under role selects (invite form, member change dialog); source language vs translation in the editor; amount examples ("2", "1/2", "to taste"); archive vs delete.
 
@@ -564,6 +631,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 **Status:** Not started.
 
 ### W38.18 — Plain-language copy pass
+
 - Replace engineering terms in all four catalogs: workspace/пространство/робочий простір, isolated/изолированы, session/сеанс, context, tenant. Account card "Your details". Read every string as a non-technical relative would. Keep keys stable.
 
 **Tests:** locale completeness tests; e2e selectors updated where text changed.
@@ -571,6 +639,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 **Status:** Not started.
 
 ### W38.8 — Leave family and clear no-access pages
+
 - **Approval boundary:** new RPC + membership status change touch authorization. Present the migration design (status value, RPC rules, audit event, RLS effect) to the user before writing it.
 - `leaveFamily` application use case + RPC: a member removes their own active membership; the sole owner is blocked with a pointer to ownership transfer; audit event without email. UI on the Family page with an explicit confirmation.
 - `UnavailablePage`: distinct copy for suspended, not a member, and not found.
@@ -582,6 +651,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 ### P2 — cooking features
 
 ### W38.9 — Serving scaler
+
 - Pure `scaleIngredientQuantity(quantity, baseServings, targetServings)` in `packages/domain`; numeric quantities only; `quantityText` unchanged; friendly rounding (fractions for small kitchen amounts).
 - Detail page stepper (− / value / +, "Reset to original"), `?servings=` URL param, note "Scaled from {n} servings". Stored recipe never changes (spec §8.3).
 
@@ -590,6 +660,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 **Status:** Not started.
 
 ### W38.10 — Cook mode
+
 - "Start cooking" on detail → `?cook=1`: chrome hidden, larger type, ingredient checkboxes, one highlighted step with Previous/Next buttons, Screen Wake Lock (`navigator.wakeLock`, feature-detected, released on exit/visibility change). State is local only. Reduced motion respected; keyboard operable; Escape exits.
 
 **Tests:** Playwright navigation and exit; axe.
@@ -597,6 +668,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 **Status:** Not started.
 
 ### W38.11 — Favourites
+
 - **Approval boundary:** new table and RLS — present the migration to the user before applying.
 - Migration `recipe_favorites (family_id, recipe_id, user_id, created_at)`, PK `(recipe_id, user_id)`, composite family FK to recipes, RLS: active members read/insert/delete only their own rows in their families. Not a recipe mutation (no revision/version bump).
 - Contract + use cases: `setRecipeFavorite`, `favoritesOnly` search filter, `isFavorite` on summaries/detail.
@@ -607,6 +679,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 **Status:** Not started.
 
 ### W38.12 — Print and documentation cleanup
+
 - `@media print` rules in `apps/web/app/globals.css` (hide shell, nav, actions; single column; ink on white); "Print" in the detail "More" menu.
 - Docs: `PROJECT_SPEC.md` §19.2 status, `docs/MCP_HANDOFF.md` status table, T5.2 "four initial locales", status lines for T0.1–T1.2, dead `docs/MCP.md` link in `docs/MCP_ROADMAP.md`.
 
@@ -617,12 +690,14 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 ## EPIC 4 — MCP service and OAuth
 
 ### T4.1 MCP service bootstrap
+
 - Add Node/Hono app using official MCP TypeScript SDK v2 and Streamable HTTP.
 - Add `/health` and MCP endpoint; verify target host supports transport behavior.
 
 **Acceptance:** a local MCP test client can initialize and list tools over HTTP.
 
 ### T4.2 OAuth staging proof
+
 - Enable/configure Supabase OAuth 2.1 Server in a non-production project.
 - Configure asymmetric signing keys, authorization/consent UI, exact redirect handling and client registration policy.
 - Test discovery, PKCE, token issuance, token validation, expiry, revocation behavior, and at least one target MCP client.
@@ -630,6 +705,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 **Acceptance:** no token bypass; client consent is explicit; failures are documented. If beta behavior is insufficient, stop and propose an alternate authorization provider rather than weakening checks.
 
 ### T4.3 Request-scoped MCP authentication
+
 - Validate bearer token signature/issuer/audience/time claims using JWKS and provider configuration.
 - Build request-scoped user-bound data client.
 - Propagate authenticated actor + OAuth client ID into use cases.
@@ -637,6 +713,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 **Acceptance:** invalid, expired, wrong-issuer and wrong-audience tokens are rejected; service-role key is not used for user operations.
 
 ### T4.4 MCP tools
+
 - Implement `list_my_families`, `search_recipes`, `get_recipe`, `create_recipe`, `update_recipe`, `archive_recipe`, `restore_recipe`, `get_recipe_history`.
 - Use shared Zod contracts; explicit `family_id`; limit outputs; map safe errors.
 - Require `confirm: true` for archive; require `expected_version` for update/archive/restore.
@@ -644,6 +721,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 **Acceptance:** positive and negative tool tests match web permission matrix; tool writes create the same revision/audit records as web.
 
 ### T4.5 MCP integration documentation
+
 - Document endpoint, client config examples, OAuth setup, limitations, revocation and troubleshooting.
 
 **Acceptance:** a developer can connect a supported MCP client by following docs without using a shared static token.
@@ -651,6 +729,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 ## EPIC 5 — Hardening and release
 
 ### T5.1 Security hardening
+
 - Add rate limits for login, invitation, upload, search, and MCP.
 - Add secure headers, strict CORS/origin, log redaction, upload controls, error mapping.
 - Run cross-tenant and role-escalation test suite.
@@ -658,6 +737,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 **Acceptance:** all critical security cases in PROJECT_SPEC section 17.3 pass.
 
 ### T5.2 Mobile/accessibility/localization review
+
 - Review 320px, 360px, tablet, and desktop layouts, plus 200% text zoom.
 - Verify keyboard flow, visible focus, accessible labels/errors, 44px primary touch targets, reduced motion, and status announcements.
 - Run automated axe checks on critical routes and manually test at least one screen-reader/browser combination.
@@ -667,6 +747,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 **Acceptance:** critical flows are usable by keyboard and screen reader, reflow at 320px, support 200% text zoom, satisfy reviewed WCAG 2.2 AA criteria, and behave correctly in all initial locales/themes. Record any remaining exceptions.
 
 ### T5.3 Staging and production deployment
+
 - Create distinct Supabase projects and OAuth clients.
 - Configure secrets in host secret manager.
 - Deploy web and MCP independently.
@@ -675,6 +756,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 **Acceptance:** staging smoke tests pass; production secrets are isolated; no local/test credentials in production.
 
 ### T5.4 Release checklist
+
 - Run full CI, production build, migration dry run, Playwright smoke, MCP smoke, backup restore verification.
 - Document unresolved risks and deferred work.
 

@@ -35,27 +35,27 @@ Do **not** commit `service_role` keys. For rare local admin tasks, read `SUPABAS
 
 ## Daily commands
 
-| Command | Purpose |
-| --- | --- |
-| `pnpm supabase:start` | Start stack (retries without Studio if Studio mount fails) |
-| `pnpm supabase:start:full` | Start everything including Studio; fails if Studio cannot mount |
-| `pnpm supabase:start:core` | Start without Studio (`-x studio`) |
-| `pnpm supabase:db:start` | Start Postgres only (used by the pgTAP CI job) |
-| `pnpm supabase:query -- "<sql>"` | Run SQL against local DB (no Studio needed) |
-| `pnpm supabase:stop` | Stop containers |
-| `pnpm supabase:status` | URLs, ports, health |
-| `pnpm supabase:reset` | Drop DB, re-run migrations + [`seed.sql`](../supabase/seed.sql) + [`seed-recipes.sql`](../supabase/seed-recipes.sql) |
-| `pnpm supabase:seed-photos` | After a reset: upload generated dish pictures to four Family A recipes through the real upload use cases (local only) |
-| `pnpm supabase:migrate` | Apply pending migrations without full reset |
+| Command                          | Purpose                                                                                                               |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `pnpm supabase:start`            | Start stack (retries without Studio if Studio mount fails)                                                            |
+| `pnpm supabase:start:full`       | Start everything including Studio; fails if Studio cannot mount                                                       |
+| `pnpm supabase:start:core`       | Start without Studio (`-x studio`)                                                                                    |
+| `pnpm supabase:db:start`         | Start Postgres only (used by the pgTAP CI job)                                                                        |
+| `pnpm supabase:query -- "<sql>"` | Run SQL against local DB (no Studio needed)                                                                           |
+| `pnpm supabase:stop`             | Stop containers                                                                                                       |
+| `pnpm supabase:status`           | URLs, ports, health                                                                                                   |
+| `pnpm supabase:reset`            | Drop DB, re-run migrations + [`seed.sql`](../supabase/seed.sql) + [`seed-recipes.sql`](../supabase/seed-recipes.sql)  |
+| `pnpm supabase:seed-photos`      | After a reset: upload generated dish pictures to four Family A recipes through the real upload use cases (local only) |
+| `pnpm supabase:migrate`          | Apply pending migrations without full reset                                                                           |
 
 **Canonical clean slate:** `pnpm supabase:reset` (not `supabase:migrate` alone).
 
 ## Local URLs (defaults)
 
-| Service | URL |
-| --- | --- |
-| API | http://127.0.0.1:54321 |
-| Studio | http://127.0.0.1:54323 |
+| Service                         | URL                    |
+| ------------------------------- | ---------------------- |
+| API                             | http://127.0.0.1:54321 |
+| Studio                          | http://127.0.0.1:54323 |
 | Mail (Inbucket / local SMTP UI) | http://127.0.0.1:54324 |
 
 Auth `site_url` is `http://localhost:3003` (same as [`NEXT_PUBLIC_APP_URL`](../.env.example)). The redirect allow-list also includes `http://127.0.0.1:3003`.
@@ -73,32 +73,34 @@ The Playwright journeys archive the recipes they create and re-archive "Archived
 ## Auth (T1.3)
 
 1. Run `pnpm supabase:sync-env` (after `pnpm supabase:start`); it sets `NEXT_PUBLIC_APP_URL=http://localhost:3003`, which matches [`config.toml`](../supabase/config.toml) `site_url`.
-2. Start web: `pnpm dev:web` → open `http://localhost:3003/en/auth/sign-in`. `http://127.0.0.1:3003` also works. Request the link and open it in the **same host** — the PKCE cookie is not shared between `localhost` and `127.0.0.1`.
+2. Start web: `pnpm dev:web` → open `http://localhost:3003/en/auth/sign-in`. `http://127.0.0.1:3003` also works. Request the sign-in message and open its link in the **same host** — the PKCE cookie is not shared between `localhost` and `127.0.0.1`.
 3. Enter an email; open **Mailpit** at http://127.0.0.1:54324 and **click the sign-in link** in the message (HTML or Text tab).
 4. Callback is **`/auth/callback`** (not locale-prefixed). After sign-in, `/en/account` should show your session; **Sign out** clears the cookie session. The account page creates a `profiles` row if the callback did not.
 
 New sign-ups create `auth.users` + `profiles` on first successful login. Seeded personas in [`fixtures/TEST_IDENTITIES.md`](fixtures/TEST_IDENTITIES.md) can sign in with their `.test` emails via Mailpit (not password UI in MVP).
 
-### Magic link vs email code (local)
+### Sign-in code and link (local)
 
-The web app calls `signInWithOtp` with a redirect to the Next.js callback (`@supabase/ssr` / PKCE cookie session). **Locally, Auth emails are link-only:** subject *Your sign-in link*, body with a URL like `http://127.0.0.1:54321/auth/v1/verify?token=pkce_…`. There is **no 6-digit code** in Mailpit (HTML, Text, or Raw) unless you customize GoTrue email templates (e.g. add `{{ .Token }}`).
+The sign-in page is two steps: the person enters an email, then types the **6-digit code** from the message. The same message also carries a **link** as a fallback. The web app calls `signInWithOtp` with a redirect to the Next.js callback (`@supabase/ssr` / PKCE cookie session); the code is verified with `verifyOtp` (`type: 'email'`).
 
-| Path | Local dev |
-| --- | --- |
-| **Magic link** (recommended) | Click **Sign in** in Mailpit → browser hits Auth verify → redirects to `/auth/callback` |
-| **“Verify code” on sign-in** | Needs a **6-digit** OTP in the email (`auth.email.otp_length`); **not available** with default local templates. The code field rejects anything else |
+The message comes from [`supabase/templates/magic_link.html`](../supabase/templates/magic_link.html), which contains `{{ .Token }}` (the code) and `{{ .ConfirmationURL }}` (the link). It is wired in `config.toml` under `[auth.email.template.magic_link]`.
 
-The sign-in page shows **both** forms for parity with hosted Supabase (some projects include OTP in email). For day-to-day local work, ignore the code section and use the link only. The long `pkce_…` token in the URL is **not** what the code field expects.
+**Known local problem (Supabase CLI 3.0.0, Docker Desktop 4.76 on macOS).** With the template block enabled, `supabase start` fails with `ContainerCreateError … failed to copy secret file into container … must be a directory`. The block is therefore **commented out** in `config.toml`, and local Mailpit mail is **link-only** (default template, no code). To apply the template locally, upgrade the pinned `supabase` CLI (the fix is untested), uncomment the block, then `pnpm supabase:stop && pnpm supabase:start`. Playwright tests that type a real code (`e2e/sign-in-code.spec.ts`) skip themselves until the local email contains a 6-digit code.
+
+| Path     | Local dev today (template off)                                              |
+| -------- | --------------------------------------------------------------------------- |
+| **Link** | Click the link in Mailpit → Auth verify → `/auth/callback`                  |
+| **Code** | Needs the template; otherwise the 6-digit field never receives a valid code |
 
 ## Families (T1.4)
 
 After sign-in, the app sends you to **`/{locale}/onboarding`** when you have no memberships, otherwise to **`/{locale}/f/{familyId}`** (preferred family from `profiles.last_selected_family_id` when still a member, else the first membership).
 
-| Goal | Steps |
-| --- | --- |
-| **Create a family** | Sign in → onboarding form (name + default recipe language) → lands on the new dashboard as **owner** |
-| **List families** | `/{locale}/families` (e.g. `multi@family-cookbook.test` after Mailpit sign-in) |
-| **Switch family** | Use **Active family** on a family dashboard, or open another family from the list |
+| Goal                  | Steps                                                                                                                               |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **Create a family**   | Sign in → onboarding form (name + default recipe language) → lands on the new dashboard as **owner**                                |
+| **List families**     | `/{locale}/families` (e.g. `multi@family-cookbook.test` after Mailpit sign-in)                                                      |
+| **Switch family**     | Use **Active family** on a family dashboard, or open another family from the list                                                   |
 | **Multi-family seed** | `multi@family-cookbook.test` — **editor** in Family A, **viewer** in Family B ([`TEST_IDENTITIES.md`](fixtures/TEST_IDENTITIES.md)) |
 
 Family URLs use an explicit UUID segment (`/en/f/aaaaaaaa-…`). Opening another family’s id without membership returns **404** (RLS + layout guard).
@@ -111,13 +113,13 @@ After `pnpm supabase:reset`, migration **`20251108100000_recipe_assets_and_stora
 
 **SMTP (invite emails):** Local stack exposes Mailpit SMTP on **`127.0.0.1:54325`** (`smtp_port` in [`supabase/config.toml`](../supabase/config.toml)). After enabling or changing SMTP, restart the stack (`pnpm supabase:stop` → `pnpm supabase:start`). Run **`pnpm supabase:sync-env`** so [`apps/web/.env.local`](../apps/web/.env.local) gets `INVITATION_SMTP_*` defaults (no user/password needed locally). Hosted/staging deploys must use a real SMTP relay with `INVITATION_SMTP_USER` / `INVITATION_SMTP_PASSWORD`; see [`DEPLOYMENT.md`](DEPLOYMENT.md) and [`fixtures/STAGING_INVITATION_EMAIL.md`](fixtures/STAGING_INVITATION_EMAIL.md).
 
-| Goal | Steps |
-| --- | --- |
-| **Send invite** | Sign in as **owner/admin** (e.g. `owner-a@family-cookbook.test`) → family dashboard → **Invitations** → email + role → **Send invitation** |
-| **Read invite mail** | Mailpit UI http://127.0.0.1:54324 — subject/body includes link to `/{locale}/invite/accept?token=…` |
-| **Accept** | Open link (or paste token on accept page) → sign in **as the same email** → **Accept invitation** → dashboard for that family |
-| **Revoke** | **Invitations** settings → **Revoke** on a pending row |
-| **Send again** | If the email is not sent, the pending row is withdrawn. Send the same address again. An expired pending invite is replaced the same way. |
+| Goal                 | Steps                                                                                                                                      |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Send invite**      | Sign in as **owner/admin** (e.g. `owner-a@family-cookbook.test`) → family dashboard → **Invitations** → email + role → **Send invitation** |
+| **Read invite mail** | Mailpit UI http://127.0.0.1:54324 — subject/body includes link to `/{locale}/invite/accept?token=…`                                        |
+| **Accept**           | Open link (or paste token on accept page) → sign in **as the same email** → **Accept invitation** → dashboard for that family              |
+| **Revoke**           | **Invitations** settings → **Revoke** on a pending row                                                                                     |
+| **Send again**       | If the email is not sent, the pending row is withdrawn. Send the same address again. An expired pending invite is replaced the same way.   |
 
 Magic-link sign-in still uses Auth → Mailpit (port 54324). Invite delivery uses SMTP (54325); both land in the same Mailpit inbox locally. The accept page can sign out and return to the same link when the signed-in email is not the invited one.
 
@@ -161,8 +163,8 @@ Linux and Windows developers usually run `pnpm supabase:start:full` or default `
 
 ## Troubleshooting
 
-| Symptom | Action |
-| --- | --- |
+| Symptom                                                 | Action                                                                                                                  |
+| ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | `pnpm supabase:status` → no `supabase_db_...` container | Run `pnpm supabase:start`; avoid leaving the stack in a half-failed state from a raw `supabase start` after Studio died |
-| Need data without Studio | `pnpm supabase:query -- "select email from auth.users order by email"` |
-| Clean database | `pnpm supabase:reset` (stack must be running) |
+| Need data without Studio                                | `pnpm supabase:query -- "select email from auth.users order by email"`                                                  |
+| Clean database                                          | `pnpm supabase:reset` (stack must be running)                                                                           |

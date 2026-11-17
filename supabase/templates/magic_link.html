@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+  <body style="font-family: Georgia, 'Times New Roman', serif; color: #2b2118; line-height: 1.5">
+    <h2 style="margin: 0 0 12px">Your Family Cookbook sign-in code</h2>
+    <p>Enter this code on the sign-in page:</p>
+    <p
+      style="
+        font-size: 32px;
+        font-weight: bold;
+        letter-spacing: 8px;
+        margin: 16px 0;
+        font-family: 'Courier New', monospace;
+      "
+    >
+      {{ .Token }}
+    </p>
+    <p>The code works for one hour and only once.</p>
+    <p>
+      Or open this link instead:
+      <a href="{{ .ConfirmationURL }}">Sign in to Family Cookbook</a>
+    </p>
+    <p style="color: #6b5d4f; font-size: 14px">
+      If you did not ask to sign in, you can ignore this message.
+    </p>
+  </body>
+</html>
