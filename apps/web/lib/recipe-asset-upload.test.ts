@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import {
+  acceptForPick,
+  assetKindForPick,
   inferRecipeAssetMimeType,
   sanitizeOriginalFilename,
   uploadRecipeAssetFile,
@@ -40,6 +42,35 @@ describe('validateClientUploadFile', () => {
     expect(validateClientUploadFile(fileLike('a.png', 'image/png', 0), 'recipe_photo')).toBe(
       'empty_file',
     );
+  });
+});
+
+describe('assetKindForPick', () => {
+  it('stores "Add photo" as a recipe photo and a step pick as a step photo', () => {
+    const png = fileLike('dish.png', 'image/png', 10);
+    expect(assetKindForPick('photo', png)).toBe('recipe_photo');
+    expect(assetKindForPick('step', png)).toBe('step_photo');
+  });
+
+  it('stores a scan as a document when it is a PDF and as a page photo otherwise', () => {
+    expect(assetKindForPick('scan', fileLike('page.pdf', 'application/pdf', 10))).toBe(
+      'original_document',
+    );
+    expect(assetKindForPick('scan', fileLike('page.pdf', '', 10))).toBe('original_document');
+    expect(assetKindForPick('scan', fileLike('page.jpg', 'image/jpeg', 10))).toBe('original_photo');
+  });
+
+  it('still rejects a PDF picked with "Add photo"', () => {
+    const pdf = fileLike('menu.pdf', 'application/pdf', 10);
+    expect(validateClientUploadFile(pdf, assetKindForPick('photo', pdf))).toBe('unsupported_type');
+  });
+});
+
+describe('acceptForPick', () => {
+  it('offers PDF only for scans', () => {
+    expect(acceptForPick('scan')).toContain('application/pdf');
+    expect(acceptForPick('photo')).not.toContain('pdf');
+    expect(acceptForPick('step')).toBe(acceptForPick('photo'));
   });
 });
 

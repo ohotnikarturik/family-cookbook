@@ -1,21 +1,19 @@
 'use client';
 
-import {
-  RECIPE_ASSETS_PER_RECIPE_MAX,
-  type AssetKind,
-  type RecipeAssetSummary,
-} from '@family-cookbook/contracts';
+import { RECIPE_ASSETS_PER_RECIPE_MAX, type RecipeAssetSummary } from '@family-cookbook/contracts';
 import { useRouter } from 'next/navigation';
-import { useId, useMemo, useRef, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { uploadRecipeAssetFile, type RecipeAssetUploadApiError } from '@/lib/recipe-asset-upload';
-
-type UploadKindOption = 'recipe_photo' | 'original_document' | 'original_photo';
-
-const KIND_OPTIONS: UploadKindOption[] = ['recipe_photo', 'original_document', 'original_photo'];
+import { RecipeFilePicker } from '@/components/recipe/recipe-file-picker';
+import { RecipeStepPhoto } from '@/components/recipe/recipe-step-photo';
+import {
+  assetKindForPick,
+  sanitizeOriginalFilename,
+  uploadRecipeAssetFile,
+  type RecipeAssetUploadApiError,
+  type RecipeUploadPick,
+} from '@/lib/recipe-asset-upload';
 
 type Props = Readonly<{
   familyId: string;
@@ -26,6 +24,11 @@ type Props = Readonly<{
   onUploaded?: (assetId: string) => void;
 }>;
 
+type UploadState =
+  | { status: 'idle' }
+  | { status: 'uploading'; name: string | null }
+  | { status: 'added'; assetId: string; image: boolean; pick: RecipeUploadPick };
+
 export function RecipeMediaUploadPanel({
   familyId,
   recipeId,
@@ -34,15 +37,10 @@ export function RecipeMediaUploadPanel({
   onUploaded,
 }: Props) {
   const t = useTranslations('recipes.mediaUpload');
+  const tMedia = useTranslations('recipes.detail.media');
   const router = useRouter();
-  const fileInputId = useId();
-  const kindSelectId = useId();
   const headingId = useId();
-  const errorId = useId();
-  const fileRef = useRef<HTMLInputElement>(null);
-  const [kind, setKind] = useState<UploadKindOption>('recipe_photo');
-  const [busy, setBusy] = useState(false);
-  const [status, setStatus] = useState<'idle' | 'uploading' | 'success'>('idle');
+  const [state, setState] = useState<UploadState>({ status: 'idle' });
   const [error, setError] = useState<RecipeAssetUploadApiError | null>(null);
   const [sessionAssetIds, setSessionAssetIds] = useState<readonly string[]>([]);
 
@@ -57,28 +55,18 @@ export function RecipeMediaUploadPanel({
     return ids.size;
   }, [assetCount, assets, sessionAssetIds]);
   const atLimit = counted >= RECIPE_ASSETS_PER_RECIPE_MAX;
+  const busy = state.status === 'uploading';
 
-  async function handleUpload() {
-    const input = fileRef.current;
-    const file = input?.files?.[0];
-    if (atLimit) {
+  async function handlePick(file: File, pick: RecipeUploadPick) {
+    if (atLimit || busy) {
       return;
     }
-    if (!file) {
-      setError('file_required');
-      setStatus('idle');
-      return;
-    }
-    setBusy(true);
-    setStatus('uploading');
+    const kind = assetKindForPick(pick, file);
     setError(null);
-    const result = await uploadRecipeAssetFile(familyId, recipeId, file, kind as AssetKind);
-    setBusy(false);
-    if (input) {
-      input.value = '';
-    }
+    setState({ status: 'uploading', name: sanitizeOriginalFilename(file.name) });
+    const result = await uploadRecipeAssetFile(familyId, recipeId, file, kind);
     if (!result.ok) {
-      setStatus('idle');
+      setState({ status: 'idle' });
       setError(result.error);
       return;
     }
@@ -88,17 +76,26 @@ export function RecipeMediaUploadPanel({
       );
     }
     onUploaded?.(result.assetId);
-    setStatus('success');
+    setState({
+      status: 'added',
+      assetId: result.assetId,
+      image: kind !== 'original_document',
+      pick,
+    });
     router.refresh();
-    window.setTimeout(() => setStatus('idle'), 2000);
   }
 
-  const accept =
-    kind === 'original_document' ? 'application/pdf' : 'image/jpeg,image/png,image/webp';
+  let statusText = '';
+  if (state.status === 'uploading') {
+    statusText = state.name ? t('uploadingFile', { name: state.name }) : t('uploading');
+  } else if (state.status === 'added') {
+    statusText = state.pick === 'scan' ? t('addedScan') : t('addedPhoto');
+  }
 
   return (
     <section
       aria-labelledby={headingId}
+      aria-busy={busy || undefined}
       className="space-y-4 rounded-xl border border-dashed border-border bg-surface-raised p-4"
     >
       <div className="space-y-1">
@@ -108,6 +105,7 @@ export function RecipeMediaUploadPanel({
         <p className="text-sm text-muted-foreground">
           {t('count', { count: counted, max: RECIPE_ASSETS_PER_RECIPE_MAX })}
         </p>
+        {atLimit ? null : <p className="text-sm text-muted-foreground">{t('addHint')}</p>}
         <p className="text-sm text-muted-foreground">{t('limitsHint')}</p>
       </div>
 
@@ -116,63 +114,48 @@ export function RecipeMediaUploadPanel({
           {t('limitReached')}
         </p>
       ) : (
-        <div className="flex flex-col gap-4">
-          <div className="space-y-2">
-            <Label htmlFor={kindSelectId}>{t('kindLabel')}</Label>
-            <select
-              id={kindSelectId}
-              value={kind}
-              disabled={busy}
-              onChange={(event) => setKind(event.target.value as UploadKindOption)}
-              className="flex min-h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              {KIND_OPTIONS.map((option) => (
-                <option key={option} value={option}>
-                  {t(`kinds.${option}`)}
-                </option>
-              ))}
-            </select>
-            <p className="text-xs text-muted-foreground">{t(`kindHints.${kind}`)}</p>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor={fileInputId}>{t('fileLabel')}</Label>
-            <input
-              ref={fileRef}
-              id={fileInputId}
-              type="file"
-              accept={accept}
-              disabled={busy}
-              className="block w-full text-sm text-foreground file:mr-4 file:min-h-11 file:rounded-md file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-medium file:text-primary-foreground"
-              aria-invalid={error !== null}
-              {...(error ? { 'aria-describedby': errorId } : {})}
-              onChange={() => setError(null)}
-            />
-          </div>
-
-          <Button
-            type="button"
-            className="min-h-11 w-full sm:w-auto"
-            disabled={busy}
-            onClick={() => void handleUpload()}
-          >
-            {busy ? t('uploading') : t('upload')}
-          </Button>
-        </div>
+        <RecipeFilePicker
+          disabled={busy}
+          onPick={(file, pick) => void handlePick(file, pick)}
+          actions={[
+            { pick: 'photo', label: t('addPhoto'), primary: true },
+            { pick: 'photo', label: t('takePhoto'), camera: true },
+            { pick: 'scan', label: t('addScan') },
+          ]}
+        />
       )}
 
-      {status === 'uploading' ? (
-        <p className="text-sm text-muted-foreground" role="status" aria-live="polite">
-          {t('uploading')}
+      <div className="flex items-center gap-3">
+        {state.status === 'uploading' ? (
+          <span
+            className="size-4 shrink-0 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent motion-reduce:animate-none"
+            aria-hidden
+          />
+        ) : null}
+        <p
+          className={
+            state.status === 'added' ? 'text-sm text-foreground' : 'text-sm text-muted-foreground'
+          }
+          role="status"
+          aria-live="polite"
+        >
+          {statusText}
         </p>
-      ) : null}
-      {status === 'success' ? (
-        <p className="text-sm text-foreground" role="status" aria-live="polite">
-          {t('success')}
-        </p>
+      </div>
+      {state.status === 'added' && state.image ? (
+        <RecipeStepPhoto
+          key={state.assetId}
+          familyId={familyId}
+          recipeId={recipeId}
+          assetId={state.assetId}
+          alt={t('previewAlt')}
+          loadErrorLabel={tMedia('loadError')}
+          loadingLabel={tMedia('loading')}
+          size="thumbnail"
+        />
       ) : null}
       {error ? (
-        <p id={errorId} className="text-sm text-destructive" role="alert">
+        <p className="text-sm text-destructive" role="alert">
           {t(`errors.${error}`)}
         </p>
       ) : null}

@@ -682,26 +682,11 @@
       "count": "{count} / {max} tiedostoa liitetty",
       "limitsHint": "JPEG, PNG tai WebP enintään 15 MB; PDF enintään 25 MB. Enintään 10 tiedostoa reseptiä kohden.",
       "limitReached": "Reseptissä on jo suurin sallittu määrä tiedostoja.",
-      "kindLabel": "Tiedostotyyppi",
-      "fileLabel": "Valitse tiedosto",
-      "upload": "Lähetä tiedosto",
       "uploading": "Lähetetään…",
-      "success": "Tiedosto lähetetty.",
-      "kinds": {
-        "recipe_photo": "Reseptikuva",
-        "original_document": "Alkuperäinen asiakirja (PDF)",
-        "original_photo": "Skannattu sivu (kuva)"
-      },
-      "kindHints": {
-        "recipe_photo": "Valmis annos tai esillepano.",
-        "original_document": "PDF-skannaus tai alkuperäisen lähteen vienti.",
-        "original_photo": "Kuva käsinkirjoitetusta tai painetusta sivusta."
-      },
       "errors": {
         "unsupported_type": "Tiedostotyyppiä ei tueta. Käytä JPEG-, PNG-, WebP- tai PDF-tiedostoa.",
         "too_large": "Tiedosto on liian suuri.",
         "empty_file": "Tiedosto on tyhjä.",
-        "file_required": "Valitse tiedosto ennen lähettämistä.",
         "auth_required": "Kirjaudu sisään lähettääksesi tiedostoja.",
         "forbidden": "Et voi lähettää tiedostoja tälle reseptille.",
         "not_found": "Reseptiä ei löytynyt.",
@@ -714,14 +699,24 @@
       "step": {
         "legend": "Vaihekuva",
         "hint": "Valinnainen kuva, joka näytetään tässä vaiheessa reseptin tallennuksen jälkeen.",
-        "fileLabel": "Valitse vaihekuva",
         "previewAlt": "Kuva vaiheelle {step}",
         "remove": "Poista vaihekuva",
         "removeHint": "Tämä irrottaa kuvan vaiheesta. Tiedosto jää reseptiin ja lasketaan yhä rajaan.",
         "saveReminder": "Tallenna resepti, jotta vaihekuva pysyy linkitettynä.",
         "uploading": "Lähetetään vaihekuvaa…",
-        "limitReached": "Reseptissä on jo suurin sallittu määrä tiedostoja."
-      }
+        "limitReached": "Reseptissä on jo suurin sallittu määrä tiedostoja.",
+        "addPhoto": "Lisää kuva vaiheeseen {step}",
+        "takePhoto": "Ota kuva vaiheeseen {step}",
+        "added": "Vaihekuva lisätty. Tallenna resepti, jotta se säilyy."
+      },
+      "addPhoto": "Lisää kuva",
+      "addScan": "Lisää skannaus tai PDF",
+      "takePhoto": "Ota kuva",
+      "addHint": "Lisää kuva ruoasta tai skannaus tai PDF alkuperäisestä reseptistä. Lähetys alkaa heti, kun valitset tiedoston.",
+      "uploadingFile": "Lähetetään {name}…",
+      "addedPhoto": "Kuva lisätty.",
+      "addedScan": "Skannaus lisätty.",
+      "previewAlt": "Juuri lisäämäsi kuva"
     }
   },
   "notices": {

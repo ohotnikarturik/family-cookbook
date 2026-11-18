@@ -614,7 +614,7 @@ Added 2026-11-18 from review of the running app: search ran only on the button o
 
 **Tests:** Vitest for helpers; Playwright upload journey (photo + PDF, oversize error); axe.
 
-**Status:** Not started.
+**Status:** Done (2026-11-18). The type select, the browser's own file control and the "Upload file" button are gone. Now "Add photo" (primary) and "Add scan or PDF" upload as soon as a file is chosen; "Take photo" (`capture="environment"`) appears only on touch screens. The button decides the kind (`assetKindForPick`). One polite live region says "Uploading {name}…" then "Photo added."/"Scan added.", and a small thumbnail of the new photo appears, loaded from its signed URL because the CSP has no `blob:`. The step photo works the same way ("Add photo for step {n}"). Copy is in en/fi/ru/uk, and unused keys were removed. Upload flow, limits and server validation are unchanged. Format, lint, typecheck, unit tests (web 126, all packages, MCP 9), build and `test:screens` 12/12 pass (summaries identical; the ru labels fit at 360px in light and dark). The new `e2e/recipe-media-upload.spec.ts` passes (5: photo, PDF scan, 16 MB error, step photo, Take photo on touch, no overflow at 320px, axe light and dark). Full Playwright: 140 passed, 2 skipped, 2 failed, both known intermittent duplicate-match failures (`language-names`, `recipe-detail` author line). `recipe-detail` also failed 2 of 6 times on the tree without this change. Not run: `supabase:test` (no migration); manual keyboard/screen-reader check; the picker and camera on a real iOS/Android phone.
 
 ### W38.5 — Home that helps
 

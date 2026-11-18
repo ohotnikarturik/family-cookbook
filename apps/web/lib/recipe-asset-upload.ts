@@ -84,9 +84,35 @@ export function validateClientUploadFile(
   return null;
 }
 
+/** What the person pressed: a dish photo, a scan or PDF of the source, or a step photo. */
+export type RecipeUploadPick = 'photo' | 'scan' | 'step';
+
+const IMAGE_ACCEPT = 'image/jpeg,image/png,image/webp';
+
+/** The `accept` list for each button. The server still checks the file's bytes. */
+export function acceptForPick(pick: RecipeUploadPick): string {
+  return pick === 'scan' ? `${IMAGE_ACCEPT},application/pdf` : IMAGE_ACCEPT;
+}
+
+/**
+ * Chooses the stored asset kind from the button and the file, so people never pick a type.
+ * A scan is a PDF document or a photographed page; anything else falls through to the
+ * photo kinds, which `validateClientUploadFile` then rejects if the file is a PDF.
+ */
+export function assetKindForPick(pick: RecipeUploadPick, file: File): AssetKind {
+  if (pick === 'step') {
+    return 'step_photo';
+  }
+  if (pick === 'photo') {
+    return 'recipe_photo';
+  }
+  return inferRecipeAssetMimeType(file) === 'application/pdf'
+    ? 'original_document'
+    : 'original_photo';
+}
+
 export type RecipeAssetUploadApiError =
   | ClientUploadValidationError
-  | 'file_required'
   | 'auth_required'
   | 'forbidden'
   | 'not_found'

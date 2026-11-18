@@ -9,7 +9,14 @@ type Props = Readonly<{
   alt: string;
   loadErrorLabel: string;
   loadingLabel: string;
+  /** `thumbnail` is the small preview shown right after an upload. */
+  size?: 'step' | 'thumbnail';
 }>;
+
+const SIZE_CLASSES = {
+  step: { image: 'max-h-80 w-full max-w-md', placeholder: 'h-40 w-full max-w-md' },
+  thumbnail: { image: 'size-24', placeholder: 'size-24' },
+} as const;
 
 export function RecipeStepPhoto({
   familyId,
@@ -18,7 +25,9 @@ export function RecipeStepPhoto({
   alt,
   loadErrorLabel,
   loadingLabel,
+  size = 'step',
 }: Props) {
+  const classes = SIZE_CLASSES[size];
   const state = useRecipeAssetDownload(familyId, recipeId, assetId, 'image');
 
   if (state.status === 'error') {
@@ -31,7 +40,10 @@ export function RecipeStepPhoto({
 
   if (state.status !== 'ready') {
     return (
-      <div className="mt-2 h-40 w-full max-w-md animate-pulse rounded-lg bg-muted" role="status">
+      <div
+        className={`mt-2 ${classes.placeholder} animate-pulse rounded-lg bg-muted`}
+        role="status"
+      >
         <span className="sr-only">{loadingLabel}</span>
       </div>
     );
@@ -42,7 +54,7 @@ export function RecipeStepPhoto({
     <img
       src={state.url}
       alt={alt}
-      className="mt-2 max-h-80 w-full max-w-md rounded-lg object-cover ring-1 ring-border"
+      className={`mt-2 ${classes.image} rounded-lg object-cover ring-1 ring-border`}
       loading="lazy"
       decoding="async"
       referrerPolicy="no-referrer"

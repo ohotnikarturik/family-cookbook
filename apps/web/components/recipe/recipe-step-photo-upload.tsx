@@ -1,11 +1,11 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useId, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
+import { RecipeFilePicker } from '@/components/recipe/recipe-file-picker';
 import { RecipeStepPhoto } from '@/components/recipe/recipe-step-photo';
 import { uploadRecipeAssetFile, type RecipeAssetUploadApiError } from '@/lib/recipe-asset-upload';
 
@@ -34,27 +34,25 @@ export function RecipeStepPhotoUpload({
   const tMedia = useTranslations('recipes.detail.media');
   const tErrors = useTranslations('recipes.mediaUpload.errors');
   const router = useRouter();
-  const inputId = useId();
-  const fileRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
+  const [added, setAdded] = useState(false);
   const [error, setError] = useState<RecipeAssetUploadApiError | null>(null);
+  const step = stepIndex + 1;
 
-  async function handleFileChange() {
-    const file = fileRef.current?.files?.[0];
-    if (!file || atAssetLimit) {
+  async function handlePick(file: File) {
+    if (atAssetLimit || busy) {
       return;
     }
     setBusy(true);
+    setAdded(false);
     setError(null);
     const result = await uploadRecipeAssetFile(familyId, recipeId, file, 'step_photo');
     setBusy(false);
-    if (fileRef.current) {
-      fileRef.current.value = '';
-    }
     if (!result.ok) {
       setError(result.error);
       return;
     }
+    setAdded(true);
     onLinked(result.assetId);
     router.refresh();
   }
@@ -69,7 +67,7 @@ export function RecipeStepPhotoUpload({
             familyId={familyId}
             recipeId={recipeId}
             assetId={mediaAssetId}
-            alt={t('previewAlt', { step: stepIndex + 1 })}
+            alt={t('previewAlt', { step })}
             loadErrorLabel={tMedia('loadError')}
             loadingLabel={tMedia('loading')}
           />
@@ -78,32 +76,31 @@ export function RecipeStepPhotoUpload({
             variant="outline"
             className="min-h-11"
             disabled={disabled || busy}
-            onClick={onClear}
+            onClick={() => {
+              setAdded(false);
+              onClear();
+            }}
           >
             {t('remove')}
           </Button>
           <p className="text-xs text-muted-foreground">{t('saveReminder')}</p>
           <p className="text-xs text-muted-foreground">{t('removeHint')}</p>
         </div>
+      ) : atAssetLimit ? (
+        <p className="text-sm text-muted-foreground">{t('limitReached')}</p>
       ) : (
-        <div className="space-y-2">
-          <Label htmlFor={inputId}>{atAssetLimit ? t('limitReached') : t('fileLabel')}</Label>
-          <input
-            ref={fileRef}
-            id={inputId}
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            disabled={disabled || busy || atAssetLimit}
-            className="block w-full text-sm text-foreground file:mr-4 file:min-h-11 file:rounded-md file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-medium file:text-primary-foreground"
-            onChange={() => void handleFileChange()}
-          />
-        </div>
+        <RecipeFilePicker
+          disabled={disabled === true || busy}
+          onPick={(file) => void handlePick(file)}
+          actions={[
+            { pick: 'step', label: t('addPhoto', { step }) },
+            { pick: 'step', label: t('takePhoto', { step }), camera: true },
+          ]}
+        />
       )}
-      {busy ? (
-        <p className="text-sm text-muted-foreground" role="status" aria-live="polite">
-          {t('uploading')}
-        </p>
-      ) : null}
+      <p className="text-sm text-muted-foreground" role="status" aria-live="polite">
+        {busy ? t('uploading') : added && mediaAssetId ? t('added') : ''}
+      </p>
       {error ? (
         <p className="text-sm text-destructive" role="alert">
           {tErrors(error)}

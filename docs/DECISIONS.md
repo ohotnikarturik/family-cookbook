@@ -427,3 +427,10 @@ Reverses the banner rule in "W38.19 — Photo-less recipe cards": from `sm` up, 
 5. **Unit suggestions** come from the UI locale's catalog (`recipes.editor.ingredients.unitOptions`, `|`-separated), not the recipe's source language. "Add several at once" recognises those units (longest first; `ст.л.` matches `ст. л.`).
 6. **Category suggestions** reuse `listRecipeBrowseOptions`; if it fails or is rate-limited, the field stays free text.
 
+
+## W38.16 — One-step photo upload (2026-11-18)
+
+1. **The button decides the kind.** "Add photo" and "Take photo" store `recipe_photo`; "Add scan or PDF" stores `original_document` for a PDF and `original_photo` for an image (`assetKindForPick` in `lib/recipe-asset-upload.ts`). People never choose a file type. Slot → signed PUT → finalize, the limits and server validation are unchanged.
+2. **Preview after upload, from the signed URL.** The CSP `img-src` (`packages/security`) allows neither `blob:` nor `data:`, so there is no local preview before upload. Once the file is finalized, the panel shows a small thumbnail through `RecipeStepPhoto` (`size="thumbnail"`). Do not loosen the CSP for this.
+3. **Progress is shown as stages** ("Uploading {name}…", then "Photo added." or "Scan added." or an error) in one polite live region, not as a byte-level bar: the PUT uses `fetch`, which does not report upload progress.
+4. **"Take photo" only on touch screens** (`(pointer: coarse)` through `useSyncExternalStore`, false on the server so hydration matches). It uses its own input with `capture="environment"`; the normal picker is always shown. The native inputs are `sr-only`, out of the tab order and `aria-hidden`; the visible `Button` opens them.
