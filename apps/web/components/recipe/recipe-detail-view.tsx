@@ -1,16 +1,29 @@
 import type { RecipeAssetSummary, RecipeDetail } from '@family-cookbook/contracts';
 import { pickRecipeCoverAssetId, type ResolvedRecipeDisplay } from '@family-cookbook/domain';
+import { Camera, Clock, Flame, Timer, Users, type LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 import { RecipeCardCover } from '@/components/recipe/recipe-card-cover';
 import { RecipeMediaGallery, type RecipeMediaCard } from '@/components/recipe/recipe-media-gallery';
 import { RecipeStepPhoto } from '@/components/recipe/recipe-step-photo';
+import { Button } from '@/components/ui/button';
 
-type Fact = Readonly<{
-  label: string;
-  value: string;
-  valueLang?: string;
-}>;
+export type RecipeFactKind = 'prep' | 'cook' | 'total' | 'serves';
+
+/** One item of the facts row, for example "Prep 20 min". */
+type Fact = Readonly<{ kind: RecipeFactKind; text: string }>;
+
+/** Quieter detail under the facts row, such as category or source language. */
+type DetailPair = Readonly<{ label: string; value: string; valueLang?: string }>;
+
+type AddPhotosPrompt = Readonly<{ title: string; body: string; action: string; href: string }>;
+
+const FACT_ICONS: Record<RecipeFactKind, LucideIcon> = {
+  prep: Clock,
+  cook: Flame,
+  total: Timer,
+  serves: Users,
+};
 
 type IngredientLine = Readonly<{
   position: number;
@@ -49,6 +62,9 @@ type Props = Readonly<{
   display: ResolvedRecipeDisplay;
   languageSelector?: ReactNode;
   facts: Fact[];
+  details: DetailPair[];
+  attribution: string;
+  addPhotos?: AddPhotosPrompt | undefined;
   ingredients: IngredientLine[];
   labels: Labels;
   mediaLabels: MediaLabels;
@@ -60,6 +76,9 @@ export function RecipeDetailView({
   display,
   languageSelector,
   facts,
+  details,
+  attribution,
+  addPhotos,
   ingredients,
   labels,
   mediaLabels,
@@ -127,17 +146,53 @@ export function RecipeDetailView({
             </p>
           </section>
         ) : null}
-        <dl className="grid gap-3 text-sm sm:grid-cols-2">
-          {facts.map((fact) => (
-            <div key={fact.label}>
-              <dt className="text-muted-foreground">{fact.label}</dt>
-              <dd className="font-medium text-foreground" lang={fact.valueLang}>
-                {fact.value}
-              </dd>
-            </div>
-          ))}
-        </dl>
+        {facts.length > 0 ? (
+          <ul className="flex list-none flex-wrap gap-x-5 gap-y-2 p-0 text-sm font-medium text-foreground">
+            {facts.map((fact) => {
+              const Icon = FACT_ICONS[fact.kind];
+              return (
+                <li key={fact.kind} className="inline-flex items-center gap-1.5">
+                  <Icon className="size-4 text-muted-foreground" aria-hidden />
+                  {fact.text}
+                </li>
+              );
+            })}
+          </ul>
+        ) : null}
+        {details.length > 0 ? (
+          <dl className="flex flex-wrap gap-x-5 gap-y-1 text-sm">
+            {details.map((detail) => (
+              <div key={detail.label} className="flex gap-1.5">
+                <dt className="text-muted-foreground">{detail.label}:</dt>
+                <dd className="text-foreground" lang={detail.valueLang}>
+                  {detail.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        ) : null}
+        <p className="text-sm text-muted-foreground">{attribution}</p>
       </header>
+
+      {addPhotos ? (
+        <section
+          aria-labelledby="recipe-add-photos-heading"
+          className="flex flex-col gap-3 rounded-xl border border-border bg-muted/40 p-4 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <div className="space-y-1">
+            <h2 id="recipe-add-photos-heading" className="text-base font-semibold text-foreground">
+              {addPhotos.title}
+            </h2>
+            <p className="text-sm text-muted-foreground">{addPhotos.body}</p>
+          </div>
+          <Button asChild className="min-h-11 shrink-0">
+            <a href={addPhotos.href}>
+              <Camera className="size-4" aria-hidden />
+              {addPhotos.action}
+            </a>
+          </Button>
+        </section>
+      ) : null}
 
       {ingredients.length > 0 ? (
         <section aria-labelledby="recipe-ingredients-heading">
@@ -147,30 +202,30 @@ export function RecipeDetailView({
           >
             {labels.ingredientsHeading}
           </h2>
-          <ul className="list-none space-y-2 p-0">
+          <ul className="list-none divide-y divide-border border-y border-border p-0">
             {display.ingredients.map((ingredient) => {
               const amount = amountByPosition.get(ingredient.position);
               const lineLang = ingredient.usedFallback ? recipe.sourceLanguage : bodyLang;
               return (
                 <li
                   key={ingredient.position}
-                  className="rounded-lg border border-border bg-card px-4 py-3 text-foreground"
+                  className="grid grid-cols-[minmax(4.5rem,7.5rem)_minmax(0,1fr)] gap-x-4 py-2.5 text-foreground"
                 >
-                  {ingredient.usedFallback ? (
-                    <p className="mb-1 text-xs text-muted-foreground">{labels.partialFallback}</p>
-                  ) : null}
-                  <p lang={lineLang}>
-                    <span className="font-medium">{ingredient.name}</span>
-                    {amount ? <span className="text-muted-foreground"> {amount}</span> : null}
-                  </p>
-                  {ingredient.notes ? (
-                    <p
-                      className="mt-1 text-sm text-muted-foreground"
-                      lang={ingredient.notesFallback ? recipe.sourceLanguage : lineLang}
-                    >
-                      {ingredient.notes}
-                    </p>
-                  ) : null}
+                  <span className="font-medium tabular-nums">{amount}</span>
+                  <div className="min-w-0">
+                    {ingredient.usedFallback ? (
+                      <p className="mb-1 text-xs text-muted-foreground">{labels.partialFallback}</p>
+                    ) : null}
+                    <p lang={lineLang}>{ingredient.name}</p>
+                    {ingredient.notes ? (
+                      <p
+                        className="text-sm text-muted-foreground"
+                        lang={ingredient.notesFallback ? recipe.sourceLanguage : lineLang}
+                      >
+                        {ingredient.notes}
+                      </p>
+                    ) : null}
+                  </div>
                 </li>
               );
             })}

@@ -65,11 +65,23 @@ test.describe('critical journeys', () => {
       .fill('Simmer gently.');
     await page.getByRole('button', { name: 'Save recipe' }).click();
 
-    await expect(page).toHaveURL(new RegExp(`/en/f/${FAMILY_A_ID}/recipes/[0-9a-f-]+$`), {
-      timeout: 30_000,
-    });
+    await expect(page).toHaveURL(
+      new RegExp(`/en/f/${FAMILY_A_ID}/recipes/[0-9a-f-]+(\\?added=1)?$`),
+      {
+        timeout: 30_000,
+      },
+    );
     await expect(page.getByRole('heading', { level: 1, name: title })).toBeVisible();
     await expect(page.getByRole('status').filter({ hasText: 'Recipe saved.' })).toBeVisible();
+    // The new recipe has no photo yet, so the detail page invites the author to add one.
+    await expect(
+      page.getByRole('heading', { level: 2, name: 'Add photos of this dish' }),
+    ).toBeVisible();
+    await page.getByRole('link', { name: 'Add photos' }).click();
+    await expect(page).toHaveURL(/#add-photos$/);
+    await expect(
+      page.getByRole('heading', { name: 'Add photos or sources', level: 2 }),
+    ).toBeVisible();
 
     // Archive it again so repeated runs do not fill the active Family A list.
     await archiveRecipeFromDetail(page);
@@ -83,9 +95,10 @@ test.describe('critical journeys', () => {
     const restoreButton = page.getByRole('button', { name: 'Restore recipe' });
     if (await restoreButton.isVisible()) {
       await restoreButton.click();
-      await expect(page.getByRole('button', { name: 'Archive recipe' })).toBeVisible({
+      await expect(page.getByRole('button', { name: 'Restore recipe' })).toBeHidden({
         timeout: 15_000,
       });
+      await expect(page.getByRole('button', { name: 'More' })).toBeVisible();
     }
 
     await page.goto(`/en/f/${FAMILY_A_ID}/recipes/${RECIPE_ARCHIVED_ID}/edit`);

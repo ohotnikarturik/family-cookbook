@@ -412,15 +412,29 @@
     },
     "detail": {
       "backToList": "Back to recipes",
-      "actions": "Actions",
+      "more": "More",
+      "facts": {
+        "prep": "Prep {time}",
+        "cook": "Cook {time}",
+        "total": "Total {time}",
+        "serves": "Serves {count}"
+      },
+      "duration": {
+        "minutes": "{minutes} min",
+        "hours": "{hours} h",
+        "hoursMinutes": "{hours} h {minutes} min"
+      },
+      "addedBy": "Added by {name}",
+      "addPhotos": {
+        "title": "Add photos of this dish",
+        "body": "A photo helps the family recognise the recipe. You can add up to 10 files.",
+        "action": "Add photos"
+      },
       "description": "Description",
       "ingredients": "Ingredients",
       "steps": "Steps",
       "tags": "Tags",
       "notes": "Notes",
-      "servings": "Servings",
-      "prepMinutes": "Prep (min)",
-      "cookMinutes": "Cook (min)",
       "sourceLanguage": "Source language",
       "category": "Category",
       "step": "Step {position}",
@@ -648,7 +662,6 @@
       "count": "{count} of {max} files attached",
       "limitsHint": "JPEG, PNG, or WebP up to 15 MB; PDF up to 25 MB. Up to 10 files per recipe.",
       "limitReached": "This recipe already has the maximum number of files.",
-      "createDeferred": "Save the recipe first, then you can add photos and scanned sources.",
       "kindLabel": "File type",
       "fileLabel": "Choose file",
       "upload": "Upload file",

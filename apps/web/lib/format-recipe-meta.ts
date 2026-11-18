@@ -27,6 +27,42 @@ export function recipeTotalMinutes(
   return total > 0 ? total : null;
 }
 
+/** Minutes as whole hours plus remaining minutes. Missing, zero and negative values give null. */
+export function splitDuration(
+  minutes: number | null | undefined,
+): Readonly<{ hours: number; minutes: number }> | null {
+  if (typeof minutes !== 'number' || !Number.isFinite(minutes) || minutes <= 0) {
+    return null;
+  }
+  const whole = Math.round(minutes);
+  return { hours: Math.floor(whole / 60), minutes: whole % 60 };
+}
+
+/**
+ * Text for a duration such as "45 min", "2 h" or "1 h 5 min". The wording (and number formatting)
+ * comes from the caller's message catalog so every locale stays in one place.
+ */
+export function formatDuration(
+  minutes: number | null | undefined,
+  labels: Readonly<{
+    minutes: (minutes: number) => string;
+    hours: (hours: number) => string;
+    hoursMinutes: (hours: number, minutes: number) => string;
+  }>,
+): string | null {
+  const parts = splitDuration(minutes);
+  if (parts === null) {
+    return null;
+  }
+  if (parts.hours === 0) {
+    return labels.minutes(parts.minutes);
+  }
+  if (parts.minutes === 0) {
+    return labels.hours(parts.hours);
+  }
+  return labels.hoursMinutes(parts.hours, parts.minutes);
+}
+
 /** One short line for a card: total time and servings. Zero and missing values are left out. */
 export function recipeMetaLabel(
   recipe: Readonly<{

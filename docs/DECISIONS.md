@@ -397,3 +397,10 @@ On `sm` and up a card without a photo is a vertical card with a tinted chef-hat 
 5. **Active category chip** uses a filled look plus hidden "selected" text, not `aria-current`: `aria-current` marks the one highlighted main-navigation item (W38.1) and two per page break that check.
 6. **Screenshot labels** may not contain a dot (`SCREENS_LABEL=before-W38-14`, not `W38.14`); an invalid label silently falls back to `current` and overwrites the baseline.
 
+
+## W38.6 — Recipe detail readability (2026-11-18)
+
+1. **One "More" menu on every width.** Edit is the only visible action; History, Translations and Archive (Print later, W38.12) live in the menu. Restore stays visible on archived recipes because it is the one thing a reader of an archived recipe needs. E2E helpers that archive a recipe must open "More" first.
+2. **`?added=1` is display-only.** `createRecipeAction` redirects to the detail page with it; the page shows the "Add photos" prompt only when the server already decided the caller may edit and the recipe has no photo. The parameter grants nothing.
+3. **Total time is shown only when both prep and cook exist**, so the row never repeats one number twice. Durations come from `splitDuration`/`formatDuration` in `lib/format-recipe-meta.ts` with ICU wording in each catalog.
+4. **Author name** comes from the member directory (`listFamilyMembers`); if it is unavailable the neutral "Family member" label is used, never an email.

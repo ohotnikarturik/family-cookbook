@@ -575,7 +575,7 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 
 **Tests:** Vitest for duration formatting (incl. hours, missing values, four locales); Playwright detail + create journey; axe.
 
-**Status:** Not started.
+**Status:** Done (2026-11-18). Detail page: "Edit" is the one visible button and History, Translations and Archive sit in one "More" menu on every width (Restore stays visible for archived recipes); facts are one icon row (Prep, Cook, Total only when both exist, Serves) from a shared `splitDuration`/`formatDuration` ("1 h 10 min" in en/fi/ru/uk); "Added by {name} · Updated {date}" through `resolveMemberDisplayLabel` (no email); ingredients are one divided list with the amount in a left column; after creating a recipe the detail page opens with `?added=1` and an "Add photos" prompt that jumps to the upload panel (the create-form note is gone). Format, lint, typecheck, unit tests (all packages, web 81, MCP 9), build, `test:screens` 12/12 and Playwright (new `e2e/recipe-detail.spec.ts`, 9 pass, axe in light and dark at 320px; journeys updated for the More menu) pass: 118 passed, 2 skipped, 1 failed on the full run (`language-names` "no reading-language selector", the intermittent failure already listed under W38.14; it passes when rerun alone). Not run: `supabase:test` and MCP tests (no migration or shared contract change); manual keyboard/screen-reader check. **Open:** the card time label still reads "{n} min" for long times (cards were not switched to the new formatter); Print joins the More menu in W38.12.
 
 ### W38.15 — Lighter recipe editor
 

@@ -196,7 +196,7 @@ export async function createRecipeAction(
   }
 
   await rememberRecipeSaved();
-  redirect(`/${locale}/f/${familyParsed.data}/recipes/${result.recipeId}`);
+  redirect(`/${locale}/f/${familyParsed.data}/recipes/${result.recipeId}?added=1`);
 }
 
 export async function updateRecipeAction(

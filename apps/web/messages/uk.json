@@ -412,15 +412,29 @@
     },
     "detail": {
       "backToList": "До списку рецептів",
-      "actions": "Дії",
+      "more": "Ще",
+      "facts": {
+        "prep": "Підготовка {time}",
+        "cook": "Готування {time}",
+        "total": "Разом {time}",
+        "serves": "Порцій: {count}"
+      },
+      "duration": {
+        "minutes": "{minutes} хв",
+        "hours": "{hours} год",
+        "hoursMinutes": "{hours} год {minutes} хв"
+      },
+      "addedBy": "Додано: {name}",
+      "addPhotos": {
+        "title": "Додайте фото страви",
+        "body": "Фото допомагає родині впізнати рецепт. Можна додати до 10 файлів.",
+        "action": "Додати фото"
+      },
       "description": "Опис",
       "ingredients": "Інгредієнти",
       "steps": "Кроки",
       "tags": "Мітки",
       "notes": "Нотатки",
-      "servings": "Порцій",
-      "prepMinutes": "Підготовка (хв)",
-      "cookMinutes": "Готування (хв)",
       "sourceLanguage": "Мова оригіналу",
       "category": "Категорія",
       "step": "Крок {position}",
@@ -648,7 +662,6 @@
       "count": "Прикріплено файлів: {count} з {max}",
       "limitsHint": "JPEG, PNG або WebP до 15 МБ; PDF до 25 МБ. До 10 файлів на рецепт.",
       "limitReached": "Для цього рецепта вже досягнуто ліміт файлів.",
-      "createDeferred": "Спочатку збережіть рецепт, потім можна додати фото та скани.",
       "kindLabel": "Тип файлу",
       "fileLabel": "Оберіть файл",
       "upload": "Завантажити файл",

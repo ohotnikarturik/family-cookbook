@@ -108,7 +108,6 @@ function RecipeEditorFormBody({
   }
 >) {
   const t = useTranslations('recipes.editor');
-  const tUpload = useTranslations('recipes.mediaUpload');
   const tLang = useTranslations('locale.languages');
   const locale = useLocale();
 
@@ -164,11 +163,7 @@ function RecipeEditorFormBody({
           assetCount={assetCount}
           onUploaded={onAssetUploaded}
         />
-      ) : (
-        <p className="rounded-lg border border-border bg-muted/30 p-4 text-sm text-muted-foreground">
-          {tUpload('createDeferred')}
-        </p>
-      )}
+      ) : null}
       <form id={formId} action={action} className="mt-6 space-y-6" aria-busy={pending} noValidate>
         <input type="hidden" name="familyId" value={mode.familyId} />
         <input type="hidden" name="payload" value={JSON.stringify(draft)} />

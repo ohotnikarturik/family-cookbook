@@ -412,15 +412,29 @@
     },
     "detail": {
       "backToList": "К списку рецептов",
-      "actions": "Действия",
+      "more": "Ещё",
+      "facts": {
+        "prep": "Подготовка {time}",
+        "cook": "Готовка {time}",
+        "total": "Всего {time}",
+        "serves": "Порций: {count}"
+      },
+      "duration": {
+        "minutes": "{minutes} мин",
+        "hours": "{hours} ч",
+        "hoursMinutes": "{hours} ч {minutes} мин"
+      },
+      "addedBy": "Добавлено: {name}",
+      "addPhotos": {
+        "title": "Добавьте фото блюда",
+        "body": "Фото помогает семье узнать рецепт. Можно добавить до 10 файлов.",
+        "action": "Добавить фото"
+      },
       "description": "Описание",
       "ingredients": "Ингредиенты",
       "steps": "Шаги",
       "tags": "Метки",
       "notes": "Заметки",
-      "servings": "Порций",
-      "prepMinutes": "Подготовка (мин)",
-      "cookMinutes": "Готовка (мин)",
       "sourceLanguage": "Исходный язык",
       "category": "Категория",
       "step": "Шаг {position}",
@@ -648,7 +662,6 @@
       "count": "Прикреплено файлов: {count} из {max}",
       "limitsHint": "JPEG, PNG или WebP до 15 МБ; PDF до 25 МБ. До 10 файлов на рецепт.",
       "limitReached": "Для этого рецепта уже достигнут лимит файлов.",
-      "createDeferred": "Сначала сохраните рецепт, затем можно добавить фото и сканы.",
       "kindLabel": "Тип файла",
       "fileLabel": "Выберите файл",
       "upload": "Загрузить файл",
