@@ -173,8 +173,6 @@
         "loadFailed": "Jäsenlistaa ei voitu ladata. Yritä hetken kuluttua uudelleen."
       },
       "admin": {
-        "sectionTitle": "Hallitse rooleja ja käyttöoikeutta",
-        "manageMember": "Hallitse käyttöoikeutta",
         "roleField": "Rooli",
         "saveRole": "Tallenna rooli",
         "savingRole": "Tallennetaan…",
@@ -187,7 +185,16 @@
           "forbidden": "Et voi muuttaa tätä jäsentä.",
           "notFound": "Jäsentä ei löytynyt.",
           "failed": "Muutosta ei voitu tallentaa. Yritä uudelleen."
-        }
+        },
+        "change": "Muuta",
+        "changeLabel": "Muuta: {name}",
+        "dialogTitle": "Muuta: {name}",
+        "dialogDescription": "Valitse, mitä {name} voi tehdä tässä perheessä.",
+        "roleLocked": "Aktivoi jäsen uudelleen ennen roolin muuttamista.",
+        "suspendHelp": "Keskeytetty jäsen ei pääse perheeseen ennen kuin aktivoit hänet uudelleen.",
+        "reactivateHelp": "Uudelleenaktivointi päästää jäsenen taas perheeseen.",
+        "close": "Sulje",
+        "saved": "Muutokset tallennettu."
       },
       "transfer": {
         "sectionTitle": "Siirrä omistajuus",
@@ -208,7 +215,12 @@
           "notFound": "Jäsentä ei löytynyt.",
           "failed": "Siirto epäonnistui. Yritä uudelleen."
         }
-      }
+      },
+      "status": {
+        "active": "Aktiivinen",
+        "suspended": "Keskeytetty"
+      },
+      "rowSummary": "{role} · {status}"
     },
     "dashboard": {
       "greeting": "Tervetuloa kotiin. Etsi resepti tai lisää perheesi suosikki.",
@@ -249,6 +261,13 @@
       "editor": "Muokkaaja",
       "contributor": "Tekijä",
       "viewer": "Katselija"
+    },
+    "roleDescriptions": {
+      "owner": "Voi tehdä kaiken, myös hallita jäseniä ja siirtää perheen jollekulle toiselle.",
+      "admin": "Voi lisätä ja muokata kaikkia reseptejä, kutsua ihmisiä ja muuttaa muiden jäsenten oikeuksia.",
+      "editor": "Voi lisätä ja muokata kaikkia perheen reseptejä.",
+      "contributor": "Voi lisätä reseptejä ja muokata omia reseptejään.",
+      "viewer": "Voi lukea reseptejä mutta ei muuttaa niitä."
     }
   },
   "invitations": {
@@ -485,10 +504,8 @@
     },
     "translationEditor": {
       "indexTitle": "Reseptin käännökset",
-      "indexSubtitle": "Lisää tai muokkaa käännöksiä: <recipeTitle>{title}</recipeTitle>. Alkuperäinen resepti ei muutu.",
+      "indexSubtitle": "Käännökset: <recipeTitle>{title}</recipeTitle>. Alkuperäinen teksti pysyy ennallaan.",
       "empty": "Ei käännöksiä vielä.",
-      "addHeading": "Lisää kieli",
-      "addLanguage": "Lisää käännös: {language}",
       "editLanguage": "Muokkaa käännöstä: {language}",
       "backToRecipe": "Takaisin reseptiin",
       "backToList": "Takaisin käännöslistaan",
@@ -516,20 +533,30 @@
         "versionConflict": "Joku muu tallensi reseptin. Päivitä ja yritä uudelleen.",
         "saveFailed": "Käännöstä ei voitu tallentaa.",
         "auth": "Kirjaudu sisään tallentaaksesi käännöksiä."
-      }
+      },
+      "edit": "Muokkaa",
+      "statusReviewed": "Tarkistettu",
+      "statusUnreviewed": "Ei vielä tarkistettu",
+      "addTranslation": "Lisää käännös",
+      "addDialogTitle": "Lisää käännös",
+      "addDialogDescription": "Valitse kieli, jolle haluat kääntää reseptin.",
+      "languageField": "Kieli",
+      "continue": "Jatka",
+      "cancel": "Peruuta",
+      "allAdded": "Kaikille käytettävissä oleville kielille on jo käännös."
     },
     "history": {
       "viewHistory": "Näytä historia",
       "title": "Reseptin historia",
-      "subtitle": "Tallennetut versiot: <recipeTitle>{title}</recipeTitle>",
+      "subtitle": "Muutokset: <recipeTitle>{title}</recipeTitle>",
       "backToDetail": "Takaisin reseptiin",
-      "revisionsHeading": "Versiot",
+      "revisionsHeading": "Muutokset",
       "version": "Versio {version}",
       "actorYou": "Teit tämän muutoksen",
       "actorMember": "Perheen jäsen teki tämän muutoksen",
       "changeSummaryLabel": "Yhteenveto",
-      "emptyTitle": "Ei versioita vielä",
-      "emptyDescription": "Versiot näkyvät täällä reseptin tallennuksen jälkeen.",
+      "emptyTitle": "Ei vielä muutoksia",
+      "emptyDescription": "Aina kun joku tallentaa reseptin, muutos näkyy täällä.",
       "forbiddenTitle": "Historia ei saatavilla",
       "forbiddenDescription": "Roolisi ei salli tämän reseptin muutoshistorian katselua.",
       "pagination": {
@@ -540,14 +567,14 @@
       }
     },
     "audit": {
-      "heading": "Turvaloki",
+      "heading": "Tapahtumaloki",
       "version": "Versio {version}",
       "emptyTitle": "Ei lokimerkintöjä",
-      "emptyDescription": "Reseptiin liittyvät turvatapahtumat näkyvät täällä. Merkinnät eivät sisällä reseptitekstiä.",
+      "emptyDescription": "Reseptin tapahtumat näkyvät täällä. Merkinnät eivät sisällä reseptitekstiä.",
       "errorTitle": "Lokia ei voitu ladata",
-      "errorDescription": "Turvalokia ei voitu ladata. Yritä hetken kuluttua uudelleen.",
+      "errorDescription": "Tapahtumalokia ei voitu ladata. Yritä hetken kuluttua uudelleen.",
       "pagination": {
-        "label": "Turvalokin sivut",
+        "label": "Tapahtumalokin sivut",
         "first": "Ensimmäinen sivu",
         "next": "Seuraava sivu",
         "count": "Näytetään {count, plural, one {# tapahtuma tällä sivulla} other {# tapahtumaa tällä sivulla}}"
@@ -558,7 +585,8 @@
         "recipe_translation_updated": "Käännös tallennettu",
         "recipe_archived": "Resepti arkistoitu",
         "recipe_restored": "Resepti palautettu"
-      }
+      },
+      "summaryHint": "Näkyy vain omistajille ja ylläpitäjille."
     },
     "status": {
       "emptyTitle": "Ei reseptejä",
@@ -685,8 +713,7 @@
       "archiving": "Arkistoidaan…",
       "archiveSubmit": "Arkistoi",
       "archiveDialogTitle": "Arkistoidaanko resepti?",
-      "archiveDialogDescription": "Arkistoidut reseptit säilyvät perheen historiassa mutta piilotetaan oletuslistalta, kunnes ne palautetaan.",
-      "archiveConfirmLabel": "Ymmärrän, että resepti piilotetaan oletuslistalta.",
+      "archiveDialogDescription": "Resepti piilotetaan reseptilistalta. Mitään ei poisteta: valitse suodattimista ”Näytä arkistoidut”, niin löydät sen ja voit palauttaa sen milloin tahansa.",
       "cancel": "Peruuta",
       "restore": "Palauta resepti",
       "restoring": "Palautetaan…",

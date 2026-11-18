@@ -1,7 +1,7 @@
 'use client';
 
 import type { RecipeStatus } from '@family-cookbook/contracts';
-import { useActionState, useId, useState, type ReactNode } from 'react';
+import { useActionState, useState, type ReactNode } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 
 import {
@@ -44,8 +44,6 @@ export function RecipeLifecycleControls({
   const [archiveOpenInternal, setArchiveOpenInternal] = useState(false);
   const archiveOpen = archiveOpenProp ?? archiveOpenInternal;
   const setArchiveOpen = onArchiveOpenChange ?? setArchiveOpenInternal;
-  const [confirmChecked, setConfirmChecked] = useState(false);
-  const confirmId = useId();
 
   const [archiveState, archiveAction, archivePending] = useActionState<
     RecipeLifecycleActionState | null,
@@ -55,13 +53,6 @@ export function RecipeLifecycleControls({
     RecipeLifecycleActionState | null,
     FormData
   >(restoreRecipeAction, null);
-
-  function handleArchiveOpenChange(open: boolean) {
-    setArchiveOpen(open);
-    if (!open) {
-      setConfirmChecked(false);
-    }
-  }
 
   if (status === 'archived') {
     return (
@@ -85,7 +76,7 @@ export function RecipeLifecycleControls({
   }
 
   return (
-    <Dialog open={archiveOpen} onOpenChange={handleArchiveOpenChange}>
+    <Dialog open={archiveOpen} onOpenChange={setArchiveOpen}>
       {showTrigger ? (
         <DialogTrigger asChild>
           <Button type="button" variant="outline" className="min-h-11 w-full sm:w-auto">
@@ -102,20 +93,8 @@ export function RecipeLifecycleControls({
           <input type="hidden" name="familyId" value={familyId} />
           <input type="hidden" name="recipeId" value={recipeId} />
           <input type="hidden" name="expectedVersion" value={expectedVersion} />
-          <input type="hidden" name="confirm" value={confirmChecked ? 'true' : 'false'} />
-          <label htmlFor={confirmId} className="flex min-h-11 cursor-pointer items-start gap-3">
-            <input
-              id={confirmId}
-              type="checkbox"
-              className="mt-3 size-5 shrink-0 rounded border border-input accent-primary"
-              checked={confirmChecked}
-              disabled={archivePending}
-              onChange={(event) => setConfirmChecked(event.target.checked)}
-            />
-            <span className="pt-2 text-sm leading-snug text-foreground">
-              {t('archiveConfirmLabel')}
-            </span>
-          </label>
+          {/* The dialog itself is the confirmation: pressing "Archive" sends confirm=true. */}
+          <input type="hidden" name="confirm" value="true" />
           <LifecycleError state={archiveState} familyId={familyId} recipeId={recipeId} />
           <DialogFooter className="flex-col gap-2 sm:flex-row">
             <Button
@@ -129,9 +108,9 @@ export function RecipeLifecycleControls({
             </Button>
             <Button
               type="submit"
-              variant="destructive"
+              variant="secondary"
               className="min-h-11 w-full sm:w-auto"
-              disabled={!confirmChecked || archivePending}
+              disabled={archivePending}
             >
               {archivePending ? t('archiving') : t('archiveSubmit')}
             </Button>

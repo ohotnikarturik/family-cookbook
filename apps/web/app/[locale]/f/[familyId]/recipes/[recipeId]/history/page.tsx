@@ -12,7 +12,7 @@ import { connection } from 'next/server';
 import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
-import { RecipeAuditList } from '@/components/recipe/recipe-audit-list';
+import { RecipeActivityLog, RecipeAuditList } from '@/components/recipe/recipe-audit-list';
 import { RecipeBrowseStates } from '@/components/recipe/recipe-browse-states';
 import { RecipeHistoryList } from '@/components/recipe/recipe-history-list';
 import { RecipeHistoryPagination } from '@/components/recipe/recipe-history-pagination';
@@ -161,7 +161,10 @@ async function RecipeHistoryContent({ params, searchParams }: Props) {
   }
 
   const { items, nextCursor } = historyResult.result;
-  const showAudit = role !== null && canViewAuditEvents(role);
+  // W38.17: the web page shows the activity log to owners and admins only. This is a display
+  // choice; who may read audit events is still `canViewAuditEvents` plus RLS.
+  const showAudit =
+    role !== null && (role === 'owner' || role === 'admin') && canViewAuditEvents(role);
   const revisionQuery: HistoryQuery = auditCursor ? { auditCursor } : {};
   const auditQuery: HistoryQuery = cursor ? { cursor } : {};
   const contentLang = recipeContentLang(recipe, locale);
@@ -236,44 +239,49 @@ async function RecipeHistoryContent({ params, searchParams }: Props) {
       ) : null}
 
       {showAudit ? (
-        auditItems.status === 'ok' ? (
-          <>
-            <RecipeAuditList
-              items={auditItems.result.items}
-              heading={t('audit.heading')}
-              emptyTitle={t('audit.emptyTitle')}
-              emptyDescription={t('audit.emptyDescription')}
-              eventLabel={eventLabel}
-              versionLabel={(version) => t('audit.version', { version })}
-              actorYou={t('history.actorYou')}
-              actorMember={t('history.actorMember')}
-              formatDate={formatDate}
-              sessionUserId={userId}
-            />
-            {auditItems.result.items.length > 0 || auditCursor ? (
-              <RecipeHistoryPagination
-                familyId={familyId}
-                recipeId={recipeId}
-                paramName="auditCursor"
-                nextCursor={auditItems.result.nextCursor}
-                currentCursor={auditCursor}
-                preserved={auditQuery}
-                navLabel={t('audit.pagination.label')}
-                firstPageLabel={t('audit.pagination.first')}
-                nextPageLabel={t('audit.pagination.next')}
-                resultsSummary={t('audit.pagination.count', {
-                  count: auditItems.result.items.length,
-                })}
+        <RecipeActivityLog
+          heading={t('audit.heading')}
+          hint={t('audit.summaryHint')}
+          defaultOpen={auditCursor !== undefined}
+        >
+          {auditItems.status === 'ok' ? (
+            <>
+              <RecipeAuditList
+                items={auditItems.result.items}
+                emptyTitle={t('audit.emptyTitle')}
+                emptyDescription={t('audit.emptyDescription')}
+                eventLabel={eventLabel}
+                versionLabel={(version) => t('audit.version', { version })}
+                actorYou={t('history.actorYou')}
+                actorMember={t('history.actorMember')}
+                formatDate={formatDate}
+                sessionUserId={userId}
               />
-            ) : null}
-          </>
-        ) : (
-          <RecipeBrowseStates
-            variant="error"
-            title={t('audit.errorTitle')}
-            description={t('audit.errorDescription')}
-          />
-        )
+              {auditItems.result.items.length > 0 || auditCursor ? (
+                <RecipeHistoryPagination
+                  familyId={familyId}
+                  recipeId={recipeId}
+                  paramName="auditCursor"
+                  nextCursor={auditItems.result.nextCursor}
+                  currentCursor={auditCursor}
+                  preserved={auditQuery}
+                  navLabel={t('audit.pagination.label')}
+                  firstPageLabel={t('audit.pagination.first')}
+                  nextPageLabel={t('audit.pagination.next')}
+                  resultsSummary={t('audit.pagination.count', {
+                    count: auditItems.result.items.length,
+                  })}
+                />
+              ) : null}
+            </>
+          ) : (
+            <RecipeBrowseStates
+              variant="error"
+              title={t('audit.errorTitle')}
+              description={t('audit.errorDescription')}
+            />
+          )}
+        </RecipeActivityLog>
       ) : null}
     </section>
   );

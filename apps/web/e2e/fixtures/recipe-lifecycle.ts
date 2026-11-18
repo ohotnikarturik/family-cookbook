@@ -9,11 +9,6 @@ export async function archiveRecipeFromDetail(page: Page): Promise<void> {
   await page.getByRole('button', { name: 'More' }).click();
   await page.getByRole('menuitem', { name: 'Archive recipe' }).click();
   const dialog = page.getByRole('dialog', { name: 'Archive this recipe?' });
-  await dialog
-    .getByRole('checkbox', {
-      name: 'I understand this recipe will be hidden from the default list.',
-    })
-    .check();
   await dialog.getByRole('button', { name: 'Archive', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Restore recipe' })).toBeVisible({
     timeout: 15_000,

@@ -8,8 +8,6 @@ import { getSessionUser } from '@family-cookbook/data-access';
 import { createServerSupabaseClient } from '@family-cookbook/data-access/supabase/server';
 import {
   assignableMemberRolesForActor,
-  canAdministrateTargetMember,
-  canManageFamilyMembers,
   canReceiveFamilyOwnership,
   canTransferFamilyOwnership,
 } from '@family-cookbook/permissions';
@@ -18,13 +16,13 @@ import { connection } from 'next/server';
 import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
-import { FamilyMemberAdminSection } from '@/components/family/family-member-directory';
 import { FamilySettingsSubnav } from '@/components/shell/family-settings-subnav';
 import { FamilyMemberList } from '@/components/family/family-member-list';
 import { FamilyOwnershipTransferSection } from '@/components/family/family-ownership-transfer';
 import { LoadingState } from '@/components/product/loading-state';
 import { PageHeader } from '@/components/product/page-header';
 import { locales, type AppLocale } from '@/i18n/routing';
+import { buildMemberRows } from '@/lib/member-rows';
 
 type Props = Readonly<{ params: Promise<{ locale: string; familyId: string }> }>;
 
@@ -45,7 +43,6 @@ async function MembersContent({ params }: Props) {
   const locale = localeParam as AppLocale;
   const t = await getTranslations({ locale, namespace: 'family.members' });
   const tRoles = await getTranslations({ locale, namespace: 'family.roles' });
-  const tAdmin = await getTranslations({ locale, namespace: 'family.members.admin' });
   const tTransfer = await getTranslations({ locale, namespace: 'family.members.transfer' });
 
   const supabase = await createServerSupabaseClient();
@@ -76,15 +73,11 @@ async function MembersContent({ params }: Props) {
       youLabel: t('you'),
       neutralLabel: t('neutralName'),
     }),
-    roleLabel: tRoles(member.role),
     role: member.role,
     status: member.status,
-    suspended: member.status === 'suspended',
   }));
   const actorRole = workspace.workspace.role;
-  const manageableMembers = canManageFamilyMembers(actorRole)
-    ? memberRows.filter((member) => canAdministrateTargetMember(actorRole, sessionUser.id, member))
-    : [];
+  const listRows = buildMemberRows(memberRows, { role: actorRole, userId: sessionUser.id });
   const transferCandidates = canTransferFamilyOwnership(actorRole)
     ? memberRows
         .filter((member) =>
@@ -105,9 +98,12 @@ async function MembersContent({ params }: Props) {
       <PageHeader title={t('title')} description={t('subtitle')} />
       <FamilySettingsSubnav familyId={familyId} showInvitations={canManageInvitations(actorRole)} />
       <FamilyMemberList
-        members={memberRows}
+        familyId={familyId}
+        members={listRows}
         emptyLabel={t('empty')}
-        suspendedLabel={t('suspendedBadge')}
+        summaryFor={(member) =>
+          t('rowSummary', { role: tRoles(member.role), status: t(`status.${member.status}`) })
+        }
       />
       {transferCandidates.length > 0 ? (
         <FamilyOwnershipTransferSection
@@ -128,36 +124,6 @@ async function MembersContent({ params }: Props) {
             submitting: tTransfer('submitting'),
             cancel: tTransfer('cancel'),
             roleLabels: {
-              admin: tRoles('admin'),
-              editor: tRoles('editor'),
-              contributor: tRoles('contributor'),
-              viewer: tRoles('viewer'),
-            },
-          }}
-        />
-      ) : null}
-      {manageableMembers.length > 0 ? (
-        <FamilyMemberAdminSection
-          familyId={familyId}
-          members={manageableMembers.map((member) => ({
-            userId: member.userId,
-            label: member.label,
-            role: member.role,
-            status: member.status,
-          }))}
-          assignableRoles={assignableMemberRolesForActor(actorRole)}
-          sectionTitle={tAdmin('sectionTitle')}
-          adminLabels={{
-            roleField: tAdmin('roleField'),
-            saveRole: tAdmin('saveRole'),
-            savingRole: tAdmin('savingRole'),
-            suspend: tAdmin('suspend'),
-            suspending: tAdmin('suspending'),
-            reactivate: tAdmin('reactivate'),
-            reactivating: tAdmin('reactivating'),
-            manageMember: tAdmin('manageMember'),
-            roleLabels: {
-              owner: tRoles('owner'),
               admin: tRoles('admin'),
               editor: tRoles('editor'),
               contributor: tRoles('contributor'),

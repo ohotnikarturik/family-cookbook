@@ -308,7 +308,7 @@ Approved for implementation without re-confirmation:
 ## W35.2 — Archive and restore UI (2026-11-09)
 
 1. **Where:** recipe detail, for the same people who can edit that recipe. The list keeps the archived badge and the include-archived filter. Archive is not a list-row action, so the confirmation stays on the recipe page.
-2. **Archive** sends `confirm: true` and `expectedVersion`. **Restore** sends `expectedVersion` only. Both call the existing use cases.
+2. **Archive** sends `confirm: true` and `expectedVersion`. **Restore** sends `expectedVersion` only. Both call the existing use cases. *(W38.17: the dialog no longer has a checkbox. Its text states the consequence, and pressing "Archive" is the confirmation, so the form always sends `confirm: true`. The server still rejects a request without it. The button uses the `secondary` style, because archiving can be undone; `destructive` is kept for actions that cannot be undone.)*
 3. **Conflict:** the message stays inside the archive dialog (or beside restore). The reload control is a full page load, because a client navigation does not refetch `expectedVersion`.
 4. A missing recipe is its own message. It is not shown as a generic save failure.
 
@@ -442,3 +442,10 @@ Reverses the banner rule in "W38.19 — Photo-less recipe cards": from `sm` up, 
 3. **The `h1` is the family name.** The nav item stays "Home". "Add recipe" is in the header only when the cookbook has recipes, because the first step already offers it in an empty one. Viewers get no header button, since "See all recipes" sits next to the list.
 4. **Home shows at most 10 category chips and no "any category" chip** (`RecipeCategoryChips` `showAll={false}`). The full list is on Recipes.
 
+## W38.17 — Calmer confirmations, history, members, translations (2026-11-19)
+
+1. **Activity log visibility is a web display choice.** The history page shows the collapsed "Activity log" only to owners and admins. `canViewAuditEvents` (editor and above), RLS and the MCP tools are unchanged, so an editor can still read audit events through the API. Making that a real permission would be a separate change that needs approval.
+2. **Members: one list, server-computed rows.** `lib/member-rows.ts` builds every row on the server with `manageable` and `roleOptions`, using the existing permission helpers. The client only shows "Change" where the server set `manageable`. Role and status changes still go through the existing server actions, use cases and RLS. The actions now return `{ ok: true }` on success, so the dialog can close and say "Changes saved."
+3. **Role descriptions** (`family.roleDescriptions.*`) are added here as plain text under the role select, ahead of W38.7. W38.7 should wrap them in its hint component and reuse them in the invite form, not write new copy.
+4. **Translations page:** existing translations are rows with an "Edit" link (accessible name "Edit {language}"). A single "Add translation" button opens a dialog with the free languages (`lib/translation-languages.ts`). The dialog needs JavaScript, which the editor already does.
+5. **E2E:** the member role test changes Multi Family (editor in Family A) to contributor and back in `finally`. It does not suspend anyone, so parallel specs that sign in as that user are unaffected. Axe runs on dialogs only after their fade-in has finished (`document.getAnimations()`); otherwise it measures half-transparent colours.

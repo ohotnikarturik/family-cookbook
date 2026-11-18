@@ -173,8 +173,6 @@
         "loadFailed": "We could not load the member list. Try again in a moment."
       },
       "admin": {
-        "sectionTitle": "Manage roles and access",
-        "manageMember": "Manage access",
         "roleField": "Role",
         "saveRole": "Save role",
         "savingRole": "Saving…",
@@ -187,7 +185,16 @@
           "forbidden": "You cannot change this member.",
           "notFound": "Member not found.",
           "failed": "Could not save the change. Try again."
-        }
+        },
+        "change": "Change",
+        "changeLabel": "Change {name}",
+        "dialogTitle": "Change {name}",
+        "dialogDescription": "Choose what {name} can do in this family.",
+        "roleLocked": "Reactivate this member before changing the role.",
+        "suspendHelp": "A suspended member cannot open this family until you reactivate them.",
+        "reactivateHelp": "Reactivating lets this member open the family again.",
+        "close": "Close",
+        "saved": "Changes saved."
       },
       "transfer": {
         "sectionTitle": "Transfer ownership",
@@ -208,7 +215,12 @@
           "notFound": "Member not found.",
           "failed": "Transfer failed. Try again."
         }
-      }
+      },
+      "status": {
+        "active": "Active",
+        "suspended": "Suspended"
+      },
+      "rowSummary": "{role} · {status}"
     },
     "dashboard": {
       "greeting": "Welcome home. Find a recipe, or add one your family loves.",
@@ -249,6 +261,13 @@
       "editor": "Editor",
       "contributor": "Contributor",
       "viewer": "Viewer"
+    },
+    "roleDescriptions": {
+      "owner": "Can do everything, including managing members and handing the family over to someone else.",
+      "admin": "Can add and edit all recipes, invite people and change what other members can do.",
+      "editor": "Can add and edit all family recipes.",
+      "contributor": "Can add recipes and edit the ones they added.",
+      "viewer": "Can read recipes but not change them."
     }
   },
   "invitations": {
@@ -485,10 +504,8 @@
     },
     "translationEditor": {
       "indexTitle": "Recipe translations",
-      "indexSubtitle": "Add or edit translations for <recipeTitle>{title}</recipeTitle>. The original recipe text stays unchanged.",
+      "indexSubtitle": "Translations of <recipeTitle>{title}</recipeTitle>. The original text stays as it is.",
       "empty": "No translations yet.",
-      "addHeading": "Add a language",
-      "addLanguage": "Add {language}",
       "editLanguage": "Edit {language}",
       "backToRecipe": "Back to recipe",
       "backToList": "Back to translation list",
@@ -516,20 +533,30 @@
         "versionConflict": "Someone else saved this recipe. Reload and try again.",
         "saveFailed": "Could not save the translation.",
         "auth": "Sign in to save translations."
-      }
+      },
+      "edit": "Edit",
+      "statusReviewed": "Reviewed",
+      "statusUnreviewed": "Not reviewed yet",
+      "addTranslation": "Add translation",
+      "addDialogTitle": "Add a translation",
+      "addDialogDescription": "Choose the language you want to translate this recipe into.",
+      "languageField": "Language",
+      "continue": "Continue",
+      "cancel": "Cancel",
+      "allAdded": "Every available language already has a translation."
     },
     "history": {
       "viewHistory": "View history",
       "title": "Recipe history",
-      "subtitle": "Saved versions for <recipeTitle>{title}</recipeTitle>",
+      "subtitle": "Changes to <recipeTitle>{title}</recipeTitle>",
       "backToDetail": "Back to recipe",
-      "revisionsHeading": "Revisions",
+      "revisionsHeading": "Changes",
       "version": "Version {version}",
       "actorYou": "You made this change",
       "actorMember": "A family member made this change",
       "changeSummaryLabel": "Summary",
-      "emptyTitle": "No revisions yet",
-      "emptyDescription": "Revisions appear here after the recipe is saved.",
+      "emptyTitle": "No changes yet",
+      "emptyDescription": "Each time someone saves the recipe, the change appears here.",
       "forbiddenTitle": "History not available",
       "forbiddenDescription": "Your role does not allow viewing this recipe’s change history.",
       "pagination": {
@@ -540,14 +567,14 @@
       }
     },
     "audit": {
-      "heading": "Security log",
+      "heading": "Activity log",
       "version": "Version {version}",
       "emptyTitle": "No log entries",
-      "emptyDescription": "Security-relevant events for this recipe appear here. Entries never include recipe text.",
+      "emptyDescription": "Events for this recipe appear here. Entries never include recipe text.",
       "errorTitle": "Could not load log",
-      "errorDescription": "We could not load the security log. Try again in a moment.",
+      "errorDescription": "We could not load the activity log. Try again in a moment.",
       "pagination": {
-        "label": "Security log pages",
+        "label": "Activity log pages",
         "first": "First page",
         "next": "Next page",
         "count": "Showing {count, plural, one {# event on this page} other {# events on this page}}"
@@ -558,7 +585,8 @@
         "recipe_translation_updated": "Translation saved",
         "recipe_archived": "Recipe archived",
         "recipe_restored": "Recipe restored"
-      }
+      },
+      "summaryHint": "Shown to owners and admins only."
     },
     "status": {
       "emptyTitle": "No recipes yet",
@@ -685,8 +713,7 @@
       "archiving": "Archiving…",
       "archiveSubmit": "Archive",
       "archiveDialogTitle": "Archive this recipe?",
-      "archiveDialogDescription": "Archived recipes stay in the family history but are hidden from normal browsing until restored.",
-      "archiveConfirmLabel": "I understand this recipe will be hidden from the default list.",
+      "archiveDialogDescription": "It will be hidden from the recipe list. Nothing is deleted: tick “Include archived recipes” in Filters to find it and restore it at any time.",
       "cancel": "Cancel",
       "restore": "Restore recipe",
       "restoring": "Restoring…",

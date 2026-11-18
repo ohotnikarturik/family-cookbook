@@ -7,12 +7,12 @@ import { connection } from 'next/server';
 import { notFound, redirect } from 'next/navigation';
 
 import { PageHeader } from '@/components/product/page-header';
-import { Button } from '@/components/ui/button';
+import { AddTranslationDialog } from '@/components/recipe/add-translation-dialog';
+import { textLinkClassName } from '@/components/product/text-link';
 import { Link } from '@/i18n/navigation';
 import { locales, type AppLocale } from '@/i18n/routing';
 import { languageLabel } from '@/lib/language-label';
-
-const ADD_LANGUAGES = ['en', 'fi', 'ru', 'uk'] as const;
+import { availableTranslationLanguages } from '@/lib/translation-languages';
 
 type Props = Readonly<{
   params: Promise<{ locale: string; familyId: string; recipeId: string }>;
@@ -51,9 +51,10 @@ export default async function RecipeTranslationsIndexPage({ params }: Props) {
   }
 
   const { recipe } = result;
-  const used = new Set(recipe.translations.map((item) => item.languageTag.toLowerCase()));
-  used.add(recipe.sourceLanguage.toLowerCase());
-  const available = ADD_LANGUAGES.filter((tag) => !used.has(tag.toLowerCase()));
+  const available = availableTranslationLanguages(recipe).map((tag) => ({
+    tag,
+    label: languageLabel(tag, locale),
+  }));
 
   return (
     <section className="mx-auto max-w-2xl space-y-6">
@@ -67,47 +68,44 @@ export default async function RecipeTranslationsIndexPage({ params }: Props) {
       />
 
       {recipe.translations.length > 0 ? (
-        <ul className="list-none space-y-2 p-0">
-          {recipe.translations.map((item) => (
-            <li key={item.languageTag}>
-              <Button
-                type="button"
-                variant="outline"
-                className="min-h-11 w-full justify-start"
-                asChild
+        <ul className="divide-y divide-border rounded-xl border border-border bg-card">
+          {recipe.translations.map((item) => {
+            const language = languageLabel(item.languageTag, locale);
+            return (
+              <li
+                key={item.languageTag}
+                className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-2"
               >
-                <Link href={`/f/${familyId}/recipes/${recipeId}/translations/${item.languageTag}`}>
-                  {t('editLanguage', { language: languageLabel(item.languageTag, locale) })}
+                <div className="min-w-0 py-1">
+                  <p className="font-medium text-foreground">{language}</p>
+                  {item.reviewStatus ? (
+                    <p className="text-sm text-muted-foreground">
+                      {item.reviewStatus === 'reviewed'
+                        ? t('statusReviewed')
+                        : t('statusUnreviewed')}
+                    </p>
+                  ) : null}
+                </div>
+                <Link
+                  href={`/f/${familyId}/recipes/${recipeId}/translations/${item.languageTag}`}
+                  aria-label={t('editLanguage', { language })}
+                  className={`${textLinkClassName} inline-flex min-h-11 items-center`}
+                >
+                  {t('edit')}
                 </Link>
-              </Button>
-            </li>
-          ))}
+              </li>
+            );
+          })}
         </ul>
       ) : (
         <p className="text-sm text-muted-foreground">{t('empty')}</p>
       )}
 
       {available.length > 0 ? (
-        <div className="space-y-2">
-          <h2 className="text-lg font-semibold">{t('addHeading')}</h2>
-          <ul className="list-none space-y-2 p-0">
-            {available.map((language) => (
-              <li key={language}>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="min-h-11 w-full justify-start"
-                  asChild
-                >
-                  <Link href={`/f/${familyId}/recipes/${recipeId}/translations/${language}`}>
-                    {t('addLanguage', { language: languageLabel(language, locale) })}
-                  </Link>
-                </Button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
+        <AddTranslationDialog familyId={familyId} recipeId={recipeId} languages={available} />
+      ) : (
+        <p className="text-sm text-muted-foreground">{t('allAdded')}</p>
+      )}
     </section>
   );
 }

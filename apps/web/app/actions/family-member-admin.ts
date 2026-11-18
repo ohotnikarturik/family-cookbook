@@ -23,10 +23,13 @@ function membersPath(locale: string, familyId: string): string {
   return `/${locale}/f/${familyId}/settings/members`;
 }
 
-export type FamilyMemberAdminActionState = null | {
-  ok: false;
-  message: string;
-};
+export type FamilyMemberAdminActionState =
+  | null
+  | { ok: true }
+  | {
+      ok: false;
+      message: string;
+    };
 
 export async function setFamilyMemberRoleAction(
   _prev: FamilyMemberAdminActionState | null,
@@ -68,7 +71,7 @@ export async function setFamilyMemberRoleAction(
   }
 
   revalidatePath(membersPath(locale, familyParsed.data));
-  return null;
+  return { ok: true };
 }
 
 export async function setFamilyMemberStatusAction(
@@ -111,5 +114,5 @@ export async function setFamilyMemberStatusAction(
   }
 
   revalidatePath(membersPath(locale, familyParsed.data));
-  return null;
+  return { ok: true };
 }

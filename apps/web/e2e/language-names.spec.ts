@@ -42,7 +42,9 @@ test.describe('language names instead of codes', () => {
     await page.goto(`${family}/recipes/${RECIPE_ACTIVE_ID}/translations`);
     await expect(page.getByRole('link', { name: 'Edit Finnish' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Edit Ukrainian' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Add Russian' })).toBeVisible();
+    await page.getByRole('button', { name: 'Add translation' }).click();
+    const languageSelect = page.getByRole('dialog').getByRole('combobox', { name: 'Language' });
+    await expect(languageSelect.locator('option')).toHaveText(['Russian']);
   });
 
   test('the search filter picks a language by name and the chip shows it', async ({ page }) => {

@@ -14,7 +14,7 @@ function form(entries: Record<string, string>): FormData {
 }
 
 describe('parseArchiveLifecycleForm', () => {
-  it('requires a checked confirmation before a valid archive', () => {
+  it('accepts an archive only with confirm=true, which the archive dialog always sends', () => {
     expect(
       parseArchiveLifecycleForm(
         form({ familyId: FAMILY_ID, recipeId: RECIPE_ID, expectedVersion: '3' }),

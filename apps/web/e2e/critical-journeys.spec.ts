@@ -39,7 +39,7 @@ test.describe('critical journeys', () => {
     await page.goto(`/en/f/${FAMILY_A_ID}/settings/members`);
     await expect(page.getByRole('heading', { name: 'Family members', level: 1 })).toBeVisible();
     const signedInMember = page.getByRole('listitem').filter({ hasText: 'You' });
-    await expect(signedInMember.getByText('Owner', { exact: true })).toBeVisible();
+    await expect(signedInMember.getByText('Owner · Active', { exact: true })).toBeVisible();
 
     await page.goto(`/en/f/${FAMILY_A_ID}/settings`);
     await expect(page.getByRole('heading', { name: 'Family settings', level: 1 })).toBeVisible();
