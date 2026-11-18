@@ -441,7 +441,7 @@ Measured on `main` before this epic: Home has no highlighted nav item; no page i
 **Execution order:** one task per fresh session.
 
 1. P0: W38.0 → W38.1 → W38.2 → W38.3 → W38.4
-2. P1: W38.19 → W38.13 → W38.14 → W38.6 → W38.15 → W38.16 → W38.5 → W38.17 → W38.7 → W38.18 → W38.8
+2. P1: W38.19 → W38.13 → W38.14 → W38.6 → W38.15 → W38.16 → W38.5 → W38.17 → W38.7 → W38.18 → W38.8 → W38.20
 3. P2: W38.9 → W38.10 → W38.11 → W38.12
 4. Then resume EPIC 4 at T4.2.
 
@@ -645,6 +645,20 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 - `UnavailablePage`: distinct copy for suspended, not a member, and not found.
 
 **Tests:** pgTAP (leave, sole-owner block, access lost on next request, cross-family); application unit tests; Playwright leave journey.
+
+**Status:** Not started.
+
+### W38.20 — Buttons work only when they would do something
+
+Added 2026-11-18 from review of the running app: many submit buttons are enabled when pressing them can change nothing (an untouched edit form, an empty field, no file chosen).
+
+- **Rule:** a button that saves, sends, uploads or applies is disabled while there is nothing to apply: the form is unchanged since it loaded or was last saved, a required starting input is empty, no file or option is chosen, or the request is already running. Navigation links and buttons that open things (menus, dialogs, filters) stay enabled.
+- **Forms to cover:** recipe editor (edit: Save until something changes; create: Save until a title exists), translation form, family settings, account preferences, member role change (selected role equals current role), invite member (empty email), create family (empty name), media upload and step-photo upload (no file chosen), ownership transfer (no member selected), accept invitation, sign-in code step (empty or incomplete code), pagination at first/last page.
+- **Shared helper:** one small `lib/form-dirty.ts` (compare a snapshot of the initial values with the current values; reset after a successful save) and, if useful, a `disabled` hint pattern in `FormField`. No per-form copies.
+- **Accessibility:** a disabled button is not focusable, so say why in visible text when the reason is not obvious (for example "Change something to save"), in all four locales. Keep errors for invalid input reachable: do not disable a button only because a field is invalid after the user typed; show the error instead. Disabled colours must still meet contrast in both themes (no reliance on opacity alone).
+- Never hides what the server decides: server-side validation and permissions stay authoritative; this is only a usability aid.
+
+**Tests:** Vitest for the dirty helper (unchanged, changed, reverted to original, reset after save); Playwright per form: disabled on load, enabled after an edit, disabled again after reverting or saving; axe in light and dark; existing e2e that click Save without editing must edit first.
 
 **Status:** Not started.
 
