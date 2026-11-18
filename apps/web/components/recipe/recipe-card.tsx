@@ -18,7 +18,8 @@ type Props = Readonly<{
 
 /**
  * Phones: a compact row with a square thumbnail on the left. From `sm` up a card with a photo
- * shows a 4:3 cover above the text. Without a photo it is always a row with a small tinted tile.
+ * shows a 4:3 cover above the text; without a photo the tinted banner has the same 4:3 shape, so
+ * every card in the grid is the same size.
  */
 export function RecipeCard({
   familyId,
@@ -69,7 +70,7 @@ export function RecipeCard({
             <span
               className={cn(
                 'flex size-[4.5rem] shrink-0 items-center justify-center rounded-lg bg-primary/12 text-primary',
-                'sm:size-auto sm:min-h-24 sm:w-full sm:flex-1 sm:rounded-none',
+                'sm:aspect-[4/3] sm:size-auto sm:w-full sm:rounded-none',
               )}
               aria-hidden
             >

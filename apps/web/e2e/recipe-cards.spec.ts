@@ -61,6 +61,25 @@ test.describe('recipe cards', () => {
     expect(text).not.toMatch(/Updated [^\n]*\d{1,2}:\d{2}/);
   });
 
+  test('on a wide screen every card has the same picture area, with or without a photo', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(`${family}/recipes`);
+    await expect(page.locator('#family-main article').first()).toBeVisible();
+    const covers = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('#family-main article a > :first-child')).map(
+        (element) => {
+          const rect = element.getBoundingClientRect();
+          return { width: Math.round(rect.width), height: Math.round(rect.height) };
+        },
+      ),
+    );
+    expect(covers.length).toBeGreaterThan(3);
+    const heights = covers.map((cover) => cover.height);
+    expect(Math.max(...heights) - Math.min(...heights)).toBeLessThanOrEqual(1);
+  });
+
   test('Home shows at most six recent recipes', async ({ page }) => {
     await page.setViewportSize(PHONE);
     await page.goto(family);

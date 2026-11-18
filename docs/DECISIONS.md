@@ -404,3 +404,7 @@ On `sm` and up a card without a photo is a vertical card with a tinted chef-hat 
 2. **`?added=1` is display-only.** `createRecipeAction` redirects to the detail page with it; the page shows the "Add photos" prompt only when the server already decided the caller may edit and the recipe has no photo. The parameter grants nothing.
 3. **Total time is shown only when both prep and cook exist**, so the row never repeats one number twice. Durations come from `splitDuration`/`formatDuration` in `lib/format-recipe-meta.ts` with ICU wording in each catalog.
 4. **Author name** comes from the member directory (`listFamilyMembers`); if it is unavailable the neutral "Family member" label is used, never an email.
+
+## Photo-less cards match photo cards (2026-11-18)
+
+Reverses the banner rule in "W38.19 — Photo-less recipe cards": from `sm` up, the tinted banner without a photo is 4:3, the same shape as a photo cover, so every card in the grid has the same picture area. Reason: banners that were 96px in photo-less rows and tall in mixed rows looked uneven. Text height still varies with a two-line title. Phones keep the compact row.
