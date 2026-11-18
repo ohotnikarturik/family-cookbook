@@ -449,3 +449,10 @@ Reverses the banner rule in "W38.19 — Photo-less recipe cards": from `sm` up, 
 3. **Role descriptions** (`family.roleDescriptions.*`) are added here as plain text under the role select, ahead of W38.7. W38.7 should wrap them in its hint component and reuse them in the invite form, not write new copy.
 4. **Translations page:** existing translations are rows with an "Edit" link (accessible name "Edit {language}"). A single "Add translation" button opens a dialog with the free languages (`lib/translation-languages.ts`). The dialog needs JavaScript, which the editor already does.
 5. **E2E:** the member role test changes Multi Family (editor in Family A) to contributor and back in `finally`. It does not suspend anyone, so parallel specs that sign in as that user are unaffected. Axe runs on dialogs only after their fade-in has finished (`document.getAnimations()`); otherwise it measures half-transparent colours.
+
+## W38.7 — Short contextual tips (2026-11-19)
+
+1. **One `Hint` component** (`components/product/hint.tsx`): a short inline line plus an optional native `<details>` ("What is this?" or a question that fits the place). It takes translated strings from the caller, like `FormField`, so it works in Server and Client Components, and it has no hover tooltips. `FormField` renders its `hint` through it, so every field hint looks the same.
+2. **Only the inline line is the field description.** Controls point `aria-describedby` at the inline text only. The longer `<details>` text is reached by opening it, so screen readers don't read a paragraph on every focus.
+3. **Copy reuse:** the invite form and the member dialog use the existing `family.roleDescriptions.*`. The invite form's "What can each role do?" lists only the roles the server says this person may invite. The amount hint keeps its existing copy (it already gives 2, 1.5, 1 1/2 and "to taste"). New keys: `common.whatIsThis`, `recipes.editor.hints.sourceLanguageMore`, `recipes.lifecycle.archiveVsDelete{Summary,}`, `invitations.form.rolesSummary`.
+4. **Locale completeness:** `lib/messages-catalog.test.ts` now requires every locale to have exactly the `en` keys and no empty strings.

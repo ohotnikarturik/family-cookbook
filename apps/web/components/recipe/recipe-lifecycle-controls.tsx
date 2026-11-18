@@ -9,6 +9,7 @@ import {
   restoreRecipeAction,
   type RecipeLifecycleActionState,
 } from '@/app/actions/recipe-lifecycle';
+import { Hint } from '@/components/product/hint';
 import { textLinkClassName } from '@/components/product/text-link';
 import { Button } from '@/components/ui/button';
 import {
@@ -89,6 +90,12 @@ export function RecipeLifecycleControls({
           <DialogTitle>{t('archiveDialogTitle')}</DialogTitle>
           <DialogDescription>{t('archiveDialogDescription')}</DialogDescription>
         </DialogHeader>
+        <Hint
+          more={{
+            summary: t('archiveVsDeleteSummary'),
+            content: <p>{t('archiveVsDelete')}</p>,
+          }}
+        />
         <form action={archiveAction} className="space-y-4">
           <input type="hidden" name="familyId" value={familyId} />
           <input type="hidden" name="recipeId" value={recipeId} />

@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useId, useState } from 'react';
 
 import { FormField } from '@/components/product/form-field';
+import { Hint } from '@/components/product/hint';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -163,9 +164,7 @@ export function IngredientListEditor({ ingredients, onChange, disabled, fieldErr
         <h2 id={headingId} className="text-base font-semibold text-foreground">
           {t('sections.ingredients')}
         </h2>
-        <p id={hintId} className="text-sm text-muted-foreground">
-          {t('hints.amount')}
-        </p>
+        <Hint id={hintId}>{t('hints.amount')}</Hint>
       </div>
       <datalist id={unitListId}>
         {units.map((unit) => (

@@ -643,7 +643,7 @@ Added 2026-11-18 from review of the running app: search ran only on the button o
 
 **Tests:** axe; locale completeness.
 
-**Status:** Not started.
+**Status:** Done (2026-11-19). `components/product/hint.tsx` (inline line plus an optional native `<details>`, no hover). `FormField` hints go through it. Used for: the role description under the invite-form role select (new) with "What can each role do?" listing the roles the server allows, the member change dialog (same text, now a `Hint`), the editor's source language with "What is this?" (original vs translations), the amount examples, and "How is this different from deleting?" in the archive dialog. Only the inline line is in `aria-describedby`. New copy in en/fi/ru/uk. Format, lint, typecheck, unit tests (web 145 including the new `lib/messages-catalog.test.ts` key-parity check, all packages, MCP 9), build and `test:screens` 12/12 pass (summaries identical; ru fits at 360px in light and dark). The new `e2e/contextual-tips.spec.ts` passes (5: role hint changes with the select, roles list opened by keyboard, source-language description, archive dialog Cancel, axe in light and dark with every tip open, 320px). Full Playwright: 163 passed, 2 skipped, 1 failed (`saved-form-values`, a hidden streamed duplicate of the settings select, the same intermittent pattern as `language-names`); it passed 3 of 3 on rerun. Not run: `supabase:test` (no migration or seed change); manual keyboard/screen-reader check. **Open:** the dark owner `before-W38-7` screenshots were taken while the invite form was being edited, so compare against the light set.
 
 ### W38.18 — Plain-language copy pass
 

@@ -9,6 +9,7 @@ import {
   setFamilyMemberStatusAction,
   type FamilyMemberAdminActionState,
 } from '@/app/actions/family-member-admin';
+import { Hint } from '@/components/product/hint';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -129,9 +130,9 @@ export function FamilyMemberChangeDialog({ familyId, member }: Props) {
                   </option>
                 ))}
               </select>
-              <p id={roleDescriptionId} className="text-sm text-muted-foreground">
+              <Hint id={roleDescriptionId}>
                 {roleLocked ? t('roleLocked') : tRoleDescriptions(selectedRole)}
-              </p>
+              </Hint>
             </div>
             <Button
               type="submit"

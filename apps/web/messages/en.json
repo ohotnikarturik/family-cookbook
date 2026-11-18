@@ -9,7 +9,8 @@
     }
   },
   "common": {
-    "loading": "Loading…"
+    "loading": "Loading…",
+    "whatIsThis": "What is this?"
   },
   "uiPreferences": {
     "legend": "Language and appearance",
@@ -276,6 +277,7 @@
     "form": {
       "emailLabel": "Email address",
       "roleLabel": "Role",
+      "rolesSummary": "What can each role do?",
       "submit": "Send invitation",
       "sending": "Sending…",
       "sent": "Invitation email sent."
@@ -640,6 +642,7 @@
       "hints": {
         "title": "A clear name helps everyone find this recipe later.",
         "sourceLanguage": "The language you are writing in — separate from your interface language.",
+        "sourceLanguageMore": "Choose the language the recipe is written in, for example Finnish for Grandma’s notes. Translations into other languages are added later on the recipe page: open More, then Translations. They never change the original.",
         "amount": "Amount can be a number, such as 2, 1.5 or 1 1/2, or words, such as “to taste”.",
         "category": "Choose one your family already uses, or type a new one.",
         "tagsEditor": "New tag names are added to this family’s shared tag list.",
@@ -714,6 +717,8 @@
       "archiveSubmit": "Archive",
       "archiveDialogTitle": "Archive this recipe?",
       "archiveDialogDescription": "It will be hidden from the recipe list. Nothing is deleted: tick “Include archived recipes” in Filters to find it and restore it at any time.",
+      "archiveVsDeleteSummary": "How is this different from deleting?",
+      "archiveVsDelete": "Deleting would remove the recipe, its photos and its history for good. Archiving only hides it from the list, so it can come back with everything in place. Recipes are never deleted here.",
       "cancel": "Cancel",
       "restore": "Restore recipe",
       "restoring": "Restoring…",

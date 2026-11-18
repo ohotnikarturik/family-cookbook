@@ -1,5 +1,6 @@
 import { cloneElement, isValidElement, type ReactElement, type ReactNode } from 'react';
 
+import { Hint } from '@/components/product/hint';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 
@@ -28,11 +29,7 @@ export function FormField({ id, label, hint, error, children, className }: Props
     <div className={cn('space-y-1.5', className)}>
       <Label htmlFor={id}>{label}</Label>
       {control}
-      {hint ? (
-        <p id={`${id}-hint`} className="text-sm text-muted-foreground">
-          {hint}
-        </p>
-      ) : null}
+      {hint ? <Hint id={`${id}-hint`}>{hint}</Hint> : null}
       {error ? (
         <p id={`${id}-error`} className="text-sm text-destructive" role="alert">
           {error}

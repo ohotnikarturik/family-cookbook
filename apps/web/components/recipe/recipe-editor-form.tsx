@@ -9,6 +9,7 @@ import {
   type RecipeEditorActionState,
 } from '@/app/actions/recipe';
 import { FormField } from '@/components/product/form-field';
+import { Hint } from '@/components/product/hint';
 import { textLinkClassName } from '@/components/product/text-link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -113,6 +114,7 @@ function RecipeEditorFormBody({
 >) {
   const t = useTranslations('recipes.editor');
   const tLang = useTranslations('locale.languages');
+  const tCommon = useTranslations('common');
   const locale = useLocale();
 
   const [draft, setDraft] = useState(initialDraft);
@@ -257,9 +259,15 @@ function RecipeEditorFormBody({
               <option value="uk">{tLang('uk')}</option>
               <option value="other">{t('fields.sourceLanguageOther')}</option>
             </select>
-            <p id={`${titleId}-lang-hint`} className="text-sm text-muted-foreground">
+            <Hint
+              id={`${titleId}-lang-hint`}
+              more={{
+                summary: tCommon('whatIsThis'),
+                content: <p>{t('hints.sourceLanguageMore')}</p>,
+              }}
+            >
               {t('hints.sourceLanguage')}
-            </p>
+            </Hint>
             {sourceLanguageError && draft.sourceLanguagePreset !== 'other' ? (
               <p id={`${titleId}-lang-error`} className="text-sm text-destructive">
                 {sourceLanguageError}

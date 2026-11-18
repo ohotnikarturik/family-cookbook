@@ -9,7 +9,8 @@
     }
   },
   "common": {
-    "loading": "Ladataan…"
+    "loading": "Ladataan…",
+    "whatIsThis": "Mikä tämä on?"
   },
   "uiPreferences": {
     "legend": "Kieli ja ulkoasu",
@@ -276,6 +277,7 @@
     "form": {
       "emailLabel": "Sähköpostiosoite",
       "roleLabel": "Rooli",
+      "rolesSummary": "Mitä kukin rooli voi tehdä?",
       "submit": "Lähetä kutsu",
       "sending": "Lähetetään…",
       "sent": "Kutsusähköposti lähetettiin."
@@ -640,6 +642,7 @@
       "hints": {
         "title": "Selkeä nimi auttaa löytämään reseptin myöhemmin.",
         "sourceLanguage": "Kieli, jolla kirjoitat — erillinen käyttöliittymän kielestä.",
+        "sourceLanguageMore": "Valitse kieli, jolla resepti on kirjoitettu, esimerkiksi suomi mummon muistiinpanoille. Käännökset muille kielille lisätään myöhemmin reseptisivulla: avaa Lisää ja sitten Käännökset. Ne eivät koskaan muuta alkuperäistä tekstiä.",
         "amount": "Määrä voi olla luku, kuten 2, 1,5 tai 1 1/2, tai sanoja, kuten ”maun mukaan”.",
         "category": "Valitse perheen jo käyttämä kategoria tai kirjoita uusi.",
         "tagsEditor": "Uudet tunnistenimet lisätään perheen yhteiseen listaan.",
@@ -714,6 +717,8 @@
       "archiveSubmit": "Arkistoi",
       "archiveDialogTitle": "Arkistoidaanko resepti?",
       "archiveDialogDescription": "Resepti piilotetaan reseptilistalta. Mitään ei poisteta: valitse suodattimista ”Näytä arkistoidut”, niin löydät sen ja voit palauttaa sen milloin tahansa.",
+      "archiveVsDeleteSummary": "Miten tämä eroaa poistamisesta?",
+      "archiveVsDelete": "Poistaminen hävittäisi reseptin, sen kuvat ja historian lopullisesti. Arkistointi vain piilottaa sen listalta, joten sen voi palauttaa kaikkineen. Täältä ei poisteta reseptejä.",
       "cancel": "Peruuta",
       "restore": "Palauta resepti",
       "restoring": "Palautetaan…",
