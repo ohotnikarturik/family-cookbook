@@ -372,18 +372,17 @@
       "archivedBadge": "В архіві",
       "imageLoading": "Завантаження фото рецепта…",
       "totalMinutes": "{minutes} хв",
-      "servings": "{servings} порцій"
+      "servings": "{servings} порцій",
+      "count": "{count, plural, one {# рецепт} few {# рецепти} many {# рецептів} other {# рецепта}}"
     },
     "filters": {
       "legend": "Фільтри пошуку",
-      "toggleLabel": "Пошук і фільтри",
+      "toggleLabel": "Фільтри",
       "activeLabel": "Активні фільтри",
       "query": "Пошук",
-      "queryHint": "Назва або опис",
       "category": "Категорія",
       "tag": "Мітка",
       "ingredient": "Інгредієнт",
-      "ingredientHint": "За назвою інгредієнта",
       "language": "Мова рецепта",
       "anyLanguage": "Будь-яка мова",
       "contributor": "Автор",
@@ -391,9 +390,14 @@
       "contributorHint": "Рецепти, додані цим учасником",
       "sort": "Сортування",
       "includeArchived": "Показувати архівні",
-      "apply": "Застосувати",
       "clear": "Скинути фільтри",
-      "removeChip": "Прибрати {value}"
+      "removeChip": "Прибрати {value}",
+      "queryPlaceholder": "Пошук за назвою або інгредієнтом",
+      "submit": "Знайти",
+      "categoriesLabel": "Рецепти за категоріями",
+      "anyCategory": "Будь-яка категорія",
+      "anyTag": "Будь-яка мітка",
+      "selected": "вибрано"
     },
     "sort": {
       "updatedAt": "За оновленням",
@@ -527,7 +531,9 @@
       "invalidFiltersTitle": "Перевірте фільтри",
       "invalidFilters": "Один або кілька фільтрів некоректні. Скиньте фільтри й спробуйте знову.",
       "rateLimitedTitle": "Трохи повільніше",
-      "rateLimited": "Забагато пошуків за короткий час. Зачекайте хвилину й спробуйте знову."
+      "rateLimited": "Забагато пошуків за короткий час. Зачекайте хвилину й спробуйте знову.",
+      "emptyFilteredTitle": "Нічого не знайдено",
+      "emptyFiltered": "За цим запитом нічого немає. Спробуйте інші слова або скиньте фільтри."
     },
     "editor": {
       "addRecipe": "Додати рецепт",

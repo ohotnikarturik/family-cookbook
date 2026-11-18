@@ -37,7 +37,8 @@ export const mapRecipeTool = {
     }
     const result = await searchRecipes(ctx.supabase, parsed.data);
     return useCaseToToolResult(result, {
-      ok: (value) => value.result,
+      // totalCount is a web-only addition; MCP output keeps its original shape.
+      ok: (value) => ({ items: value.result.items, nextCursor: value.result.nextCursor }),
     });
   },
 

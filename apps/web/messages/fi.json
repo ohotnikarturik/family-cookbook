@@ -372,18 +372,17 @@
       "archivedBadge": "Arkistoitu",
       "imageLoading": "Ladataan reseptikuvaa…",
       "totalMinutes": "{minutes} min",
-      "servings": "{servings} annosta"
+      "servings": "{servings} annosta",
+      "count": "{count, plural, one {# resepti} other {# reseptiä}}"
     },
     "filters": {
       "legend": "Reseptihaun suodattimet",
-      "toggleLabel": "Haku ja suodattimet",
+      "toggleLabel": "Suodattimet",
       "activeLabel": "Käytössä olevat suodattimet",
       "query": "Haku",
-      "queryHint": "Otsikko tai kuvaus",
       "category": "Kategoria",
       "tag": "Tunniste",
       "ingredient": "Ainesosa",
-      "ingredientHint": "Hakee ainesten nimistä",
       "language": "Reseptin kieli",
       "anyLanguage": "Mikä tahansa kieli",
       "contributor": "Tekijä",
@@ -391,9 +390,14 @@
       "contributorHint": "Jäsenen lisäämät reseptit",
       "sort": "Järjestä",
       "includeArchived": "Näytä arkistoidut",
-      "apply": "Käytä suodattimia",
       "clear": "Tyhjennä suodattimet",
-      "removeChip": "Poista {value}"
+      "removeChip": "Poista {value}",
+      "queryPlaceholder": "Hae nimellä tai ainesosalla",
+      "submit": "Hae",
+      "categoriesLabel": "Selaa kategorioittain",
+      "anyCategory": "Mikä tahansa kategoria",
+      "anyTag": "Mikä tahansa tunniste",
+      "selected": "valittu"
     },
     "sort": {
       "updatedAt": "Viimeksi päivitetty",
@@ -527,7 +531,9 @@
       "invalidFiltersTitle": "Tarkista suodattimet",
       "invalidFilters": "Yksi tai useampi suodatin on virheellinen. Tyhjennä suodattimet ja yritä uudelleen.",
       "rateLimitedTitle": "Hetki rauhaa",
-      "rateLimited": "Liian monta hakua lyhyessä ajassa. Odota hetki ja yritä uudelleen."
+      "rateLimited": "Liian monta hakua lyhyessä ajassa. Odota hetki ja yritä uudelleen.",
+      "emptyFilteredTitle": "Ei hakua vastaavia reseptejä",
+      "emptyFiltered": "Mikään ei vastaa hakua. Kokeile muita sanoja tai tyhjennä suodattimet."
     },
     "editor": {
       "addRecipe": "Lisää resepti",

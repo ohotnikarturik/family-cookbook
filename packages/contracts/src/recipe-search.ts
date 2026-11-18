@@ -18,6 +18,8 @@ export type RecipeSearchSort = z.infer<typeof recipeSearchSortSchema>;
 export const searchRecipesInputSchema = z.object({
   familyId: familyIdSchema,
   query: z.string().trim().min(1).max(SEARCH_QUERY_MAX).optional(),
+  /** Title, description, category or ingredient name (OR). Web search box. */
+  anyText: z.string().trim().min(1).max(SEARCH_QUERY_MAX).optional(),
   ingredient: z.string().trim().min(1).max(SEARCH_INGREDIENT_MAX).optional(),
   category: z.string().trim().min(1).max(SEARCH_CATEGORY_MAX).optional(),
   tag: z.string().trim().min(1).max(SEARCH_TAG_MAX).optional(),

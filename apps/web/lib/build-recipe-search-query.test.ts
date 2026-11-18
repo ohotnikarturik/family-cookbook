@@ -13,4 +13,19 @@ describe('buildRecipeSearchQuery', () => {
     });
     expect(query).toBe(`?createdBy=${OWNER_A}`);
   });
+
+  it('writes anyText back as the short query parameter', () => {
+    expect(buildRecipeSearchQuery({ familyId: FAMILY_ID, anyText: 'beet soup' })).toBe(
+      '?query=beet+soup',
+    );
+  });
+
+  it('can drop the search text and keep the category', () => {
+    expect(
+      buildRecipeSearchQuery(
+        { familyId: FAMILY_ID, anyText: 'soup', category: 'Dinner' },
+        { anyText: undefined },
+      ),
+    ).toBe('?category=Dinner');
+  });
 });

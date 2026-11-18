@@ -372,18 +372,17 @@
       "archivedBadge": "Archived",
       "imageLoading": "Loading recipe photo…",
       "totalMinutes": "{minutes} min",
-      "servings": "{servings} servings"
+      "servings": "{servings} servings",
+      "count": "{count, plural, one {# recipe} other {# recipes}}"
     },
     "filters": {
       "legend": "Recipe search filters",
-      "toggleLabel": "Search and filters",
+      "toggleLabel": "Filters",
       "activeLabel": "Active filters",
       "query": "Search",
-      "queryHint": "Title or description",
       "category": "Category",
       "tag": "Tag",
       "ingredient": "Ingredient",
-      "ingredientHint": "Matches ingredient names",
       "language": "Recipe language",
       "anyLanguage": "Any language",
       "contributor": "Contributor",
@@ -391,9 +390,14 @@
       "contributorHint": "Recipes added by this family member",
       "sort": "Sort by",
       "includeArchived": "Include archived recipes",
-      "apply": "Apply filters",
       "clear": "Clear filters",
-      "removeChip": "Remove {value}"
+      "removeChip": "Remove {value}",
+      "queryPlaceholder": "Search by name or ingredient",
+      "submit": "Search",
+      "categoriesLabel": "Browse by category",
+      "anyCategory": "Any category",
+      "anyTag": "Any tag",
+      "selected": "selected"
     },
     "sort": {
       "updatedAt": "Last updated",
@@ -527,7 +531,9 @@
       "invalidFiltersTitle": "Check your filters",
       "invalidFilters": "One or more filters are invalid. Clear filters and try again.",
       "rateLimitedTitle": "Slow down a moment",
-      "rateLimited": "Too many searches in a short time. Wait a minute and try again."
+      "rateLimited": "Too many searches in a short time. Wait a minute and try again.",
+      "emptyFilteredTitle": "No matching recipes",
+      "emptyFiltered": "Nothing matches this search. Try other words or clear the filters."
     },
     "editor": {
       "addRecipe": "Add recipe",

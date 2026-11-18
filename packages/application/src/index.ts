@@ -98,4 +98,9 @@ export { getRecipeHistory, type GetRecipeHistoryResult } from './recipe/get-reci
 export { getRecipeAuditLog, type GetRecipeAuditLogResult } from './recipe/get-recipe-audit-log.js';
 export { restoreRecipe, type RestoreRecipeResult } from './recipe/restore-recipe.js';
 export { searchRecipes, type SearchRecipesResult } from './recipe/search-recipes.js';
+export {
+  listRecipeBrowseOptions,
+  type ListRecipeBrowseOptionsResult,
+  type RecipeBrowseOptions,
+} from './recipe/list-recipe-browse-options.js';
 export { updateRecipe, type UpdateRecipeResult } from './recipe/update-recipe.js';

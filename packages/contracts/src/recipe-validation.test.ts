@@ -336,4 +336,18 @@ describe('searchRecipesInputSchema', () => {
     ).toBe(false);
     expect(searchRecipesInputSchema.safeParse({ ...base, limit: 25 }).success).toBe(true);
   });
+
+  it('bounds anyText and trims it', () => {
+    const base = { familyId: FAMILY_ID };
+    expect(searchRecipesInputSchema.safeParse({ ...base, anyText: '' }).success).toBe(false);
+    expect(searchRecipesInputSchema.safeParse({ ...base, anyText: '   ' }).success).toBe(false);
+    expect(searchRecipesInputSchema.safeParse({ ...base, anyText: 'a'.repeat(201) }).success).toBe(
+      false,
+    );
+    const ok = searchRecipesInputSchema.safeParse({ ...base, anyText: '  beet  ' });
+    expect(ok.success && ok.data.anyText).toBe('beet');
+    expect(searchRecipesInputSchema.safeParse({ ...base, anyText: 'a'.repeat(200) }).success).toBe(
+      true,
+    );
+  });
 });

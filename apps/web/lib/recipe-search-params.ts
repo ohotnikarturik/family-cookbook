@@ -37,7 +37,8 @@ export function parseRecipeSearchFromUrl(
 ): ParsedRecipeSearch {
   const raw = {
     familyId,
-    query: firstParam(searchParams.query),
+    // The address bar keeps the short `query` name; the contract calls it `anyText`.
+    anyText: firstParam(searchParams.query),
     ingredient: firstParam(searchParams.ingredient),
     category: firstParam(searchParams.category),
     tag: firstParam(searchParams.tag),

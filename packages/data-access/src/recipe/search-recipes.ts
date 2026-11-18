@@ -27,31 +27,70 @@ import {
   decodeRecipeSearchCursor,
   encodeRecipeSearchCursor,
   escapeIlikePattern,
+  isUuid,
+  quotePostgrestValue,
   recipeSearchKeysetFilter,
 } from './search-cursor.js';
 import { listRecipeCoverAssetIds } from './list-recipe-cover-asset-ids.js';
 import { readRecipeSummaryNumber } from './summary-number.js';
 
-export async function searchRecipes(
-  client: AppSupabaseClient,
-  input: SearchRecipesInput,
-): Promise<
-  { ok: true; result: RecipeSearchResult } | { ok: false; error: 'query_failed' | 'invalid_row' }
-> {
-  const limit = Math.min(input.limit ?? RECIPE_SEARCH_DEFAULT_LIMIT, RECIPE_SEARCH_MAX_LIMIT);
-  const fetchLimit = limit + 1;
-  const sort = input.sort ?? 'updatedAt';
+/** Upper bound on ingredient-name matches folded into one `anyText` search. */
+const ANY_TEXT_INGREDIENT_MATCH_LIMIT = 200;
 
-  let select =
-    'id, family_id, title, source_language, category, servings, prep_minutes, cook_minutes, status, version, created_by, updated_at, created_at';
+/**
+ * Recipe ids (this family only) with an ingredient whose name contains `text`.
+ * Runs as the caller, so RLS still decides what is visible.
+ */
+async function findRecipeIdsByIngredientText(
+  client: AppSupabaseClient,
+  familyId: string,
+  text: string,
+): Promise<string[] | null> {
+  const { data, error } = await client
+    .from('recipe_ingredients')
+    .select('recipe_id')
+    .eq('family_id', familyId)
+    .ilike('name', `%${escapeIlikePattern(text)}%`)
+    .limit(ANY_TEXT_INGREDIENT_MATCH_LIMIT);
+  if (error || !data) {
+    return null;
+  }
+  return [...new Set(data.map((row) => row.recipe_id as string))].filter(isUuid);
+}
+
+/** `.or()` filter: full text OR title substring OR an ingredient-name match. */
+function anyTextFilter(text: string, ingredientRecipeIds: readonly string[]): string {
+  const quoted = quotePostgrestValue(text);
+  const parts = [
+    `search_document.wfts(simple).${quoted}`,
+    `title.ilike.${quotePostgrestValue(`%${escapeIlikePattern(text)}%`)}`,
+  ];
+  if (ingredientRecipeIds.length > 0) {
+    parts.push(`id.in.(${ingredientRecipeIds.join(',')})`);
+  }
+  return parts.join(',');
+}
+
+function recipeSelect(input: SearchRecipesInput, columns: string): string {
+  let select = columns;
   if (input.ingredient) {
     select += ',recipe_ingredients!inner(name)';
   }
   if (input.tag) {
     select += ',recipe_tags!inner(tag_id,family_tags!inner(normalized_name))';
   }
+  return select;
+}
 
-  let query = client.from('recipes').select(select).eq('family_id', input.familyId);
+/** Every filter except sort, cursor and limit, so the page query and the count agree. */
+function filteredRecipes(
+  client: AppSupabaseClient,
+  input: SearchRecipesInput,
+  select: string,
+  ingredientRecipeIds: readonly string[],
+  options?: { count: 'exact'; head: true },
+) {
+  let query = client.from('recipes').select(select, options).eq('family_id', input.familyId);
 
   if (!input.includeArchived) {
     query = query.eq('status', 'active');
@@ -62,6 +101,10 @@ export async function searchRecipes(
       type: 'websearch',
       config: 'simple',
     });
+  }
+
+  if (input.anyText) {
+    query = query.or(anyTextFilter(input.anyText, ingredientRecipeIds));
   }
 
   if (input.category) {
@@ -83,6 +126,38 @@ export async function searchRecipes(
   if (input.tag) {
     query = query.eq('recipe_tags.family_tags.normalized_name', input.tag.trim().toLowerCase());
   }
+
+  return query;
+}
+
+export async function searchRecipes(
+  client: AppSupabaseClient,
+  input: SearchRecipesInput,
+): Promise<
+  { ok: true; result: RecipeSearchResult } | { ok: false; error: 'query_failed' | 'invalid_row' }
+> {
+  const limit = Math.min(input.limit ?? RECIPE_SEARCH_DEFAULT_LIMIT, RECIPE_SEARCH_MAX_LIMIT);
+  const fetchLimit = limit + 1;
+  const sort = input.sort ?? 'updatedAt';
+
+  let ingredientRecipeIds: string[] = [];
+  if (input.anyText) {
+    const found = await findRecipeIdsByIngredientText(client, input.familyId, input.anyText);
+    if (found === null) {
+      return { ok: false, error: 'query_failed' };
+    }
+    ingredientRecipeIds = found;
+  }
+
+  let query = filteredRecipes(
+    client,
+    input,
+    recipeSelect(
+      input,
+      'id, family_id, title, source_language, category, servings, prep_minutes, cook_minutes, status, version, created_by, updated_at, created_at',
+    ),
+    ingredientRecipeIds,
+  );
 
   if (sort === 'title') {
     query = query.order('title', { ascending: true }).order('id', { ascending: true });
@@ -171,5 +246,17 @@ export async function searchRecipes(
     }
   }
 
-  return { ok: true, result: { items, nextCursor } };
+  const { count, error: countError } = await filteredRecipes(
+    client,
+    input,
+    recipeSelect(input, 'id'),
+    ingredientRecipeIds,
+    { count: 'exact', head: true },
+  );
+  const totalCount = countError || count === null ? undefined : count;
+
+  return {
+    ok: true,
+    result: { items, nextCursor, ...(totalCount === undefined ? {} : { totalCount }) },
+  };
 }

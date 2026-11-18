@@ -17,4 +17,15 @@ describe('parseRecipeSearchFromUrl', () => {
     expect(parsed.input).toBeNull();
     expect(parsed.hadInvalidParams).toBe(true);
   });
+
+  it('reads the address-bar query as anyText', () => {
+    const parsed = parseRecipeSearchFromUrl(FAMILY_ID, { query: 'yeast' });
+    expect(parsed.input?.anyText).toBe('yeast');
+    expect(parsed.input?.query).toBeUndefined();
+  });
+
+  it('rejects a query longer than the search bound', () => {
+    const parsed = parseRecipeSearchFromUrl(FAMILY_ID, { query: 'a'.repeat(201) });
+    expect(parsed.input).toBeNull();
+  });
 });

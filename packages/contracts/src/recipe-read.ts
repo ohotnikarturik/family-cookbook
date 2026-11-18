@@ -78,6 +78,8 @@ export type RecipeRevisionSummary = z.infer<typeof recipeRevisionSummarySchema>;
 export const recipeSearchResultSchema = z.object({
   items: z.array(recipeSummarySchema),
   nextCursor: z.string().nullable(),
+  /** Matches for the current filters, ignoring the page cursor. Set by the web search only. */
+  totalCount: z.number().int().min(0).optional(),
 });
 
 export type RecipeSearchResult = z.infer<typeof recipeSearchResultSchema>;

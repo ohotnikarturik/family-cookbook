@@ -387,3 +387,13 @@ Approved for implementation without re-confirmation:
 ## W38.19 — Photo-less recipe cards (2026-11-18)
 
 On `sm` and up a card without a photo is a vertical card with a tinted chef-hat banner (min 96px) instead of the spec's "small square beside the text". Rows mixing short row cards and tall photo cards looked ragged and cramped text in narrow columns. Phones keep the compact row. The tile shows an icon, not the category initial, because the initial was read as the dish's initial.
+
+## W38.14 — Search-first recipe browse (2026-11-18)
+
+1. **`anyText` filter.** The shared `searchRecipesInputSchema` has `anyText` (trim, 1..200): title/description/category full text OR title substring OR an ingredient name of the same family. Ingredient matches are looked up first (max 200 recipe ids) and folded into one quoted `.or()`; no migration. MCP keeps its own `query`/`ingredient` schema and does not expose `anyText`.
+2. **URL stays `?query=`.** Old links keep working; the web parser maps `query` to `anyText` and `buildRecipeSearchQuery` writes it back. The contract's `query` (title/description full text only) is no longer set by the web.
+3. **`totalCount`** is an optional field on the search result, computed with a head-only exact count that ignores the cursor. The MCP tool strips it so its output shape and size do not change.
+4. **Facet lists** (`listFamilyCategories` max 50, `listFamilyTags` max 100, `listFamilyRecipeLanguages` max 20) scan up to 1000 recipe rows and de-duplicate in code, because PostgREST has no DISTINCT. A SQL function would need a migration; revisit if a family outgrows the scan.
+5. **Active category chip** uses a filled look plus hidden "selected" text, not `aria-current`: `aria-current` marks the one highlighted main-navigation item (W38.1) and two per page break that check.
+6. **Screenshot labels** may not contain a dot (`SCREENS_LABEL=before-W38-14`, not `W38.14`); an invalid label silently falls back to `current` and overwrites the baseline.
+

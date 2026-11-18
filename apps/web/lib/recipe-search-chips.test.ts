@@ -19,7 +19,7 @@ const labels = {
 describe('buildRecipeSearchChips', () => {
   it('includes the contributor and a non-default sort', () => {
     const chips = buildRecipeSearchChips(
-      { createdBy: 'user-1', sort: 'title', query: 'soup' },
+      { createdBy: 'user-1', sort: 'title', anyText: 'soup' },
       labels,
     );
     expect(chips.map((chip) => chip.label)).toEqual([

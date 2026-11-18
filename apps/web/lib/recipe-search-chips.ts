@@ -32,8 +32,8 @@ export function buildRecipeSearchChips(
     chips.push({ key, label: `${field}: ${value}`, omit: key });
   }
 
-  if (values.query?.trim()) {
-    push('query', labels.query, values.query.trim());
+  if (values.anyText?.trim()) {
+    push('anyText', labels.query, values.anyText.trim());
   }
   if (values.ingredient?.trim()) {
     push('ingredient', labels.ingredient, values.ingredient.trim());

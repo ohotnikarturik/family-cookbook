@@ -372,18 +372,17 @@
       "archivedBadge": "В архиве",
       "imageLoading": "Загрузка фото рецепта…",
       "totalMinutes": "{minutes} мин",
-      "servings": "{servings} порций"
+      "servings": "{servings} порций",
+      "count": "{count, plural, one {# рецепт} few {# рецепта} many {# рецептов} other {# рецепта}}"
     },
     "filters": {
       "legend": "Фильтры поиска",
-      "toggleLabel": "Поиск и фильтры",
+      "toggleLabel": "Фильтры",
       "activeLabel": "Активные фильтры",
       "query": "Поиск",
-      "queryHint": "Название или описание",
       "category": "Категория",
       "tag": "Метка",
       "ingredient": "Ингредиент",
-      "ingredientHint": "По названию ингредиента",
       "language": "Язык рецепта",
       "anyLanguage": "Любой язык",
       "contributor": "Автор",
@@ -391,9 +390,14 @@
       "contributorHint": "Рецепты, добавленные этим участником",
       "sort": "Сортировка",
       "includeArchived": "Показывать архивные",
-      "apply": "Применить",
       "clear": "Сбросить фильтры",
-      "removeChip": "Убрать {value}"
+      "removeChip": "Убрать {value}",
+      "queryPlaceholder": "Поиск по названию или ингредиенту",
+      "submit": "Найти",
+      "categoriesLabel": "Рецепты по категориям",
+      "anyCategory": "Любая категория",
+      "anyTag": "Любая метка",
+      "selected": "выбрано"
     },
     "sort": {
       "updatedAt": "По обновлению",
@@ -527,7 +531,9 @@
       "invalidFiltersTitle": "Проверьте фильтры",
       "invalidFilters": "Один или несколько фильтров неверны. Сбросьте фильтры и попробуйте снова.",
       "rateLimitedTitle": "Немного помедленнее",
-      "rateLimited": "Слишком много поисков за короткое время. Подождите минуту и попробуйте снова."
+      "rateLimited": "Слишком много поисков за короткое время. Подождите минуту и попробуйте снова.",
+      "emptyFilteredTitle": "Ничего не найдено",
+      "emptyFiltered": "По этому запросу ничего нет. Попробуйте другие слова или сбросьте фильтры."
     },
     "editor": {
       "addRecipe": "Добавить рецепт",

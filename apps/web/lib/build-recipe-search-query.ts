@@ -1,7 +1,7 @@
 import type { SearchRecipesInput } from '@family-cookbook/contracts';
 
 const FILTER_KEYS = [
-  'query',
+  'anyText',
   'ingredient',
   'category',
   'tag',
@@ -32,7 +32,7 @@ export function buildRecipeSearchQuery(
       }
       continue;
     }
-    params.set(key, String(value));
+    params.set(key === 'anyText' ? 'query' : key, String(value));
   }
 
   const query = params.toString();

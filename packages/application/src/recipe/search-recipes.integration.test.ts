@@ -5,6 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it, beforeAll } from 'vitest';
 
+import { listRecipeBrowseOptions } from './list-recipe-browse-options.js';
 import { searchRecipes } from './search-recipes.js';
 
 const FAMILY_A = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
@@ -130,6 +131,134 @@ describe.skipIf(!stackReady)('searchRecipes integration (local Supabase)', () =>
       return;
     }
     expect(foreignAuthor.result.items).toHaveLength(0);
+  });
+
+  it('anyText finds a recipe by an ingredient name that is not in its text', async () => {
+    const plain = await searchRecipes(ownerAClient, { familyId: FAMILY_A, query: 'yeast' });
+    expect(plain.status).toBe('ok');
+    if (plain.status !== 'ok') {
+      return;
+    }
+    expect(plain.result.items).toHaveLength(0);
+
+    const any = await searchRecipes(ownerAClient, { familyId: FAMILY_A, anyText: 'yeast' });
+    expect(any.status).toBe('ok');
+    if (any.status !== 'ok') {
+      return;
+    }
+    expect(any.result.items.map((item) => item.title)).toEqual(["Grandma's cardamom buns"]);
+    expect(any.result.totalCount).toBe(1);
+  });
+
+  it('anyText matches a partial title and a description word', async () => {
+    const partialTitle = await searchRecipes(ownerAClient, { familyId: FAMILY_A, anyText: 'salm' });
+    expect(partialTitle.status).toBe('ok');
+    if (partialTitle.status !== 'ok') {
+      return;
+    }
+    expect(partialTitle.result.items.map((item) => item.title)).toContain('Weeknight salmon soup');
+
+    const description = await searchRecipes(ownerAClient, {
+      familyId: FAMILY_A,
+      anyText: 'pearl',
+    });
+    expect(description.status).toBe('ok');
+    if (description.status !== 'ok') {
+      return;
+    }
+    expect(description.result.items.map((item) => item.title)).toContain("Grandma's cardamom buns");
+  });
+
+  it('anyText respects the archived rule', async () => {
+    const hidden = await searchRecipes(ownerAClient, { familyId: FAMILY_A, anyText: 'beetroot' });
+    expect(hidden.status).toBe('ok');
+    if (hidden.status !== 'ok') {
+      return;
+    }
+    expect(hidden.result.items).toHaveLength(0);
+
+    const shown = await searchRecipes(ownerAClient, {
+      familyId: FAMILY_A,
+      anyText: 'beetroot',
+      includeArchived: true,
+    });
+    expect(shown.status).toBe('ok');
+    if (shown.status !== 'ok') {
+      return;
+    }
+    expect(shown.result.items.map((item) => item.title)).toEqual(['Archived beet salad']);
+  });
+
+  it('anyText treats commas, quotes, parentheses and wildcards as plain text', async () => {
+    for (const text of [
+      'a,b)',
+      '"quoted',
+      'x") or id.not.is.null,("',
+      '100%',
+      'under_score',
+      '\\',
+    ]) {
+      const result = await searchRecipes(ownerAClient, { familyId: FAMILY_A, anyText: text });
+      expect(result.status).toBe('ok');
+      if (result.status !== 'ok') {
+        return;
+      }
+      expect(result.result.items).toHaveLength(0);
+      expect(result.result.totalCount).toBe(0);
+    }
+  });
+
+  it('anyText never returns another family’s recipes', async () => {
+    const own = await searchRecipes(ownerAClient, { familyId: FAMILY_A, anyText: 'pancakes' });
+    expect(own.status).toBe('ok');
+    if (own.status !== 'ok') {
+      return;
+    }
+    expect(own.result.items).toHaveLength(0);
+
+    const foreign = await searchRecipes(ownerAClient, { familyId: FAMILY_B, anyText: 'pancakes' });
+    expect(foreign.status).toBe('forbidden');
+  });
+
+  it('totalCount ignores the page cursor', async () => {
+    const first = await searchRecipes(ownerAClient, { familyId: FAMILY_A, limit: 5 });
+    expect(first.status).toBe('ok');
+    if (first.status !== 'ok' || !first.result.nextCursor) {
+      return;
+    }
+    const second = await searchRecipes(ownerAClient, {
+      familyId: FAMILY_A,
+      limit: 5,
+      cursor: first.result.nextCursor,
+    });
+    expect(second.status).toBe('ok');
+    if (second.status !== 'ok') {
+      return;
+    }
+    expect(first.result.totalCount).toBe(30);
+    expect(second.result.totalCount).toBe(30);
+  });
+
+  it('lists the categories, tags and languages Family A uses, without duplicates', async () => {
+    const result = await listRecipeBrowseOptions(ownerAClient, { familyId: FAMILY_A });
+    expect(result.status).toBe('ok');
+    if (result.status !== 'ok') {
+      return;
+    }
+    const { categories, tags, languages } = result.options;
+    expect(categories).toContain('Baking');
+    expect(categories.length).toBeLessThanOrEqual(50);
+    expect(new Set(categories.map((value) => value.toLowerCase())).size).toBe(categories.length);
+    expect(categories.filter((value) => value === 'Breakfast')).toHaveLength(1);
+    expect(languages).toContain('en');
+    expect(tags.length).toBeLessThanOrEqual(100);
+  });
+
+  it('refuses browse options for a family the caller is not in', async () => {
+    const result = await listRecipeBrowseOptions(ownerAClient, { familyId: FAMILY_B });
+    expect(result.status).toBe('forbidden');
+    const invalid = await listRecipeBrowseOptions(ownerAClient, { familyId: 'not-a-uuid' });
+    expect(invalid.status).toBe('validation_error');
   });
 
   it('never returns another family’s recipes for the same contributor id probe', async () => {

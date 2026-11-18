@@ -1,4 +1,8 @@
-import { listFamilyMembers, searchRecipes } from '@family-cookbook/application';
+import {
+  listFamilyMembers,
+  listRecipeBrowseOptions,
+  searchRecipes,
+} from '@family-cookbook/application';
 import { resolveMemberDisplayLabel } from '@family-cookbook/domain';
 import { getSessionUser } from '@family-cookbook/data-access';
 import { createServerSupabaseClient } from '@family-cookbook/data-access/supabase/server';
@@ -9,6 +13,7 @@ import { Suspense } from 'react';
 
 import { RecipeBrowseStates } from '@/components/recipe/recipe-browse-states';
 import { getRecipeCardLabels } from '@/components/recipe/recipe-card-labels';
+import { RecipeCategoryChips } from '@/components/recipe/recipe-category-chips';
 import { RecipeList } from '@/components/recipe/recipe-list';
 import { RecipePagination } from '@/components/recipe/recipe-pagination';
 import { RecipeSearchActiveChips } from '@/components/recipe/recipe-search-active-chips';
@@ -148,6 +153,23 @@ async function RecipesContent({ params, searchParams }: Props) {
           })
       : [];
 
+  const formValues = {
+    ...(parsed.input.anyText ? { anyText: parsed.input.anyText } : {}),
+    ...(parsed.input.ingredient ? { ingredient: parsed.input.ingredient } : {}),
+    ...(parsed.input.category ? { category: parsed.input.category } : {}),
+    ...(parsed.input.tag ? { tag: parsed.input.tag } : {}),
+    ...(parsed.input.language ? { language: parsed.input.language } : {}),
+    ...(parsed.input.createdBy ? { createdBy: parsed.input.createdBy } : {}),
+    ...(parsed.input.sort ? { sort: parsed.input.sort } : {}),
+    ...(parsed.input.includeArchived ? { includeArchived: true } : {}),
+  };
+  const hasActiveFilters = Object.keys(formValues).some((key) => key !== 'sort');
+
+  // The selects and chips only list what the family uses; if this fails the page still works.
+  const browse = await listRecipeBrowseOptions(supabase, { familyId });
+  const browseOptions =
+    browse.status === 'ok' ? browse.options : { categories: [], tags: [], languages: [] };
+
   return (
     <section className="space-y-6">
       <PageHeader title={t('list.title')} description={t('list.subtitle')} />
@@ -155,29 +177,22 @@ async function RecipesContent({ params, searchParams }: Props) {
         key={buildRecipeSearchQuery(parsed.input) || 'all'}
         familyId={familyId}
         contributorOptions={contributorOptions}
-        defaultValues={{
-          ...(parsed.input.query ? { query: parsed.input.query } : {}),
-          ...(parsed.input.ingredient ? { ingredient: parsed.input.ingredient } : {}),
-          ...(parsed.input.category ? { category: parsed.input.category } : {}),
-          ...(parsed.input.tag ? { tag: parsed.input.tag } : {}),
-          ...(parsed.input.language ? { language: parsed.input.language } : {}),
-          ...(parsed.input.createdBy ? { createdBy: parsed.input.createdBy } : {}),
-          ...(parsed.input.sort ? { sort: parsed.input.sort } : {}),
-          ...(parsed.input.includeArchived ? { includeArchived: true } : {}),
-        }}
+        categories={browseOptions.categories}
+        tags={browseOptions.tags}
+        languages={browseOptions.languages}
+        defaultValues={formValues}
+      />
+      <RecipeCategoryChips
+        familyId={familyId}
+        searchInput={parsed.input}
+        categories={browseOptions.categories}
+        label={t('filters.categoriesLabel')}
+        allLabel={t('filters.anyCategory')}
+        selectedLabel={t('filters.selected')}
       />
       <RecipeSearchActiveChips
         familyId={familyId}
-        values={{
-          ...(parsed.input.query ? { query: parsed.input.query } : {}),
-          ...(parsed.input.ingredient ? { ingredient: parsed.input.ingredient } : {}),
-          ...(parsed.input.category ? { category: parsed.input.category } : {}),
-          ...(parsed.input.tag ? { tag: parsed.input.tag } : {}),
-          ...(parsed.input.language ? { language: parsed.input.language } : {}),
-          ...(parsed.input.createdBy ? { createdBy: parsed.input.createdBy } : {}),
-          ...(parsed.input.sort ? { sort: parsed.input.sort } : {}),
-          ...(parsed.input.includeArchived ? { includeArchived: true } : {}),
-        }}
+        values={formValues}
         contributorOptions={contributorOptions}
       />
       {membersListed.status !== 'ok' ? (
@@ -185,17 +200,33 @@ async function RecipesContent({ params, searchParams }: Props) {
           {tMembers('errors.loadFailed')}
         </p>
       ) : null}
+      <p className="text-sm text-muted-foreground">
+        {t('list.count', { count: result.result.totalCount ?? items.length })}
+      </p>
       <RecipeList
         familyId={familyId}
         items={items}
         uiLocale={locale}
         listLabel={t('list.resultsLabel')}
         emptyState={
-          <RecipeBrowseStates
-            variant="empty"
-            title={t('status.emptyTitle')}
-            description={t('status.empty')}
-          />
+          hasActiveFilters ? (
+            <RecipeBrowseStates
+              variant="empty"
+              title={t('status.emptyFilteredTitle')}
+              description={t('status.emptyFiltered')}
+              action={
+                <Button type="button" variant="outline" className="min-h-11" asChild>
+                  <Link href={`/f/${familyId}/recipes`}>{t('filters.clear')}</Link>
+                </Button>
+              }
+            />
+          ) : (
+            <RecipeBrowseStates
+              variant="empty"
+              title={t('status.emptyTitle')}
+              description={t('status.empty')}
+            />
+          )
         }
         cardLabels={cardLabels}
       />
