@@ -568,11 +568,10 @@
       "saving": "Saving…",
       "sections": {
         "basics": "Basics",
-        "timing": "Timing and servings",
-        "meta": "Category and notes",
-        "tags": "Tags",
         "ingredients": "Ingredients",
-        "steps": "Steps"
+        "steps": "Steps",
+        "details": "Details",
+        "tags": "Tags"
       },
       "fields": {
         "title": "Recipe title",
@@ -589,7 +588,8 @@
       "hints": {
         "title": "A clear name helps everyone find this recipe later.",
         "sourceLanguage": "The language you are writing in — separate from your interface language.",
-        "quantityText": "Use this for amounts like “to taste” when a number does not fit.",
+        "amount": "Amount can be a number, such as 2, 1.5 or 1 1/2, or words, such as “to taste”.",
+        "category": "Choose one your family already uses, or type a new one.",
         "tagsEditor": "New tag names are added to this family’s shared tag list.",
         "tagsContributor": "You can attach existing family tags by name. Creating new tags requires an editor role.",
         "stepDuration": "Optional time for this step, in minutes.",
@@ -602,25 +602,43 @@
         "name": "Tag name"
       },
       "ingredients": {
-        "name": "Ingredient",
-        "quantity": "Amount (number)",
-        "quantityText": "Amount (text)",
+        "amount": "Amount",
         "unit": "Unit",
-        "notes": "Notes",
+        "unitOptions": "g|kg|ml|l|tsp|tbsp|cup|cups|pinch|clove|cloves|can|cans|piece|pieces|slice|slices|bunch",
+        "name": "Ingredient",
+        "note": "Note",
+        "addNote": "Add note",
         "add": "Add ingredient",
         "remove": "Remove {name}",
-        "row": "Ingredient {index}"
+        "row": "Ingredient {index}",
+        "removed": "{name} removed.",
+        "moved": "{name} moved to position {position}.",
+        "bulk": {
+          "open": "Add several at once",
+          "label": "Ingredients, one per line",
+          "hint": "For example: 200 g butter. Each line becomes its own row, so you can check it before saving.",
+          "add": "Add to list",
+          "cancel": "Cancel",
+          "empty": "Type at least one ingredient.",
+          "full": "This recipe already has the most ingredients allowed ({max}).",
+          "added": "{count, plural, one {# ingredient added.} other {# ingredients added.}}",
+          "truncated": "{count, plural, one {# ingredient added.} other {# ingredients added.}} A recipe can have up to {max} ingredients, so the rest were left out."
+        }
       },
       "steps": {
-        "instruction": "Instruction",
+        "label": "Step {index}",
         "durationMinutes": "Step time (minutes)",
+        "moreOptions": "More options",
         "add": "Add step",
         "remove": "Remove step {index}",
-        "row": "Step {index}"
+        "row": "Step {index}",
+        "removed": "Step {index} removed.",
+        "moved": "Step {from} moved to position {position}."
       },
       "actions": {
         "moveUp": "Move up",
-        "moveDown": "Move down"
+        "moveDown": "Move down",
+        "remove": "Remove"
       },
       "errors": {
         "validation": "Check the highlighted fields and try again.",
@@ -631,6 +649,7 @@
         "required": "Fill in this field or clear the row.",
         "field": "Check this field.",
         "invalidNumber": "Enter a valid number or leave the field empty.",
+        "amount": "Keep the amount short (up to 120 characters), or put the extra words in a note.",
         "forbidden": "You do not have permission to save this recipe.",
         "saveFailed": "We could not save the recipe. Check your connection and try again.",
         "versionConflict": "Someone else saved a newer version. Reload the editor before saving again.",

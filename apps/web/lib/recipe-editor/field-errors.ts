@@ -42,6 +42,7 @@ const FIELD_MESSAGE_KEYS = {
   title: 'errors.title',
   sourceLanguage: 'errors.sourceLanguage',
   invalidNumber: 'errors.invalidNumber',
+  amount: 'errors.amount',
   ingredientName: 'errors.ingredientName',
   stepInstruction: 'errors.stepInstruction',
   required: 'errors.required',
@@ -63,6 +64,10 @@ export function draftPathFromSchemaPath(path: string, indexes: DraftIndexes): st
     return normalized;
   }
   const leaf = match[3];
+  // The editor has one Amount field for the contract's `quantity` and `quantityText`.
+  if (collection === 'ingredients' && (leaf === 'quantity' || leaf === 'quantityText')) {
+    return `${collection}.${draftIndex}.amount`;
+  }
   return `${collection}.${draftIndex}.${leaf}`;
 }
 
@@ -76,10 +81,12 @@ export function messageKeyForField(
     leaf === 'servings' ||
     leaf === 'prepMinutes' ||
     leaf === 'cookMinutes' ||
-    leaf === 'quantity' ||
     leaf === 'durationMinutes'
   ) {
     return FIELD_MESSAGE_KEYS.invalidNumber;
+  }
+  if (path.startsWith('ingredients.') && leaf === 'amount') {
+    return FIELD_MESSAGE_KEYS.amount;
   }
   if (leaf === 'title') {
     return FIELD_MESSAGE_KEYS.title;

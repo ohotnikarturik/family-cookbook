@@ -1,233 +1,330 @@
 'use client';
 
-import { cloneElement, isValidElement, type ReactElement } from 'react';
+import { MAX_RECIPE_INGREDIENTS } from '@family-cookbook/contracts';
+import { Plus } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useId, useState } from 'react';
 
-import type { RecipeEditorIngredientDraft } from '@/lib/recipe-editor';
-import { emptyIngredientRow } from '@/lib/recipe-editor';
-
+import { FormField } from '@/components/product/form-field';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  emptyIngredientRow,
+  INGREDIENT_LINES_TEXT_MAX,
+  parseIngredientLines,
+  unitOptionsFromCatalog,
+  type RecipeEditorIngredientDraft,
+} from '@/lib/recipe-editor';
 
-export type IngredientEditorLabels = Readonly<{
-  sectionLegend: string;
-  name: string;
-  quantity: string;
-  quantityText: string;
-  quantityTextHint: string;
-  unit: string;
-  notes: string;
-  add: string;
-  remove: (name: string) => string;
-  moveUp: string;
-  moveDown: string;
-  rowLabel: (index: number) => string;
-}>;
+import {
+  EditorRowControls,
+  moveListItem,
+  useAnnouncement,
+  useFocusAfterRender,
+} from './editor-row-controls';
 
 type Props = Readonly<{
   ingredients: RecipeEditorIngredientDraft[];
   onChange: (ingredients: RecipeEditorIngredientDraft[]) => void;
-  labels: IngredientEditorLabels;
   disabled?: boolean;
   fieldErrors?: Record<string, string> | undefined;
 }>;
 
-export function IngredientListEditor({
-  ingredients,
-  onChange,
-  labels,
-  disabled,
-  fieldErrors,
-}: Props) {
+type RowPart = 'amount' | 'unit' | 'name' | 'note' | 'up' | 'down' | 'remove';
+
+function isBlankRow(row: RecipeEditorIngredientDraft): boolean {
+  return [row.amount, row.unit, row.name, row.notes].every((value) => value.trim().length === 0);
+}
+
+/**
+ * One compact row per ingredient: Amount · Unit · Ingredient (two lines on phones), an optional
+ * note, arrow buttons to reorder, and "Add several at once" for pasting a list.
+ */
+export function IngredientListEditor({ ingredients, onChange, disabled, fieldErrors }: Props) {
+  const t = useTranslations('recipes.editor');
+  const baseId = useId();
+  const headingId = `${baseId}-heading`;
+  const hintId = `${baseId}-amount-hint`;
+  const unitListId = `${baseId}-units`;
+  const bulkToggleId = `${baseId}-bulk-toggle`;
+  const bulkPanelId = `${baseId}-bulk`;
+  const bulkTextId = `${baseId}-bulk-text`;
+  const units = unitOptionsFromCatalog(t('ingredients.unitOptions'));
+
+  const [revealedNotes, setRevealedNotes] = useState<ReadonlySet<string>>(() => new Set());
+  const [bulkOpen, setBulkOpen] = useState(false);
+  const [bulkText, setBulkText] = useState('');
+  const [bulkError, setBulkError] = useState<string | undefined>(undefined);
+  const focusLater = useFocusAfterRender();
+  const { message, announce } = useAnnouncement();
+
+  const rowPrefix = (row: RecipeEditorIngredientDraft) => `${baseId}-${row.clientKey}`;
+  const rowId = (row: RecipeEditorIngredientDraft, part: RowPart) => `${rowPrefix(row)}-${part}`;
+  const rowLabel = (index: number) => t('ingredients.row', { index: index + 1 });
+  const displayName = (row: RecipeEditorIngredientDraft, index: number) =>
+    row.name.trim() || rowLabel(index);
+
   function updateRow(index: number, patch: Partial<RecipeEditorIngredientDraft>) {
     onChange(ingredients.map((row, i) => (i === index ? { ...row, ...patch } : row)));
   }
 
-  function removeRow(index: number) {
-    const next = ingredients.filter((_, i) => i !== index);
-    onChange(next.length > 0 ? next : [emptyIngredientRow()]);
+  function addRow() {
+    const row = emptyIngredientRow();
+    onChange([...ingredients, row]);
+    focusLater(rowId(row, 'amount'));
   }
 
-  function addRow() {
-    onChange([...ingredients, emptyIngredientRow()]);
+  function removeRow(index: number) {
+    const row = ingredients[index];
+    if (!row) {
+      return;
+    }
+    const remaining = ingredients.filter((_, i) => i !== index);
+    const next = remaining.length > 0 ? remaining : [emptyIngredientRow()];
+    onChange(next);
+    const focusRow = next[Math.min(index, next.length - 1)];
+    if (focusRow) {
+      focusLater(rowId(focusRow, 'amount'));
+    }
+    announce(t('ingredients.removed', { name: displayName(row, index) }));
   }
 
   function moveRow(index: number, delta: -1 | 1) {
-    const target = index + delta;
-    if (target < 0 || target >= ingredients.length) {
+    const row = ingredients[index];
+    const next = moveListItem(ingredients, index, delta);
+    if (!row || !next) {
       return;
     }
-    const next = [...ingredients];
-    const current = next[index];
-    const swap = next[target];
-    if (!current || !swap) {
-      return;
-    }
-    next[index] = swap;
-    next[target] = current;
     onChange(next);
+    // Keep focus on the arrow that was pressed; at the top or bottom it is disabled, so use the other.
+    const same = delta < 0 ? 'up' : 'down';
+    const other = delta < 0 ? 'down' : 'up';
+    focusLater(rowId(row, same), rowId(row, other));
+    announce(
+      t('ingredients.moved', { name: displayName(row, index), position: index + delta + 1 }),
+    );
+  }
+
+  function revealNote(row: RecipeEditorIngredientDraft) {
+    setRevealedNotes((current) => new Set(current).add(row.clientKey));
+    focusLater(rowId(row, 'note'));
+  }
+
+  function openBulk() {
+    setBulkOpen(true);
+    setBulkError(undefined);
+    focusLater(bulkTextId);
+  }
+
+  function closeBulk() {
+    setBulkOpen(false);
+    setBulkText('');
+    setBulkError(undefined);
+    focusLater(bulkToggleId);
+  }
+
+  function applyBulk() {
+    const kept = ingredients.filter((row) => !isBlankRow(row));
+    const room = MAX_RECIPE_INGREDIENTS - kept.length;
+    const parsed = parseIngredientLines(bulkText, units, room);
+    const first = parsed.rows[0];
+    if (!first) {
+      setBulkError(
+        room <= 0
+          ? t('ingredients.bulk.full', { max: MAX_RECIPE_INGREDIENTS })
+          : t('ingredients.bulk.empty'),
+      );
+      focusLater(bulkTextId);
+      return;
+    }
+    const added = parsed.rows.map((line) => ({ ...emptyIngredientRow(), ...line }));
+    onChange([...kept, ...added]);
+    setBulkOpen(false);
+    setBulkText('');
+    setBulkError(undefined);
+    announce(
+      parsed.truncated
+        ? t('ingredients.bulk.truncated', { count: added.length, max: MAX_RECIPE_INGREDIENTS })
+        : t('ingredients.bulk.added', { count: added.length }),
+    );
+    const firstAdded = added[0];
+    if (firstAdded) {
+      focusLater(rowId(firstAdded, 'amount'));
+    }
   }
 
   return (
-    <fieldset className="space-y-4 rounded-xl border border-border bg-surface-raised p-4">
-      <legend className="px-1 text-base font-semibold text-foreground">
-        {labels.sectionLegend}
-      </legend>
-      <ul className="list-none space-y-4 p-0">
-        {ingredients.map((row, index) => (
-          <li key={row.clientKey} className="rounded-lg border border-border bg-card p-4">
-            <div role="group" aria-label={labels.rowLabel(index + 1)} className="space-y-3">
-              <div className="flex flex-wrap gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="min-h-11"
-                  disabled={disabled || index === 0}
-                  aria-label={`${labels.moveUp}, ${labels.rowLabel(index + 1)}`}
-                  onClick={() => moveRow(index, -1)}
-                >
-                  {labels.moveUp}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="min-h-11"
-                  disabled={disabled || index === ingredients.length - 1}
-                  aria-label={`${labels.moveDown}, ${labels.rowLabel(index + 1)}`}
-                  onClick={() => moveRow(index, 1)}
-                >
-                  {labels.moveDown}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="h-auto min-h-11 max-w-full whitespace-normal py-2 text-start"
-                  disabled={disabled}
-                  onClick={() => removeRow(index)}
-                >
-                  {labels.remove(row.name || labels.rowLabel(index + 1))}
-                </Button>
-              </div>
-              <EditorField
-                id={`${row.clientKey}-name`}
-                label={labels.name}
-                error={fieldErrors?.[`ingredients.${index}.name`]}
-              >
-                <Input
-                  value={row.name}
-                  onChange={(event) => updateRow(index, { name: event.target.value })}
-                  disabled={disabled}
-                  className="min-h-11"
-                  autoComplete="off"
-                />
-              </EditorField>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <EditorField
-                  id={`${row.clientKey}-quantity`}
-                  label={labels.quantity}
-                  error={fieldErrors?.[`ingredients.${index}.quantity`]}
-                >
-                  <Input
-                    value={row.quantity}
-                    onChange={(event) => updateRow(index, { quantity: event.target.value })}
-                    disabled={disabled}
-                    className="min-h-11"
-                    inputMode="decimal"
-                    autoComplete="off"
-                  />
-                </EditorField>
-                <EditorField
-                  id={`${row.clientKey}-quantity-text`}
-                  label={labels.quantityText}
-                  hint={labels.quantityTextHint}
-                >
-                  <Input
-                    value={row.quantityText}
-                    onChange={(event) => updateRow(index, { quantityText: event.target.value })}
-                    disabled={disabled}
-                    className="min-h-11"
-                    autoComplete="off"
-                  />
-                </EditorField>
-              </div>
-              <EditorField id={`${row.clientKey}-unit`} label={labels.unit}>
-                <Input
-                  value={row.unit}
-                  onChange={(event) => updateRow(index, { unit: event.target.value })}
-                  disabled={disabled}
-                  className="min-h-11"
-                  autoComplete="off"
-                />
-              </EditorField>
-              <EditorField id={`${row.clientKey}-notes`} label={labels.notes}>
-                <Input
-                  value={row.notes}
-                  onChange={(event) => updateRow(index, { notes: event.target.value })}
-                  disabled={disabled}
-                  className="min-h-11"
-                  autoComplete="off"
-                />
-              </EditorField>
-            </div>
-          </li>
+    <section
+      aria-labelledby={headingId}
+      className="space-y-4 rounded-xl border border-border bg-card p-4 shadow-sm"
+    >
+      <div className="space-y-1">
+        <h2 id={headingId} className="text-base font-semibold text-foreground">
+          {t('sections.ingredients')}
+        </h2>
+        <p id={hintId} className="text-sm text-muted-foreground">
+          {t('hints.amount')}
+        </p>
+      </div>
+      <datalist id={unitListId}>
+        {units.map((unit) => (
+          <option key={unit} value={unit} />
         ))}
+      </datalist>
+      <ul aria-labelledby={headingId} className="list-none divide-y divide-border p-0">
+        {ingredients.map((row, index) => {
+          const error = (field: string) => fieldErrors?.[`ingredients.${index}.${field}`];
+          const noteError = error('notes');
+          const noteOpen =
+            revealedNotes.has(row.clientKey) || row.notes.trim() !== '' || noteError !== undefined;
+          return (
+            <li key={row.clientKey} className="py-4 first:pt-0 last:pb-0">
+              <div role="group" aria-label={rowLabel(index)} className="space-y-2">
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-[minmax(0,6.5rem)_minmax(0,8rem)_minmax(0,1fr)]">
+                  <FormField
+                    id={rowId(row, 'amount')}
+                    label={t('ingredients.amount')}
+                    error={error('amount')}
+                  >
+                    <Input
+                      value={row.amount}
+                      onChange={(event) => updateRow(index, { amount: event.target.value })}
+                      disabled={disabled}
+                      className="min-h-11"
+                      autoComplete="off"
+                      aria-describedby={hintId}
+                    />
+                  </FormField>
+                  <FormField
+                    id={rowId(row, 'unit')}
+                    label={t('ingredients.unit')}
+                    error={error('unit')}
+                  >
+                    <Input
+                      value={row.unit}
+                      onChange={(event) => updateRow(index, { unit: event.target.value })}
+                      disabled={disabled}
+                      className="min-h-11"
+                      autoComplete="off"
+                      list={unitListId}
+                    />
+                  </FormField>
+                  <FormField
+                    id={rowId(row, 'name')}
+                    label={t('ingredients.name')}
+                    error={error('name')}
+                    className="col-span-2 sm:col-span-1"
+                  >
+                    <Input
+                      value={row.name}
+                      onChange={(event) => updateRow(index, { name: event.target.value })}
+                      disabled={disabled}
+                      className="min-h-11"
+                      autoComplete="off"
+                    />
+                  </FormField>
+                </div>
+                {noteOpen ? (
+                  <FormField
+                    id={rowId(row, 'note')}
+                    label={t('ingredients.note')}
+                    error={noteError}
+                  >
+                    <Input
+                      value={row.notes}
+                      onChange={(event) => updateRow(index, { notes: event.target.value })}
+                      disabled={disabled}
+                      className="min-h-11"
+                      autoComplete="off"
+                    />
+                  </FormField>
+                ) : null}
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  {noteOpen ? null : (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      className="px-2"
+                      disabled={disabled}
+                      onClick={() => revealNote(row)}
+                    >
+                      <Plus aria-hidden />
+                      {t('ingredients.addNote')}
+                    </Button>
+                  )}
+                  <div className="ms-auto">
+                    <EditorRowControls
+                      idPrefix={rowPrefix(row)}
+                      index={index}
+                      count={ingredients.length}
+                      disabled={disabled}
+                      labels={{
+                        moveUp: t('actions.moveUp'),
+                        moveDown: t('actions.moveDown'),
+                        remove: t('actions.remove'),
+                        removeName: t('ingredients.remove', { name: displayName(row, index) }),
+                        rowLabel: rowLabel(index),
+                      }}
+                      onMove={(delta) => moveRow(index, delta)}
+                      onRemove={() => removeRow(index)}
+                    />
+                  </div>
+                </div>
+              </div>
+            </li>
+          );
+        })}
       </ul>
-      <Button
-        type="button"
-        variant="outline"
-        className="min-h-11"
-        disabled={disabled}
-        onClick={addRow}
+      <div className="flex flex-wrap gap-2">
+        <Button type="button" variant="outline" disabled={disabled} onClick={addRow}>
+          <Plus aria-hidden />
+          {t('ingredients.add')}
+        </Button>
+        <Button
+          id={bulkToggleId}
+          type="button"
+          variant="ghost"
+          disabled={disabled}
+          aria-expanded={bulkOpen}
+          aria-controls={bulkPanelId}
+          onClick={bulkOpen ? closeBulk : openBulk}
+        >
+          {t('ingredients.bulk.open')}
+        </Button>
+      </div>
+      <div
+        id={bulkPanelId}
+        hidden={!bulkOpen}
+        className="space-y-3 rounded-lg border border-border bg-surface-sunken p-3"
       >
-        {labels.add}
-      </Button>
-    </fieldset>
-  );
-}
-
-function EditorField({
-  id,
-  label,
-  hint,
-  error,
-  children,
-}: Readonly<{
-  id: string;
-  label: string;
-  hint?: string;
-  error?: string | undefined;
-  children: ReactElement<{
-    id?: string;
-    'aria-invalid'?: boolean;
-    'aria-describedby'?: string;
-  }>;
-}>) {
-  const describedBy = [hint ? `${id}-hint` : null, error ? `${id}-error` : null]
-    .filter((value) => value !== null)
-    .join(' ');
-  const control = isValidElement(children)
-    ? cloneElement(children, {
-        id,
-        'aria-invalid': error !== undefined,
-        ...(describedBy.length > 0 ? { 'aria-describedby': describedBy } : {}),
-      })
-    : children;
-  return (
-    <div className="space-y-1.5">
-      <Label htmlFor={id} className="text-sm font-medium text-foreground">
-        {label}
-      </Label>
-      {hint ? (
-        <p id={`${id}-hint`} className="text-xs text-muted-foreground">
-          {hint}
-        </p>
-      ) : null}
-      {control}
-      {error ? (
-        <p id={`${id}-error`} className="text-sm text-destructive">
-          {error}
-        </p>
-      ) : null}
-    </div>
+        <FormField
+          id={bulkTextId}
+          label={t('ingredients.bulk.label')}
+          hint={t('ingredients.bulk.hint')}
+          error={bulkError}
+        >
+          <Textarea
+            value={bulkText}
+            onChange={(event) => setBulkText(event.target.value)}
+            disabled={disabled}
+            rows={6}
+            maxLength={INGREDIENT_LINES_TEXT_MAX}
+            className="min-h-32 text-base"
+          />
+        </FormField>
+        <div className="flex flex-wrap gap-2">
+          <Button type="button" variant="secondary" disabled={disabled} onClick={applyBulk}>
+            {t('ingredients.bulk.add')}
+          </Button>
+          <Button type="button" variant="ghost" onClick={closeBulk}>
+            {t('ingredients.bulk.cancel')}
+          </Button>
+        </div>
+      </div>
+      <p role="status" aria-live="polite" className="sr-only">
+        {message}
+      </p>
+    </section>
   );
 }

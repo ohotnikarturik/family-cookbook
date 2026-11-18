@@ -12,16 +12,9 @@ describe('draftToCreatePayload', () => {
       ...draft,
       title: 'Test soup',
       ingredients: [
-        { clientKey: 'a', name: 'Carrot', quantity: '', quantityText: '', unit: '', notes: '' },
-        { clientKey: 'b', name: '', quantity: '', quantityText: '', unit: '', notes: '' },
-        {
-          clientKey: 'c',
-          name: 'Salt',
-          quantity: '',
-          quantityText: 'to taste',
-          unit: '',
-          notes: '',
-        },
+        { clientKey: 'a', name: 'Carrot', amount: '', unit: '', notes: '' },
+        { clientKey: 'b', name: '', amount: '', unit: '', notes: '' },
+        { clientKey: 'c', name: 'Salt', amount: 'to taste', unit: '', notes: '' },
       ],
       steps: [
         { clientKey: 's1', instruction: 'Chop vegetables.', durationMinutes: '' },
@@ -101,8 +94,7 @@ describe('draftToCreatePayload', () => {
         {
           clientKey: 'a',
           name: '',
-          quantity: '2',
-          quantityText: '',
+          amount: '2',
           unit: 'dl',
           notes: '',
         },
@@ -169,7 +161,7 @@ describe('draftFromRecipeDetail', () => {
       ingredientTranslations: [],
       stepTranslations: [],
     };
-    const draft = draftFromRecipeDetail(detail);
+    const draft = draftFromRecipeDetail(detail, 'en');
     expect(draft.tags[0]?.tagId).toBe('22222222-2222-4222-8222-222222222201');
     expect(draft.sourceLanguagePreset).toBe('fi');
   });

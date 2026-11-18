@@ -1,10 +1,11 @@
 import type { RecipeDetail } from '@family-cookbook/contracts';
 
-import { formatOptionalNumber } from './parse-numbers';
+import { formatAmountInput, formatOptionalNumber } from './parse-numbers';
 import type {
   PreservedTranslationCollections,
   RecipeEditorDraft,
   RecipeEditorIngredientDraft,
+  RecipeEditorKeptAmount,
   RecipeEditorStepDraft,
   SourceLanguagePreset,
 } from './types.js';
@@ -18,12 +19,36 @@ export function newClientKey(): string {
 export function emptyIngredientRow(): RecipeEditorIngredientDraft {
   return {
     clientKey: newClientKey(),
-    name: '',
-    quantity: '',
-    quantityText: '',
+    amount: '',
     unit: '',
+    name: '',
     notes: '',
   };
+}
+
+type StoredIngredient = RecipeDetail['ingredients'][number];
+
+/** Loads a stored ingredient into the editor's single Amount field. */
+export function ingredientDraftFromStored(
+  item: StoredIngredient,
+  locale: string,
+): RecipeEditorIngredientDraft {
+  const quantity = item.quantity ?? null;
+  const text = item.quantityText?.trim() ?? '';
+  const base = {
+    clientKey: newClientKey(),
+    unit: item.unit ?? '',
+    name: item.name,
+    notes: item.notes ?? '',
+  };
+  if (text.length > 0 && quantity !== null) {
+    // The detail page shows the text; keep the number too unless the amount is edited.
+    return { ...base, amount: text, kept: { amount: text, quantity, quantityText: text } };
+  }
+  if (text.length > 0) {
+    return { ...base, amount: text };
+  }
+  return { ...base, amount: quantity === null ? '' : formatAmountInput(quantity, locale) };
 }
 
 export function emptyStepRow(): RecipeEditorStepDraft {
@@ -98,7 +123,7 @@ export function preservedTranslationsFromDetail(
   };
 }
 
-export function draftFromRecipeDetail(recipe: RecipeDetail): RecipeEditorDraft {
+export function draftFromRecipeDetail(recipe: RecipeDetail, locale: string): RecipeEditorDraft {
   const { preset, other } = sourceLanguagePresetForTag(recipe.sourceLanguage);
   return {
     title: recipe.title,
@@ -112,14 +137,7 @@ export function draftFromRecipeDetail(recipe: RecipeDetail): RecipeEditorDraft {
     notes: recipe.notes ?? '',
     ingredients:
       recipe.ingredients.length > 0
-        ? recipe.ingredients.map((item) => ({
-            clientKey: newClientKey(),
-            name: item.name,
-            quantity: formatOptionalNumber(item.quantity ?? null),
-            quantityText: item.quantityText ?? '',
-            unit: item.unit ?? '',
-            notes: item.notes ?? '',
-          }))
+        ? recipe.ingredients.map((item) => ingredientDraftFromStored(item, locale))
         : [emptyIngredientRow()],
     steps:
       recipe.steps.length > 0
@@ -210,17 +228,45 @@ function coerceIngredients(value: unknown): RecipeEditorIngredientDraft[] {
         return null;
       }
       const row = item as Record<string, unknown>;
-      return {
+      const ingredient: RecipeEditorIngredientDraft = {
         clientKey: typeof row.clientKey === 'string' ? row.clientKey : newClientKey(),
-        name: typeof row.name === 'string' ? row.name : '',
-        quantity: typeof row.quantity === 'string' ? row.quantity : '',
-        quantityText: typeof row.quantityText === 'string' ? row.quantityText : '',
+        amount: coerceAmount(row),
         unit: typeof row.unit === 'string' ? row.unit : '',
+        name: typeof row.name === 'string' ? row.name : '',
         notes: typeof row.notes === 'string' ? row.notes : '',
       };
+      const kept = coerceKept(row.kept);
+      return kept ? { ...ingredient, kept } : ingredient;
     })
     .filter((item): item is RecipeEditorIngredientDraft => item !== null);
   return rows.length > 0 ? rows : [emptyIngredientRow()];
+}
+
+/** `amount`, or the two fields an editor from before W38.15 sent. */
+function coerceAmount(row: Record<string, unknown>): string {
+  if (typeof row.amount === 'string') {
+    return row.amount;
+  }
+  if (typeof row.quantityText === 'string' && row.quantityText.trim().length > 0) {
+    return row.quantityText;
+  }
+  return typeof row.quantity === 'string' ? row.quantity : '';
+}
+
+function coerceKept(value: unknown): RecipeEditorKeptAmount | null {
+  if (typeof value !== 'object' || value === null) {
+    return null;
+  }
+  const kept = value as Record<string, unknown>;
+  if (
+    typeof kept.amount !== 'string' ||
+    typeof kept.quantityText !== 'string' ||
+    typeof kept.quantity !== 'number' ||
+    !Number.isFinite(kept.quantity)
+  ) {
+    return null;
+  }
+  return { amount: kept.amount, quantity: kept.quantity, quantityText: kept.quantityText };
 }
 
 function coerceSteps(value: unknown): RecipeEditorStepDraft[] {

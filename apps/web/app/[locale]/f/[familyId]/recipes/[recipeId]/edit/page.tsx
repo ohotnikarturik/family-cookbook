@@ -1,4 +1,8 @@
-import { getRecipe, resolveAccessibleFamily } from '@family-cookbook/application';
+import {
+  getRecipe,
+  listRecipeBrowseOptions,
+  resolveAccessibleFamily,
+} from '@family-cookbook/application';
 import { getSessionUser } from '@family-cookbook/data-access';
 import { createServerSupabaseClient } from '@family-cookbook/data-access/supabase/server';
 import { canEditRecipe, canManageRecipeTags } from '@family-cookbook/permissions';
@@ -100,6 +104,9 @@ async function EditRecipeContent({ params }: Props) {
   }
 
   const preserved = preservedTranslationsFromDetail(recipe);
+  // Suggestions only: if the list cannot be loaded, the category field still takes free text.
+  const browseOptions = await listRecipeBrowseOptions(supabase, { familyId });
+  const categoryOptions = browseOptions.status === 'ok' ? browseOptions.options.categories : [];
 
   return (
     <section className="space-y-6">
@@ -116,10 +123,11 @@ async function EditRecipeContent({ params }: Props) {
           expectedVersion: recipe.version,
           preserved,
         }}
-        initialDraft={draftFromRecipeDetail(recipe)}
+        initialDraft={draftFromRecipeDetail(recipe, locale)}
         canManageRecipeTags={canManageRecipeTags(workspace.workspace.role)}
         cancelHref={`/f/${familyId}/recipes/${recipeId}`}
         recipeAssets={recipe.assets}
+        categoryOptions={categoryOptions}
       />
     </section>
   );

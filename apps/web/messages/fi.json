@@ -568,11 +568,10 @@
       "saving": "Tallennetaan…",
       "sections": {
         "basics": "Perustiedot",
-        "timing": "Ajat ja annokset",
-        "meta": "Kategoria ja muistiinpanot",
-        "tags": "Tunnisteet",
         "ingredients": "Ainekset",
-        "steps": "Vaiheet"
+        "steps": "Vaiheet",
+        "details": "Lisätiedot",
+        "tags": "Tunnisteet"
       },
       "fields": {
         "title": "Reseptin nimi",
@@ -589,7 +588,8 @@
       "hints": {
         "title": "Selkeä nimi auttaa löytämään reseptin myöhemmin.",
         "sourceLanguage": "Kieli, jolla kirjoitat — erillinen käyttöliittymän kielestä.",
-        "quantityText": "Käytä esim. „maun mukaan”, kun numero ei sovi.",
+        "amount": "Määrä voi olla luku, kuten 2, 1,5 tai 1 1/2, tai sanoja, kuten ”maun mukaan”.",
+        "category": "Valitse perheen jo käyttämä kategoria tai kirjoita uusi.",
         "tagsEditor": "Uudet tunnistenimet lisätään perheen yhteiseen listaan.",
         "tagsContributor": "Voit liittää olemassa olevia tunnisteita nimellä. Uusien luonti vaatii muokkaajan roolin.",
         "stepDuration": "Valinnainen aika tälle vaiheelle minuutteina.",
@@ -602,25 +602,43 @@
         "name": "Tunnisteen nimi"
       },
       "ingredients": {
-        "name": "Aines",
-        "quantity": "Määrä (luku)",
-        "quantityText": "Määrä (teksti)",
+        "amount": "Määrä",
         "unit": "Yksikkö",
-        "notes": "Muistiinpanot",
+        "unitOptions": "g|kg|ml|dl|l|tl|rkl|mm|kpl|ripaus|purkki|pussi|nippu|viipale|kynsi",
+        "name": "Aines",
+        "note": "Huomautus",
+        "addNote": "Lisää huomautus",
         "add": "Lisää aines",
         "remove": "Poista {name}",
-        "row": "Aines {index}"
+        "row": "Aines {index}",
+        "removed": "{name} poistettu.",
+        "moved": "{name} siirretty kohtaan {position}.",
+        "bulk": {
+          "open": "Lisää monta kerralla",
+          "label": "Ainekset, yksi riville",
+          "hint": "Esimerkiksi: 200 g voita. Jokaisesta rivistä tulee oma aineksensa, jonka voit tarkistaa ennen tallennusta.",
+          "add": "Lisää listaan",
+          "cancel": "Peruuta",
+          "empty": "Kirjoita vähintään yksi aines.",
+          "full": "Reseptissä on jo suurin sallittu määrä aineksia ({max}).",
+          "added": "{count, plural, one {# aines lisätty.} other {# ainesta lisätty.}}",
+          "truncated": "{count, plural, one {# aines lisätty.} other {# ainesta lisätty.}} Reseptissä voi olla enintään {max} ainesta, joten loput jätettiin pois."
+        }
       },
       "steps": {
-        "instruction": "Ohje",
+        "label": "Vaihe {index}",
         "durationMinutes": "Vaiheen aika (min)",
+        "moreOptions": "Lisää valintoja",
         "add": "Lisää vaihe",
         "remove": "Poista vaihe {index}",
-        "row": "Vaihe {index}"
+        "row": "Vaihe {index}",
+        "removed": "Vaihe {index} poistettu.",
+        "moved": "Vaihe {from} siirretty kohtaan {position}."
       },
       "actions": {
         "moveUp": "Siirrä ylös",
-        "moveDown": "Siirrä alas"
+        "moveDown": "Siirrä alas",
+        "remove": "Poista"
       },
       "errors": {
         "validation": "Tarkista korostetut kentät ja yritä uudelleen.",
@@ -631,6 +649,7 @@
         "required": "Täytä kenttä tai tyhjennä rivi.",
         "field": "Tarkista tämä kenttä.",
         "invalidNumber": "Anna kelvollinen luku tai jätä kenttä tyhjäksi.",
+        "amount": "Lyhennä määrää (enintään 120 merkkiä) tai siirrä muut sanat huomautukseen.",
         "forbidden": "Sinulla ei ole oikeutta tallentaa tätä reseptiä.",
         "saveFailed": "Reseptiä ei voitu tallentaa. Tarkista yhteys ja yritä uudelleen.",
         "versionConflict": "Joku muu tallensi uudemman version. Lataa editori uudelleen ennen tallennusta.",

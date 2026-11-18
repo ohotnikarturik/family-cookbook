@@ -3,6 +3,7 @@ import { createRecipePayloadSchema, updateRecipePayloadSchema } from '@family-co
 
 import { resolveSourceLanguageFromDraft } from './draft';
 import {
+  parseIngredientAmount,
   parseOptionalNonNegativeInt,
   parseOptionalPositiveNumber,
   trimToNull,
@@ -19,8 +20,7 @@ export type BuiltRecipePayload<T> = Readonly<{
 function isBlankIngredient(row: RecipeEditorDraft['ingredients'][number]): boolean {
   return (
     row.name.trim().length === 0 &&
-    row.quantity.trim().length === 0 &&
-    row.quantityText.trim().length === 0 &&
+    row.amount.trim().length === 0 &&
     row.unit.trim().length === 0 &&
     row.notes.trim().length === 0
   );
@@ -31,6 +31,28 @@ function isBlankStep(row: RecipeEditorDraft['steps'][number]): boolean {
   return (
     !hasPhoto && row.instruction.trim().length === 0 && row.durationMinutes.trim().length === 0
   );
+}
+
+type IngredientAmountFields = Pick<
+  CreateRecipePayload['ingredients'][number],
+  'quantity' | 'quantityText'
+>;
+
+/** The single Amount field as the contract's `quantity` or `quantityText` (never both, unless kept). */
+export function ingredientAmountFields(
+  row: RecipeEditorDraft['ingredients'][number],
+): IngredientAmountFields {
+  if (row.kept && row.amount.trim() === row.kept.amount.trim()) {
+    return { quantity: row.kept.quantity, quantityText: row.kept.quantityText };
+  }
+  const parsed = parseIngredientAmount(row.amount);
+  if (parsed.kind === 'quantity') {
+    return { quantity: parsed.quantity };
+  }
+  if (parsed.kind === 'text') {
+    return { quantityText: parsed.text };
+  }
+  return {};
 }
 
 function mapIngredients(draft: RecipeEditorDraft): {
@@ -46,24 +68,14 @@ function mapIngredients(draft: RecipeEditorDraft): {
     if (isBlankIngredient(row)) {
       continue;
     }
-    let rowInvalid = false;
     if (row.name.trim().length === 0) {
       fieldErrors[`ingredients.${index}.name`] = 'required';
-      rowInvalid = true;
-    }
-    const quantity = parseOptionalPositiveNumber(row.quantity);
-    if (quantity === 'invalid') {
-      fieldErrors[`ingredients.${index}.quantity`] = 'invalidNumber';
-      rowInvalid = true;
-    }
-    if (rowInvalid || quantity === 'invalid') {
       continue;
     }
     rows.push({
       position: rows.length + 1,
       name: row.name.trim(),
-      quantity: quantity ?? undefined,
-      quantityText: trimToNull(row.quantityText) ?? undefined,
+      ...ingredientAmountFields(row),
       unit: trimToNull(row.unit) ?? undefined,
       notes: trimToNull(row.notes) ?? undefined,
     });

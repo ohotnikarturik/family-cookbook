@@ -1,4 +1,4 @@
-import { resolveAccessibleFamily } from '@family-cookbook/application';
+import { listRecipeBrowseOptions, resolveAccessibleFamily } from '@family-cookbook/application';
 import { canCreateRecipe } from '@family-cookbook/permissions';
 import { createServerSupabaseClient } from '@family-cookbook/data-access/supabase/server';
 import { getTranslations } from 'next-intl/server';
@@ -61,6 +61,10 @@ async function NewRecipeContent({ params }: Props) {
     );
   }
 
+  // Suggestions only: if the list cannot be loaded, the category field still takes free text.
+  const browseOptions = await listRecipeBrowseOptions(supabase, { familyId });
+  const categoryOptions = browseOptions.status === 'ok' ? browseOptions.options.categories : [];
+
   return (
     <section className="space-y-6">
       <PageHeader title={t('createTitle')} description={t('createSubtitle')} />
@@ -71,6 +75,7 @@ async function NewRecipeContent({ params }: Props) {
           family.role === 'owner' || family.role === 'admin' || family.role === 'editor'
         }
         cancelHref={`/f/${familyId}/recipes`}
+        categoryOptions={categoryOptions}
       />
     </section>
   );

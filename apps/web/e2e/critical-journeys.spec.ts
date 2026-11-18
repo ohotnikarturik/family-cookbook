@@ -57,10 +57,7 @@ test.describe('critical journeys', () => {
 
     await page.getByRole('textbox', { name: 'Recipe title', exact: true }).fill(title);
     await page.getByRole('textbox', { name: 'Ingredient', exact: true }).first().fill('water');
-    await page
-      .getByRole('textbox', { name: 'Instruction', exact: true })
-      .first()
-      .fill('Simmer gently.');
+    await page.getByRole('textbox', { name: 'Step 1', exact: true }).fill('Simmer gently.');
     await page.getByRole('button', { name: 'Save recipe' }).click();
 
     await expect(page).toHaveURL(

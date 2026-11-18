@@ -1,7 +1,6 @@
 'use client';
 
-import { ChevronDown } from 'lucide-react';
-import { useActionState, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useActionState, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 
 import {
@@ -36,6 +35,8 @@ type Props = Readonly<{
   canManageRecipeTags: boolean;
   cancelHref: string;
   recipeAssets?: readonly RecipeAssetSummary[];
+  /** Categories the family already uses, offered as suggestions. */
+  categoryOptions?: readonly string[];
 }>;
 
 export function RecipeEditorForm({
@@ -44,6 +45,7 @@ export function RecipeEditorForm({
   canManageRecipeTags,
   cancelHref,
   recipeAssets = [],
+  categoryOptions = [],
 }: Props) {
   const actionFn = mode.kind === 'create' ? createRecipeAction : updateRecipeAction;
   const [state, action, pending] = useActionState<RecipeEditorActionState | null, FormData>(
@@ -78,6 +80,7 @@ export function RecipeEditorForm({
       canManageRecipeTags={canManageRecipeTags}
       cancelHref={cancelHref}
       recipeAssets={recipeAssets}
+      categoryOptions={categoryOptions}
       sessionAssetIds={sessionAssetIds}
       onAssetUploaded={noteUploadedAsset}
       state={state}
@@ -93,6 +96,7 @@ function RecipeEditorFormBody({
   canManageRecipeTags,
   cancelHref,
   recipeAssets = [],
+  categoryOptions = [],
   sessionAssetIds,
   onAssetUploaded,
   state,
@@ -137,6 +141,9 @@ function RecipeEditorFormBody({
   const titleId = useId();
   const descriptionId = useId();
   const formId = useId();
+  const detailsHeadingId = useId();
+  const tagsHeadingId = useId();
+  const categoryListId = `${titleId}-categories`;
 
   const fieldErrors = state?.ok === false ? state.fieldErrors : undefined;
   const titleError = fieldErrors ? fieldErrorForPath(fieldErrors, 'title') : undefined;
@@ -146,6 +153,8 @@ function RecipeEditorFormBody({
   const servingsError = fieldErrors ? fieldErrorForPath(fieldErrors, 'servings') : undefined;
   const prepError = fieldErrors ? fieldErrorForPath(fieldErrors, 'prepMinutes') : undefined;
   const cookError = fieldErrors ? fieldErrorForPath(fieldErrors, 'cookMinutes') : undefined;
+  const categoryError = fieldErrors ? fieldErrorForPath(fieldErrors, 'category') : undefined;
+  const notesError = fieldErrors ? fieldErrorForPath(fieldErrors, 'notes') : undefined;
 
   useEffect(() => {
     if (state?.ok === false) {
@@ -154,17 +163,8 @@ function RecipeEditorFormBody({
   }, [state]);
 
   return (
-    <div className="pb-28 md:pb-24">
-      {mode.kind === 'edit' ? (
-        <RecipeMediaUploadPanel
-          familyId={mode.familyId}
-          recipeId={mode.recipeId}
-          assets={attachedAssets}
-          assetCount={assetCount}
-          onUploaded={onAssetUploaded}
-        />
-      ) : null}
-      <form id={formId} action={action} className="mt-6 space-y-6" aria-busy={pending} noValidate>
+    <div className="space-y-6 pb-28 md:pb-24">
+      <form id={formId} action={action} className="space-y-6" aria-busy={pending} noValidate>
         <input type="hidden" name="familyId" value={mode.familyId} />
         <input type="hidden" name="payload" value={JSON.stringify(draft)} />
         {mode.kind === 'edit' ? (
@@ -303,15 +303,28 @@ function RecipeEditorFormBody({
           </FormField>
         </section>
 
-        <EditorSection
-          title={t('sections.timing')}
-          defaultOpen={
-            draft.servings.trim() !== '' ||
-            draft.prepMinutes.trim() !== '' ||
-            draft.cookMinutes.trim() !== '' ||
-            sectionHasError(fieldErrors, ['servings', 'prepMinutes', 'cookMinutes'])
-          }
+        <IngredientListEditor
+          ingredients={draft.ingredients}
+          onChange={(ingredients) => setDraft((current) => ({ ...current, ingredients }))}
+          disabled={pending}
+          fieldErrors={fieldErrors}
+        />
+
+        <StepListEditor
+          steps={draft.steps}
+          onChange={(steps) => setDraft((current) => ({ ...current, steps }))}
+          disabled={pending}
+          fieldErrors={fieldErrors}
+          {...(mediaContext ? { mediaContext } : {})}
+        />
+
+        <section
+          aria-labelledby={detailsHeadingId}
+          className="space-y-4 rounded-xl border border-border bg-card p-4 shadow-sm"
         >
+          <h2 id={detailsHeadingId} className="text-base font-semibold text-foreground">
+            {t('sections.details')}
+          </h2>
           <div className="grid gap-4 sm:grid-cols-3">
             <NumberField
               label={t('fields.servings')}
@@ -338,17 +351,12 @@ function RecipeEditorFormBody({
               error={cookError}
             />
           </div>
-        </EditorSection>
-
-        <EditorSection
-          title={t('sections.meta')}
-          defaultOpen={
-            draft.category.trim() !== '' ||
-            draft.notes.trim() !== '' ||
-            sectionHasError(fieldErrors, ['category', 'notes'])
-          }
-        >
-          <FormField id={`${titleId}-category`} label={t('fields.category')}>
+          <FormField
+            id={`${titleId}-category`}
+            label={t('fields.category')}
+            hint={categoryOptions.length > 0 ? t('hints.category') : undefined}
+            error={categoryError}
+          >
             <Input
               value={draft.category}
               onChange={(event) =>
@@ -357,9 +365,32 @@ function RecipeEditorFormBody({
               disabled={pending}
               className="min-h-11"
               autoComplete="off"
+              list={categoryOptions.length > 0 ? categoryListId : undefined}
             />
           </FormField>
-          <FormField id={`${titleId}-notes`} label={t('fields.notes')}>
+          {categoryOptions.length > 0 ? (
+            <datalist id={categoryListId}>
+              {categoryOptions.map((category) => (
+                <option key={category} value={category} />
+              ))}
+            </datalist>
+          ) : null}
+          <div role="group" aria-labelledby={tagsHeadingId} className="space-y-2">
+            <h3 id={tagsHeadingId} className="text-sm font-medium text-foreground">
+              {t('sections.tags')}
+            </h3>
+            <TagListEditor
+              tags={draft.tags}
+              onChange={(tags) => setDraft((current) => ({ ...current, tags }))}
+              addLabel={t('tags.add')}
+              removeLabel={(name) => t('tags.remove', { name: name || t('tags.unnamed') })}
+              nameLabel={t('tags.name')}
+              nameHint={canManageRecipeTags ? t('hints.tagsEditor') : t('hints.tagsContributor')}
+              disabled={pending}
+              fieldErrors={fieldErrors}
+            />
+          </div>
+          <FormField id={`${titleId}-notes`} label={t('fields.notes')} error={notesError}>
             <Textarea
               value={draft.notes}
               onChange={(event) =>
@@ -370,71 +401,21 @@ function RecipeEditorFormBody({
               rows={3}
             />
           </FormField>
-        </EditorSection>
-
-        <EditorSection
-          title={t('sections.tags')}
-          defaultOpen={
-            draft.tags.some((tag) => tag.name.trim() !== '') ||
-            sectionHasError(fieldErrors, ['tags'])
-          }
-        >
-          <TagListEditor
-            tags={draft.tags}
-            onChange={(tags) => setDraft((current) => ({ ...current, tags }))}
-            addLabel={t('tags.add')}
-            removeLabel={(name) => t('tags.remove', { name: name || t('tags.unnamed') })}
-            nameLabel={t('tags.name')}
-            nameHint={canManageRecipeTags ? t('hints.tagsEditor') : t('hints.tagsContributor')}
-            disabled={pending}
-            fieldErrors={fieldErrors}
-          />
-        </EditorSection>
-
-        <IngredientListEditor
-          ingredients={draft.ingredients}
-          onChange={(ingredients) => setDraft((current) => ({ ...current, ingredients }))}
-          disabled={pending}
-          fieldErrors={fieldErrors}
-          labels={{
-            sectionLegend: t('sections.ingredients'),
-            name: t('ingredients.name'),
-            quantity: t('ingredients.quantity'),
-            quantityText: t('ingredients.quantityText'),
-            quantityTextHint: t('hints.quantityText'),
-            unit: t('ingredients.unit'),
-            notes: t('ingredients.notes'),
-            add: t('ingredients.add'),
-            remove: (name) => t('ingredients.remove', { name }),
-            moveUp: t('actions.moveUp'),
-            moveDown: t('actions.moveDown'),
-            rowLabel: (index) => t('ingredients.row', { index }),
-          }}
-        />
-
-        <StepListEditor
-          steps={draft.steps}
-          onChange={(steps) => setDraft((current) => ({ ...current, steps }))}
-          disabled={pending}
-          fieldErrors={fieldErrors}
-          {...(mediaContext ? { mediaContext } : {})}
-          labels={{
-            sectionLegend: t('sections.steps'),
-            instruction: t('steps.instruction'),
-            durationMinutes: t('steps.durationMinutes'),
-            durationHint: t('hints.stepDuration'),
-            add: t('steps.add'),
-            remove: (index) => t('steps.remove', { index }),
-            moveUp: t('actions.moveUp'),
-            moveDown: t('actions.moveDown'),
-            rowLabel: (index) => t('steps.row', { index }),
-          }}
-        />
+        </section>
 
         {preserved && preserved.translations.length > 0 ? (
           <p className="text-sm text-muted-foreground">{t('hints.translationsPreserved')}</p>
         ) : null}
       </form>
+      {mode.kind === 'edit' ? (
+        <RecipeMediaUploadPanel
+          familyId={mode.familyId}
+          recipeId={mode.recipeId}
+          assets={attachedAssets}
+          assetCount={assetCount}
+          onUploaded={onAssetUploaded}
+        />
+      ) : null}
       <div className="fixed inset-x-0 z-30 border-t border-border bg-background/95 px-4 py-3 backdrop-blur-sm bottom-[calc(4.25rem+env(safe-area-inset-bottom,0px))] md:bottom-0">
         <div className="mx-auto flex w-full max-w-3xl flex-col gap-3 sm:flex-row sm:items-center">
           <Button
@@ -451,48 +432,6 @@ function RecipeEditorFormBody({
         </div>
       </div>
     </div>
-  );
-}
-
-function EditorSection({
-  title,
-  defaultOpen,
-  children,
-}: Readonly<{ title: string; defaultOpen: boolean; children: ReactNode }>) {
-  const detailsRef = useRef<HTMLDetailsElement>(null);
-
-  useEffect(() => {
-    if (defaultOpen && detailsRef.current) {
-      detailsRef.current.open = true;
-    }
-  }, [defaultOpen]);
-
-  return (
-    <details ref={detailsRef} className="group rounded-xl border border-border bg-card shadow-sm">
-      <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-base font-semibold text-foreground marker:content-none [&::-webkit-details-marker]:hidden">
-        <span>{title}</span>
-        <ChevronDown
-          className="size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180"
-          aria-hidden
-        />
-      </summary>
-      <div className="space-y-4 border-t border-border p-4">{children}</div>
-    </details>
-  );
-}
-
-function sectionHasError(
-  fieldErrors: Record<string, string> | undefined,
-  prefixes: readonly string[],
-): boolean {
-  if (!fieldErrors) {
-    return false;
-  }
-  return Object.keys(fieldErrors).some((key) =>
-    prefixes.some(
-      (prefix) =>
-        key === prefix || key.startsWith(`${prefix}.`) || key.startsWith(`recipe.${prefix}`),
-    ),
   );
 }
 

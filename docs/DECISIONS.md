@@ -417,3 +417,13 @@ Reverses the banner rule in "W38.19 — Photo-less recipe cards": from `sm` up, 
 4. **Our own late results are not "outside" changes.** The form keeps the addresses it asked for that have not arrived yet; an older one arriving after a newer request (two filters picked quickly) is ignored. Any other address change resets the controls to the address.
 5. **Announcing the count:** the results page hands its count to one `role="status"` region in the layout (a region inserted with the new page is not reliably read). The first count is not read out.
 6. **Rate limit unchanged** (120/min per user). The filter lists now load once per visit in the layout, so a search costs 1 instead of 2. Back-to-back e2e runs as one user can still hit it.
+
+## W38.15 — Lighter recipe editor (2026-11-18)
+
+1. **One Amount field, no contract change.** The editor draft has `amount` instead of `quantity` + `quantityText`; `ingredientAmountFields` writes exactly one of them. Fractions are rounded to the contract's 4 decimal places, so `1/3` comes back as `0.3333`. Zero, ranges (`2-3`) and too-large numbers are kept as text. The bounds are mirrored in `parse-numbers.ts` because contracts does not export them; a Vitest test pins them to `recipeIngredientInputSchema`.
+2. **Rows with both a number and text** (possible from the old editor or MCP) show the text, which is what the detail page shows. The draft keeps the stored pair in `kept`, and while the Amount field still shows that text, saving writes both back unchanged; editing the field replaces them with one value. The server still validates the payload, so `kept` grants nothing.
+3. **Visible labels on every ingredient row**, not column headers once: clearer for all ages and for screen readers, at the cost of one label line per row.
+4. **Details is one open section** at the end (servings, times, category, tags, notes), not three collapsibles: nothing is hidden, and it no longer pushes ingredients down.
+5. **Unit suggestions** come from the UI locale's catalog (`recipes.editor.ingredients.unitOptions`, `|`-separated), not the recipe's source language. "Add several at once" recognises those units (longest first; `ст.л.` matches `ст. л.`).
+6. **Category suggestions** reuse `listRecipeBrowseOptions`; if it fails or is rate-limited, the field stays free text.
+

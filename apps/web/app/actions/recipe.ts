@@ -84,6 +84,8 @@ function translateFieldError(
       return t('errors.sourceLanguage');
     case 'errors.invalidNumber':
       return t('errors.invalidNumber');
+    case 'errors.amount':
+      return t('errors.amount');
     case 'errors.ingredientName':
       return t('errors.ingredientName');
     case 'errors.stepInstruction':
