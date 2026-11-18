@@ -434,3 +434,11 @@ Reverses the banner rule in "W38.19 — Photo-less recipe cards": from `sm` up, 
 2. **Preview after upload, from the signed URL.** The CSP `img-src` (`packages/security`) allows neither `blob:` nor `data:`, so there is no local preview before upload. Once the file is finalized, the panel shows a small thumbnail through `RecipeStepPhoto` (`size="thumbnail"`). Do not loosen the CSP for this.
 3. **Progress is shown as stages** ("Uploading {name}…", then "Photo added." or "Scan added." or an error) in one polite live region, not as a byte-level bar: the PUT uses `fetch`, which does not report upload progress.
 4. **"Take photo" only on touch screens** (`(pointer: coarse)` through `useSyncExternalStore`, false on the server so hydration matches). It uses its own input with `capture="environment"`; the normal picker is always shown. The native inputs are `sr-only`, out of the tab order and `aria-hidden`; the visible `Button` opens them.
+
+## W38.5 — Home that helps (2026-11-18)
+
+1. **Empty-Home fixture.** The seed has Family C, "Cole Empty Kitchen" (`cccccccc-…`), with no recipes and two users of its own, Owner C and Viewer C (`44444444-…01/02`). New users were chosen instead of adding Owner B or Viewer A, so that pgTAP checks like "sees exactly one family" and e2e sign-in landings stay the same. Keep Family C empty; tests that create recipes must not use it.
+2. **"Add a photo" has no button.** An empty cookbook has no recipe to add a photo to. The step tells people that the recipe page offers "Add photos" after saving (W38.6 `?added=1`). It is shown only to roles that can create recipes. "Invite" is shown only to roles that can manage invitations.
+3. **The `h1` is the family name.** The nav item stays "Home". "Add recipe" is in the header only when the cookbook has recipes, because the first step already offers it in an empty one. Viewers get no header button, since "See all recipes" sits next to the list.
+4. **Home shows at most 10 category chips and no "any category" chip** (`RecipeCategoryChips` `showAll={false}`). The full list is on Recipes.
+

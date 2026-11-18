@@ -61,6 +61,20 @@ begin
           'Multi Family',
           'uk',
           'system'
+        ),
+        (
+          '44444444-4444-4444-8444-444444444401'::uuid,
+          'owner-c@family-cookbook.test',
+          'Owner C',
+          'en',
+          'system'
+        ),
+        (
+          '44444444-4444-4444-8444-444444444402'::uuid,
+          'viewer-c@family-cookbook.test',
+          'Viewer C',
+          'en',
+          'system'
         )
     ) as t(user_id, email, display_name, preferred_language, theme_preference)
   loop
@@ -150,6 +164,13 @@ values
     'Berg Test Pantry',
     'en',
     '22222222-2222-4222-8222-222222222201'::uuid
+  ),
+  -- Family C has no recipes on purpose: the empty Home (W38.5). Keep it empty.
+  (
+    'cccccccc-cccc-4ccc-8ccc-cccccccccccc'::uuid,
+    'Cole Empty Kitchen',
+    'en',
+    '44444444-4444-4444-8444-444444444401'::uuid
   );
 
 insert into
@@ -215,6 +236,22 @@ values
     'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbb0003'::uuid,
     'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb'::uuid,
     '33333333-3333-4333-8333-333333333301'::uuid,
+    'viewer',
+    'active',
+    now()
+  ),
+  (
+    'cccccccc-cccc-4ccc-8ccc-cccccccc0001'::uuid,
+    'cccccccc-cccc-4ccc-8ccc-cccccccccccc'::uuid,
+    '44444444-4444-4444-8444-444444444401'::uuid,
+    'owner',
+    'active',
+    now()
+  ),
+  (
+    'cccccccc-cccc-4ccc-8ccc-cccccccc0002'::uuid,
+    'cccccccc-cccc-4ccc-8ccc-cccccccccccc'::uuid,
+    '44444444-4444-4444-8444-444444444402'::uuid,
     'viewer',
     'active',
     now()

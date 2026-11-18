@@ -623,7 +623,7 @@ Added 2026-11-18 from review of the running app: search ran only on the button o
 
 **Tests:** Playwright empty and populated Home for owner and viewer; axe.
 
-**Status:** Not started.
+**Status:** Done (2026-11-18). Home's `h1` is the family name, with a greeting, "Add recipe" for roles that may create, a search box that opens Recipes with `?query=` (`next/form`, works without JavaScript), up to 10 category chips that open the filtered list, the six most recent recipes and "See all recipes". An empty cookbook shows numbered steps for the role (`lib/home-first-steps.ts`): add a recipe, add a photo (text only, no button), invite (owner/admin only); a viewer gets a calm message without buttons. Seeded empty Family C (Owner C, Viewer C) after an approved local reset. Format, lint, typecheck, unit tests (web 129, all packages, MCP 9), build, pgTAP 175/175, `test:screens` 12/12 (summaries unchanged, ru fits at 360px in light and dark) and the new `e2e/home.spec.ts` (populated owner and viewer, search, chip, empty owner and viewer, 320px, axe light and dark) pass. Full Playwright: 148 passed, 2 skipped, 3 failed, all known intermittent ones (`recipe-detail` author line, `recipe-search` clearing, `sign-in-code` dark axe); on rerun 2 passed and `sign-in-code` failed once more, then passed with and without this change. Not run: MCP tests (no shared contract change); manual keyboard/screen-reader check. **Open:** Home now makes one more rate-limited call (`listRecipeBrowseOptions`); a family with only archived recipes sees the empty steps.
 
 ### W38.17 — Calmer confirmations, history, members, translations
 

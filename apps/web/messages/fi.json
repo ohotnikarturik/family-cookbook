@@ -211,13 +211,37 @@
       }
     },
     "dashboard": {
-      "title": "Etusivu",
-      "subtitle": "Pikakatsaus perheen keittiöön. Haku ja suodattimet ovat täydellä reseptilistalla.",
-      "yourRole": "Roolisi",
-      "memberCount": "Aktiiviset jäsenet",
-      "browseRecipes": "Selaa kaikkia reseptejä",
+      "greeting": "Tervetuloa kotiin. Etsi resepti tai lisää perheesi suosikki.",
       "addRecipe": "Lisää resepti",
-      "recentRecipes": "Viimeksi päivitetty"
+      "recentRecipes": "Viimeksi päivitetty",
+      "seeAllRecipes": "Näytä kaikki reseptit",
+      "categoriesLabel": "Reseptien kategoriat",
+      "search": {
+        "label": "Hae reseptejä",
+        "placeholder": "Reseptin nimi tai ainesosa",
+        "submit": "Hae"
+      },
+      "empty": {
+        "title": "Keittokirjasi on tyhjä",
+        "intro": "Aloita kolmella askeleella:",
+        "viewer": "Reseptejä ei ole vielä. Kun joku perheestäsi lisää reseptin, se näkyy tässä.",
+        "steps": {
+          "addRecipe": {
+            "title": "Lisää ensimmäinen resepti",
+            "description": "Kirjoita se niin kuin itse teet ruoan. Voit muuttaa sitä myöhemmin.",
+            "action": "Lisää resepti"
+          },
+          "addPhoto": {
+            "title": "Lisää kuva",
+            "description": "Kun olet tallentanut reseptin, sen sivulla on painike ”Lisää kuvia”. Kuva ruoasta tai käsin kirjoitetusta reseptikortista käy."
+          },
+          "invite": {
+            "title": "Kutsu perheesi",
+            "description": "Lähetä sukulaisille kutsu, niin hekin voivat lukea ja lisätä reseptejä.",
+            "action": "Kutsu perhettä"
+          }
+        }
+      }
     },
     "roles": {
       "owner": "Omistaja",

@@ -10,7 +10,7 @@ const recipe = `${family}/recipes/${RECIPE_ACTIVE_ID}`;
 
 /** Every family-shell page: its single `h1`, and the back link (if any) that must sit above it. */
 const ROUTES = [
-  { name: 'home', path: family, title: 'Home' },
+  { name: 'home', path: family, title: 'Andersen Test Kitchen' },
   { name: 'recipes', path: `${family}/recipes`, title: 'Recipes' },
   { name: 'recipe detail', path: recipe, title: /\S/ },
   { name: 'recipe new', path: `${family}/recipes/new`, title: 'Add a recipe' },

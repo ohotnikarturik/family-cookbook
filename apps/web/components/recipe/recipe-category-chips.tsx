@@ -13,6 +13,8 @@ type Props = Readonly<{
   allLabel: string;
   /** Read out after the active chip's name, e.g. "selected". */
   selectedLabel: string;
+  /** Show the "any category" chip first. Off on Home, where no category is being browsed. */
+  showAll?: boolean;
 }>;
 
 const chipClass =
@@ -27,6 +29,7 @@ export function RecipeCategoryChips({
   label,
   allLabel,
   selectedLabel,
+  showAll = true,
 }: Props) {
   if (categories.length === 0) {
     return null;
@@ -41,20 +44,22 @@ export function RecipeCategoryChips({
   return (
     <nav aria-label={label}>
       <ul className="flex list-none flex-wrap gap-2 p-0">
-        <li>
-          <Link
-            href={href(undefined)}
-            className={cn(
-              chipClass,
-              active === undefined
-                ? 'border-primary bg-primary text-primary-foreground'
-                : 'border-border bg-card text-foreground hover:bg-muted',
-            )}
-          >
-            {allLabel}
-            {active === undefined ? <span className="sr-only">{selectedLabel}</span> : null}
-          </Link>
-        </li>
+        {showAll ? (
+          <li>
+            <Link
+              href={href(undefined)}
+              className={cn(
+                chipClass,
+                active === undefined
+                  ? 'border-primary bg-primary text-primary-foreground'
+                  : 'border-border bg-card text-foreground hover:bg-muted',
+              )}
+            >
+              {allLabel}
+              {active === undefined ? <span className="sr-only">{selectedLabel}</span> : null}
+            </Link>
+          </li>
+        ) : null}
         {categories.map((category) => {
           const isActive = active === category.toLowerCase();
           return (

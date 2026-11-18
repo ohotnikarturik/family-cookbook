@@ -211,13 +211,37 @@
       }
     },
     "dashboard": {
-      "title": "Home",
-      "subtitle": "A quick look at what your family has been cooking. Open the full recipe list for search and filters.",
-      "yourRole": "Your role",
-      "memberCount": "Active members",
-      "browseRecipes": "Browse all recipes",
+      "greeting": "Welcome home. Find a recipe, or add one your family loves.",
       "addRecipe": "Add recipe",
-      "recentRecipes": "Recently updated"
+      "recentRecipes": "Recently updated",
+      "seeAllRecipes": "See all recipes",
+      "categoriesLabel": "Recipe categories",
+      "search": {
+        "label": "Search recipes",
+        "placeholder": "Recipe name or ingredient",
+        "submit": "Search"
+      },
+      "empty": {
+        "title": "Your cookbook is empty",
+        "intro": "Three steps to get started:",
+        "viewer": "No recipes yet. When someone in your family adds one, it will appear here.",
+        "steps": {
+          "addRecipe": {
+            "title": "Add your first recipe",
+            "description": "Write it down the way you cook it. You can change it later.",
+            "action": "Add recipe"
+          },
+          "addPhoto": {
+            "title": "Add a photo",
+            "description": "After you save a recipe, its page offers “Add photos”. A photo of the dish or of a handwritten card both work."
+          },
+          "invite": {
+            "title": "Invite your family",
+            "description": "Send relatives an invitation so they can read and add recipes too.",
+            "action": "Invite family"
+          }
+        }
+      }
     },
     "roles": {
       "owner": "Owner",
