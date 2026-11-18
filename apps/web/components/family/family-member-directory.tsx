@@ -10,6 +10,7 @@ import {
 } from '@/app/actions/family-member-admin';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { submitWithoutReset } from '@/lib/submit-without-reset';
 
 type ManagedMember = Readonly<{
   userId: string;
@@ -124,7 +125,10 @@ function MemberAdminPanel({
           {adminLabels.manageMember}
         </summary>
         <div className="space-y-3 border-t border-border p-4">
-          <form action={roleAction} className="flex flex-col gap-3 sm:flex-row sm:items-end">
+          <form
+            onSubmit={submitWithoutReset(roleAction)}
+            className="flex flex-col gap-3 sm:flex-row sm:items-end"
+          >
             <input type="hidden" name="familyId" value={familyId} />
             <input type="hidden" name="memberUserId" value={member.userId} />
             <div className="min-w-0 flex-1 space-y-2">

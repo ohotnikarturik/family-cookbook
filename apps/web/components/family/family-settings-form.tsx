@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { locales } from '@/i18n/routing';
 import { languageLabel } from '@/lib/language-label';
+import { submitWithoutReset } from '@/lib/submit-without-reset';
 
 type Props = Readonly<{
   familyId: string;
@@ -53,7 +54,7 @@ export function FamilySettingsForm({ familyId, name, defaultLanguage, canEdit }:
 
   return (
     <form
-      action={action}
+      onSubmit={submitWithoutReset(action)}
       className="space-y-4 rounded-xl border border-border bg-card p-5 shadow-sm"
     >
       <input type="hidden" name="familyId" value={familyId} />

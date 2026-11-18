@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { locales } from '@/i18n/routing';
 import { type ThemePreference } from '@/lib/theme';
+import { submitWithoutReset } from '@/lib/submit-without-reset';
 
 type Props = Readonly<{
   profile: OwnProfile;
@@ -41,7 +42,7 @@ export function AccountPreferencesForm({ profile }: Props) {
 
   return (
     <form
-      action={action}
+      onSubmit={submitWithoutReset(action)}
       className="space-y-5 rounded-xl border border-border bg-card p-5 shadow-sm"
     >
       <div className="space-y-2">
