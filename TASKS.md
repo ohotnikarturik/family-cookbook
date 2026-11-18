@@ -441,7 +441,7 @@ Measured on `main` before this epic: Home has no highlighted nav item; no page i
 **Execution order:** one task per fresh session.
 
 1. P0: W38.0 → W38.1 → W38.2 → W38.3 → W38.4
-2. P1: W38.19 → W38.13 → W38.14 → W38.6 → W38.15 → W38.16 → W38.5 → W38.17 → W38.7 → W38.18 → W38.8 → W38.20
+2. P1: W38.19 → W38.13 → W38.14 → W38.6 → W38.21 → W38.15 → W38.16 → W38.5 → W38.17 → W38.7 → W38.18 → W38.8 → W38.20
 3. P2: W38.9 → W38.10 → W38.11 → W38.12
 4. Then resume EPIC 4 at T4.2.
 
@@ -565,6 +565,21 @@ Split into two sessions if large: (a) PageHeader + family pages, (b) account/aut
 
 **Status:** Done (2026-11-18). One search box (title, description, category, ingredient names via a new `anyText` filter; the address bar keeps `?query=`), a "Search" button, a "Filters" button that is collapsed on every width and opens selects for category, tag, language (by name), author and sort plus the archived checkbox, category chips under the search box, a total count (`totalCount`, web only; MCP output is unchanged) and an empty state with "Clear filters". New `listFamilyCategories`, `listFamilyTags`, `listFamilyRecipeLanguages` and the `listRecipeBrowseOptions` use case (W38.5 can reuse the categories). Format, lint, typecheck, unit tests (all packages, MCP 9), build, application integration tests against the local stack (11, including injection-style text, cross-family and archived cases) and `test:screens` 12/12 pass; Playwright: new `e2e/recipe-search.spec.ts` (9) passes and the final full suite run passed 111 (2 skipped); three of the earlier runs each had one intermittent failure (see Open). Not run: `supabase:test` (no migration or seed change); manual keyboard/screen-reader check. **Open:** the full suite is not stable: `language-names` "no reading-language selector" fails intermittently and also failed on the untouched tree (a hidden streamed duplicate makes `getByText('Finnish')` match twice), `sign-in-code` dark axe failed once, and my ingredient-search test timed out once (1 min) and did not reproduce in 6 later runs. At 360px the category chips take about five rows and push the first card down, so the "four cards above the fold" target from W38.19 is still not met; consider a single scrolling row or a "More" limit if it matters.
 
+### W38.21 — Search as you type, filters without a confirm button
+
+Added 2026-11-18 from review of the running app: search ran only on the button or Enter, and filters needed a "Search" button to apply.
+
+- Results update while typing, after 300 ms without a keystroke, once the box holds at least 2 characters (counted as characters, not UTF-16 units). Clearing the box shows all recipes again. Enter still searches and also accepts a single character. No Search button.
+- A filter (category, tag, language, author, sort, archived) applies as soon as it is chosen; the panel has no apply button, only "Clear filters".
+- Update the address with `router.replace` (no history entry per keystroke); a new search starts at the first page and keeps the chosen filters.
+- Typing and choosing filters must not lose focus or close the Filters panel. External changes (removing a chip, "Clear filters", Back) update the controls.
+- Do not search during IME composition. Read out the new result count politely. Short hints under the box and in the panel, in all four locales.
+- No new request path: the existing page and use case do the work, rate limiting unchanged.
+
+**Tests:** Vitest for the trigger rule and the address builder; Playwright: types and finds without clicking, one letter does nothing, Enter searches one letter, clearing resets, focus stays, one history entry, chip removal clears the box, a filter applies on change with the panel open and focus kept, filters kept while typing; axe in light and dark at 320px.
+
+**Status:** Done (2026-11-18). No Search button: typing searches after 300 ms from 2 characters (code points), Enter searches straight away (also 1 character), clearing shows all recipes; filters apply on change and the panel only has "Clear filters". `router.replace` keeps one history entry; the default sort and `cursor` stay out of the address; hints under the box and in the panel (en/fi/ru/uk); no search during IME composition. The heading, search box, filters and chips moved into a route-group layout, `recipes/(list)/layout.tsx`, so Next keeps them mounted (focus and the open panel survive) and only the results page is rebuilt; a polite live region there reads out the new count. The filter lists now load once per visit, not on every search. Format, lint, typecheck, unit tests (web 89, all packages, MCP 9), build, Playwright 129 passed / 2 skipped (search spec 17, three clean runs a minute apart) and `test:screens` 12/12 (summaries identical to before) pass. Not run: `supabase:test` and MCP tests (no migration or shared contract change); manual keyboard/screen-reader and IME check. **Open:** the per-user search limit (120/min) can still be hit by back-to-back e2e runs as one user; a person typing stays far below it.
+
 ### W38.6 — Recipe detail readability
 
 - Actions: "Edit" is the one visible button on all widths; History, Translations, Print (W38.12) and Archive go into a "More" menu.
@@ -654,6 +669,7 @@ Added 2026-11-18 from review of the running app: many submit buttons are enabled
 
 - **Rule:** a button that saves, sends, uploads or applies is disabled while there is nothing to apply: the form is unchanged since it loaded or was last saved, a required starting input is empty, no file or option is chosen, or the request is already running. Navigation links and buttons that open things (menus, dialogs, filters) stay enabled.
 - **Forms to cover:** recipe editor (edit: Save until something changes; create: Save until a title exists), translation form, family settings, account preferences, member role change (selected role equals current role), invite member (empty email), create family (empty name), media upload and step-photo upload (no file chosen), ownership transfer (no member selected), accept invitation, sign-in code step (empty or incomplete code), pagination at first/last page.
+- **Apply without a button where the header already does:** on the Account page, theme and interface language apply as soon as they are chosen (same as the header switches) and are saved to the profile; display name keeps its Save button. Found in the 2026-11-18 review of extra confirm steps; the remaining one, recipe media upload, is W38.16.
 - **Shared helper:** one small `lib/form-dirty.ts` (compare a snapshot of the initial values with the current values; reset after a successful save) and, if useful, a `disabled` hint pattern in `FormField`. No per-form copies.
 - **Accessibility:** a disabled button is not focusable, so say why in visible text when the reason is not obvious (for example "Change something to save"), in all four locales. Keep errors for invalid input reachable: do not disable a button only because a field is invalid after the user typed; show the error instead. Disabled colours must still meet contrast in both themes (no reliance on opacity alone).
 - Never hides what the server decides: server-side validation and permissions stay authoritative; this is only a usability aid.

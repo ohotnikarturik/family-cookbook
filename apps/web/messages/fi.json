@@ -378,6 +378,7 @@
     "filters": {
       "legend": "Reseptihaun suodattimet",
       "toggleLabel": "Suodattimet",
+      "panelHint": "Suodattimet tulevat voimaan heti, kun valitset ne.",
       "activeLabel": "Käytössä olevat suodattimet",
       "query": "Haku",
       "category": "Kategoria",
@@ -393,7 +394,7 @@
       "clear": "Tyhjennä suodattimet",
       "removeChip": "Poista {value}",
       "queryPlaceholder": "Hae nimellä tai ainesosalla",
-      "submit": "Hae",
+      "queryHint": "Tulokset päivittyvät kirjoittaessasi. Kirjoita vähintään 2 kirjainta.",
       "categoriesLabel": "Selaa kategorioittain",
       "anyCategory": "Mikä tahansa kategoria",
       "anyTag": "Mikä tahansa tunniste",

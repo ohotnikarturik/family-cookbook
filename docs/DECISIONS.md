@@ -408,3 +408,12 @@ On `sm` and up a card without a photo is a vertical card with a tinted chef-hat 
 ## Photo-less cards match photo cards (2026-11-18)
 
 Reverses the banner rule in "W38.19 — Photo-less recipe cards": from `sm` up, the tinted banner without a photo is 4:3, the same shape as a photo cover, so every card in the grid has the same picture area. Reason: banners that were 96px in photo-less rows and tall in mixed rows looked uneven. Text height still varies with a two-line title. Phones keep the compact row.
+
+## W38.21 — Search as you type, filters without a confirm button (2026-11-18)
+
+1. **Rule:** 300 ms after the last keystroke, at least 2 characters counted as code points (one emoji or one Cyrillic letter is one character). Empty text clears the search. Enter searches at once and accepts 1 character. There is no Search button; filters apply on change (no apply button). A content update on the same page with focus kept is not a change of context (WCAG 3.2.2).
+2. **`router.replace`, not `push`:** one history entry for a typed search. The default sort (`updatedAt`) and `cursor` are left out of the address; a new search starts on page 1.
+3. **Controls live in a layout.** Next.js rebuilds a page when its search params change (focus lost, Filters panel closed) but keeps layouts. The heading, search box, filters and both chip rows are in `app/[locale]/f/[familyId]/recipes/(list)/layout.tsx` with the client `RecipeBrowseShell`, which reads `useSearchParams`; the results stay in `(list)/page.tsx`. Detail, new and edit pages sit outside the `(list)` group. This replaced a short-lived focus-carry module.
+4. **Our own late results are not "outside" changes.** The form keeps the addresses it asked for that have not arrived yet; an older one arriving after a newer request (two filters picked quickly) is ignored. Any other address change resets the controls to the address.
+5. **Announcing the count:** the results page hands its count to one `role="status"` region in the layout (a region inserted with the new page is not reliably read). The first count is not read out.
+6. **Rate limit unchanged** (120/min per user). The filter lists now load once per visit in the layout, so a search costs 1 instead of 2. Back-to-back e2e runs as one user can still hit it.

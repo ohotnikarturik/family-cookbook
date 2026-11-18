@@ -1,10 +1,4 @@
-import {
-  listFamilyMembers,
-  listRecipeBrowseOptions,
-  searchRecipes,
-} from '@family-cookbook/application';
-import { resolveMemberDisplayLabel } from '@family-cookbook/domain';
-import { getSessionUser } from '@family-cookbook/data-access';
+import { searchRecipes } from '@family-cookbook/application';
 import { createServerSupabaseClient } from '@family-cookbook/data-access/supabase/server';
 import { getTranslations } from 'next-intl/server';
 import { connection } from 'next/server';
@@ -13,17 +7,13 @@ import { Suspense } from 'react';
 
 import { RecipeBrowseStates } from '@/components/recipe/recipe-browse-states';
 import { getRecipeCardLabels } from '@/components/recipe/recipe-card-labels';
-import { RecipeCategoryChips } from '@/components/recipe/recipe-category-chips';
+import { AnnounceRecipeResults } from '@/components/recipe/recipe-browse-shell';
 import { RecipeList } from '@/components/recipe/recipe-list';
 import { RecipePagination } from '@/components/recipe/recipe-pagination';
-import { RecipeSearchActiveChips } from '@/components/recipe/recipe-search-active-chips';
-import { RecipeSearchForm } from '@/components/recipe/recipe-search-form';
 import { LoadingState } from '@/components/product/loading-state';
-import { PageHeader } from '@/components/product/page-header';
 import { UnavailablePage } from '@/components/product/unavailable-page';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/i18n/navigation';
-import { buildRecipeSearchQuery } from '@/lib/build-recipe-search-query';
 import { parseRecipeSearchFromUrl } from '@/lib/recipe-search-params';
 import { locales, type AppLocale } from '@/i18n/routing';
 
@@ -59,7 +49,6 @@ async function RecipesContent({ params, searchParams }: Props) {
   if (parsed.input === null) {
     return (
       <section className="space-y-4">
-        <PageHeader title={t('list.title')} description={t('list.subtitle')} />
         <RecipeBrowseStates
           variant="invalidFilters"
           title={t('status.invalidFiltersTitle')}
@@ -73,19 +62,18 @@ async function RecipesContent({ params, searchParams }: Props) {
   }
 
   const supabase = await createServerSupabaseClient();
-  const sessionUser = await getSessionUser(supabase);
   const result = await searchRecipes(supabase, parsed.input);
 
   if (result.status === 'auth_required') {
     redirect(`/${locale}/auth/sign-in?next=/${locale}/f/${familyId}/recipes`);
   }
   if (result.status === 'forbidden') {
-    return <UnavailablePage locale={locale} headingLevel="h1" embedded />;
+    // The layout already shows the page heading.
+    return <UnavailablePage locale={locale} headingLevel="h2" embedded />;
   }
   if (result.status === 'validation_error') {
     return (
       <section className="space-y-4">
-        <PageHeader title={t('list.title')} description={t('list.subtitle')} />
         <RecipeBrowseStates
           variant="invalidFilters"
           title={t('status.invalidFiltersTitle')}
@@ -100,7 +88,6 @@ async function RecipesContent({ params, searchParams }: Props) {
   if (result.status === 'rate_limited') {
     return (
       <section className="space-y-4">
-        <PageHeader title={t('list.title')} description={t('list.subtitle')} />
         <RecipeBrowseStates
           variant="error"
           title={t('status.rateLimitedTitle')}
@@ -112,7 +99,6 @@ async function RecipesContent({ params, searchParams }: Props) {
   if (result.status === 'query_failed') {
     return (
       <section className="space-y-4">
-        <PageHeader title={t('list.title')} description={t('list.subtitle')} />
         <RecipeBrowseStates
           variant="error"
           title={t('status.errorTitle')}
@@ -123,86 +109,23 @@ async function RecipesContent({ params, searchParams }: Props) {
   }
 
   const { items, nextCursor } = result.result;
-  const tMembers = await getTranslations({ locale, namespace: 'family.members' });
-  const membersListed = await listFamilyMembers(supabase, { familyId });
-  const contributorOptions =
-    membersListed.status === 'ok' && sessionUser
-      ? membersListed.members
-          .map((member) => {
-            const name = resolveMemberDisplayLabel({
-              displayName: member.displayName,
-              memberUserId: member.userId,
-              actorUserId: sessionUser.id,
-              youLabel: tMembers('you'),
-              neutralLabel: tMembers('neutralName'),
-            });
-            return {
-              userId: member.userId,
-              label:
-                member.status === 'suspended' ? `${name} (${tMembers('suspendedBadge')})` : name,
-            };
-          })
-          .sort((a, b) => {
-            if (a.userId === sessionUser.id) {
-              return -1;
-            }
-            if (b.userId === sessionUser.id) {
-              return 1;
-            }
-            return a.label.localeCompare(b.label, locale);
-          })
-      : [];
+  const input = parsed.input;
+  const hasActiveFilters = Boolean(
+    input.anyText ||
+      input.ingredient ||
+      input.category ||
+      input.tag ||
+      input.language ||
+      input.createdBy ||
+      input.includeArchived,
+  );
+  const countText = t('list.count', { count: result.result.totalCount ?? items.length });
 
-  const formValues = {
-    ...(parsed.input.anyText ? { anyText: parsed.input.anyText } : {}),
-    ...(parsed.input.ingredient ? { ingredient: parsed.input.ingredient } : {}),
-    ...(parsed.input.category ? { category: parsed.input.category } : {}),
-    ...(parsed.input.tag ? { tag: parsed.input.tag } : {}),
-    ...(parsed.input.language ? { language: parsed.input.language } : {}),
-    ...(parsed.input.createdBy ? { createdBy: parsed.input.createdBy } : {}),
-    ...(parsed.input.sort ? { sort: parsed.input.sort } : {}),
-    ...(parsed.input.includeArchived ? { includeArchived: true } : {}),
-  };
-  const hasActiveFilters = Object.keys(formValues).some((key) => key !== 'sort');
-
-  // The selects and chips only list what the family uses; if this fails the page still works.
-  const browse = await listRecipeBrowseOptions(supabase, { familyId });
-  const browseOptions =
-    browse.status === 'ok' ? browse.options : { categories: [], tags: [], languages: [] };
-
+  // Heading, search box, filters and chips are in the layout, which stays mounted between searches.
   return (
-    <section className="space-y-6">
-      <PageHeader title={t('list.title')} description={t('list.subtitle')} />
-      <RecipeSearchForm
-        key={buildRecipeSearchQuery(parsed.input) || 'all'}
-        familyId={familyId}
-        contributorOptions={contributorOptions}
-        categories={browseOptions.categories}
-        tags={browseOptions.tags}
-        languages={browseOptions.languages}
-        defaultValues={formValues}
-      />
-      <RecipeCategoryChips
-        familyId={familyId}
-        searchInput={parsed.input}
-        categories={browseOptions.categories}
-        label={t('filters.categoriesLabel')}
-        allLabel={t('filters.anyCategory')}
-        selectedLabel={t('filters.selected')}
-      />
-      <RecipeSearchActiveChips
-        familyId={familyId}
-        values={formValues}
-        contributorOptions={contributorOptions}
-      />
-      {membersListed.status !== 'ok' ? (
-        <p className="text-sm text-destructive" role="alert">
-          {tMembers('errors.loadFailed')}
-        </p>
-      ) : null}
-      <p className="text-sm text-muted-foreground">
-        {t('list.count', { count: result.result.totalCount ?? items.length })}
-      </p>
+    <div className="space-y-6">
+      <AnnounceRecipeResults message={countText} />
+      <p className="text-sm text-muted-foreground">{countText}</p>
       <RecipeList
         familyId={familyId}
         items={items}
@@ -241,6 +164,6 @@ async function RecipesContent({ params, searchParams }: Props) {
           resultsSummary={t('pagination.count', { count: items.length })}
         />
       ) : null}
-    </section>
+    </div>
   );
 }

@@ -378,6 +378,7 @@
     "filters": {
       "legend": "Recipe search filters",
       "toggleLabel": "Filters",
+      "panelHint": "Filters apply as soon as you choose them.",
       "activeLabel": "Active filters",
       "query": "Search",
       "category": "Category",
@@ -393,7 +394,7 @@
       "clear": "Clear filters",
       "removeChip": "Remove {value}",
       "queryPlaceholder": "Search by name or ingredient",
-      "submit": "Search",
+      "queryHint": "Results update as you type. Type at least 2 letters.",
       "categoriesLabel": "Browse by category",
       "anyCategory": "Any category",
       "anyTag": "Any tag",
