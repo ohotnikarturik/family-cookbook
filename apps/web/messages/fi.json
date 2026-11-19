@@ -54,7 +54,7 @@
   "account": {
     "title": "Tilisi",
     "subtitle": "Olet kirjautunut Family Cookbookiin.",
-    "signedInAs": "Kirjautuneena",
+    "signedInAs": "Tietosi",
     "email": "Sähköposti",
     "signOut": "Kirjaudu ulos",
     "preferences": {
@@ -62,7 +62,7 @@
       "displayNameLabel": "Näyttönimi",
       "displayNameHint": "Näkyy perheen jäsenille sähköpostisi sijaan.",
       "languageLabel": "Sovelluksen kieli",
-      "languageHint": "Vaihtaa käyttöliittymän kielen kaikilla laitteilla, joihin olet kirjautunut.",
+      "languageHint": "Vaihtaa sovelluksen kielen kaikilla laitteilla, joihin olet kirjautunut.",
       "themeLabel": "Ulkoasu",
       "themeHint": "Valitse vaalea, tumma tai seuraa laitettasi.",
       "save": "Tallenna asetukset",
@@ -101,11 +101,11 @@
   },
   "onboarding": {
     "title": "Aloita perheen keittokirja",
-    "subtitle": "Anna työtilalle nimi. Sinusta tulee ensimmäinen omistaja.",
+    "subtitle": "Anna perheesi reseptikirjalle nimi. Sinusta tulee ensimmäinen omistaja.",
     "inviteLaterHint": "Kun perhe on luotu, voit kutsua sukulaisia sähköpostilla. Jos sait jo kutsun, avaa linkki viestistä.",
     "nameLabel": "Perheen nimi",
     "defaultLanguageLabel": "Reseptien oletuskieli",
-    "defaultLanguageHint": "Käytetään järkevänä oletuksena uusille resepteille. Käyttöliittymän kieli on erillinen.",
+    "defaultLanguageHint": "Käytetään uusille resepteille. Sovelluksen kieli on erillinen.",
     "submit": "Luo perhe",
     "creating": "Luodaan…",
     "backAccount": "Takaisin tiliin",
@@ -122,7 +122,7 @@
     },
     "list": {
       "title": "Perheesi",
-      "subtitle": "Valitse työtila. Reseptit ja jäsenet pysyvät perheen sisällä."
+      "subtitle": "Valitse perhe. Jokaisella perheellä on omat reseptinsä ja jäsenensä."
     },
     "shell": {
       "kicker": "Perheen keittokirja",
@@ -150,7 +150,7 @@
       "subnavInvitations": "Kutsut",
       "nameLabel": "Perheen nimi",
       "defaultLanguageLabel": "Reseptien oletuskieli",
-      "defaultLanguageHint": "Oletus uusille resepteille ja kutsuille—ei käyttöliittymän kielelle.",
+      "defaultLanguageHint": "Oletus uusille resepteille ja kutsuille—ei sovelluksen kielelle.",
       "readOnlyNote": "Vain omistajat ja ylläpitäjät voivat muuttaa perheen asetuksia.",
       "save": "Tallenna asetukset",
       "saving": "Tallennetaan…",
@@ -169,7 +169,7 @@
       "neutralName": "Perheen jäsen",
       "suspendedBadge": "Keskeytetty",
       "empty": "Jäseniä ei löytynyt.",
-      "privacyNote": "Vain näyttönimet näytetään. Kirjautumissähköposteja ei koskaan näytetä muille.",
+      "privacyNote": "Vain nimet näytetään. Sähköpostiosoitteita ei koskaan näytetä muille jäsenille.",
       "errors": {
         "loadFailed": "Jäsenlistaa ei voitu ladata. Yritä hetken kuluttua uudelleen."
       },
@@ -287,7 +287,7 @@
       "empty": "Ei odottavia kutsuja.",
       "expires": "Vanhenee {date}",
       "expired": "Vanhentunut {date}",
-      "revoke": "Peru",
+      "revoke": "Peru kutsu",
       "revoking": "Perutaan…"
     },
     "email": {
@@ -311,7 +311,7 @@
   },
   "inviteAccept": {
     "title": "Hyväksy kutsu",
-    "subtitle": "Liity perheen työtilaan kutsusähköpostin mukaan.",
+    "subtitle": "Liity kutsusähköpostissa mainittuun perheeseen.",
     "signedInAs": "Kirjautunut: {email}",
     "missingToken": "Avaa koko kutsulinkki sähköpostistasi.",
     "submit": "Hyväksy kutsu",
@@ -411,7 +411,7 @@
   "recipes": {
     "list": {
       "title": "Reseptit",
-      "subtitle": "Hae ja avaa perheen reseptejä. Tulokset pysyvät tässä työtilassa.",
+      "subtitle": "Hae ja avaa perheesi reseptejä.",
       "resultsLabel": "Reseptitulokset",
       "updated": "Päivitetty {date}",
       "archivedBadge": "Arkistoitu",
@@ -481,7 +481,7 @@
       "steps": "Vaiheet",
       "tags": "Tunnisteet",
       "notes": "Muistiinpanot",
-      "sourceLanguage": "Lähdekieli",
+      "sourceLanguage": "Alkuperäinen kieli",
       "category": "Kategoria",
       "step": "Vaihe {position}",
       "media": {
@@ -596,7 +596,7 @@
       "errorTitle": "Reseptejä ei voitu ladata",
       "error": "Reseptejä ei voitu ladata. Tarkista yhteys ja yritä uudelleen.",
       "forbiddenTitle": "Ei saatavilla",
-      "forbidden": "Sinulla ei ole oikeutta tähän reseptiin tässä perhekontekstissa.",
+      "forbidden": "Sinulla ei ole oikeutta tähän reseptiin.",
       "invalidFiltersTitle": "Tarkista suodattimet",
       "invalidFilters": "Yksi tai useampi suodatin on virheellinen. Tyhjennä suodattimet ja yritä uudelleen.",
       "rateLimitedTitle": "Hetki rauhaa",
@@ -630,7 +630,7 @@
       "fields": {
         "title": "Reseptin nimi",
         "description": "Kuvaus",
-        "sourceLanguage": "Lähdekieli",
+        "sourceLanguage": "Alkuperäinen kieli",
         "sourceLanguageOther": "Muu kieli",
         "sourceLanguageOtherPlaceholder": "esim. sv tai en-US",
         "servings": "Annoksia",
@@ -641,7 +641,7 @@
       },
       "hints": {
         "title": "Selkeä nimi auttaa löytämään reseptin myöhemmin.",
-        "sourceLanguage": "Kieli, jolla kirjoitat — erillinen käyttöliittymän kielestä.",
+        "sourceLanguage": "Kieli, jolla kirjoitat — ei sovelluksen kieli.",
         "sourceLanguageMore": "Valitse kieli, jolla resepti on kirjoitettu, esimerkiksi suomi mummon muistiinpanoille. Käännökset muille kielille lisätään myöhemmin reseptisivulla: avaa Lisää ja sitten Käännökset. Ne eivät koskaan muuta alkuperäistä tekstiä.",
         "amount": "Määrä voi olla luku, kuten 2, 1,5 tai 1 1/2, tai sanoja, kuten ”maun mukaan”.",
         "category": "Valitse perheen jo käyttämä kategoria tai kirjoita uusi.",

@@ -651,7 +651,7 @@ Added 2026-11-18 from review of the running app: search ran only on the button o
 
 **Tests:** locale completeness tests; e2e selectors updated where text changed.
 
-**Status:** Not started.
+**Status:** Done (2026-11-19). "Workspace", "isolated" and "context" are gone from all four catalogs (there was no "session" or "tenant" copy to replace). Also made plainer: the account card is "Your details"; "Revoke" is "Cancel invitation"; "Source language" is "Original language"; "secure token", "single-use", "invitee", "UI locale", "interface language" and "Verifying" are reworded; the app-consent screen says "Allow this app?". Keys are unchanged. New banned-terms test in `lib/messages-catalog.test.ts` (design gallery excluded). Format, lint, typecheck, unit tests (web 149, all packages, MCP 9), build and `test:screens` 12/12 (summaries identical to before, ru fits at 360px) pass. Full Playwright: 162 passed, 2 skipped, 2 failed on the first run (the known `recipe-detail` author line, and `contextual-tips` which asserted the old hint text and was updated); later full runs showed the known intermittent duplicate-match failures (`language-names`, `recipe-search`, `recipe-detail`, `contextual-tips` editor tip, which fails 1 in 8 repeats with and without this change). Not run: `supabase:test` and MCP tests (no migration or shared contract change); manual keyboard/screen-reader check. **Open:** fi/ru/uk wording was written without a native-speaker review. The language picker label (`locale.label`) still says "Interface language".
 
 ### W38.8 — Leave family and clear no-access pages
 

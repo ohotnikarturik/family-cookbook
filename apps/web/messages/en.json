@@ -29,7 +29,7 @@
     "subtitle": "We email you a 6-digit code. No password needed.",
     "emailLabel": "Email",
     "sending": "Sending…",
-    "verifying": "Verifying…",
+    "verifying": "Checking…",
     "sendCode": "Email me a sign-in code",
     "checkEmailTitle": "Check your email",
     "sentTo": "We sent a message to {email}.",
@@ -54,7 +54,7 @@
   "account": {
     "title": "Your account",
     "subtitle": "You are signed in to Family Cookbook.",
-    "signedInAs": "Signed in as",
+    "signedInAs": "Your details",
     "email": "Email",
     "signOut": "Sign out",
     "preferences": {
@@ -62,7 +62,7 @@
       "displayNameLabel": "Display name",
       "displayNameHint": "Shown to family members instead of your email.",
       "languageLabel": "App language",
-      "languageHint": "Changes the interface language on every device where you are signed in.",
+      "languageHint": "Changes the app language on every device where you are signed in.",
       "themeLabel": "Appearance",
       "themeHint": "Choose light, dark, or match your device.",
       "save": "Save preferences",
@@ -101,11 +101,11 @@
   },
   "onboarding": {
     "title": "Start your family cookbook",
-    "subtitle": "Give your workspace a name. You will be the first owner.",
+    "subtitle": "Give your family cookbook a name. You will be the first owner.",
     "inviteLaterHint": "After you create the family, you can invite relatives by email. If you already have an invitation, open the link in that message.",
     "nameLabel": "Family name",
     "defaultLanguageLabel": "Default recipe language",
-    "defaultLanguageHint": "Used as a sensible default for new recipes in this family. Your interface language stays separate.",
+    "defaultLanguageHint": "Used for new recipes in this family. It does not change the app language for you.",
     "submit": "Create family",
     "creating": "Creating…",
     "backAccount": "Back to account",
@@ -122,7 +122,7 @@
     },
     "list": {
       "title": "Your families",
-      "subtitle": "Choose a workspace. Recipes and members stay inside each family."
+      "subtitle": "Choose a family. Each family has its own recipes and members."
     },
     "shell": {
       "kicker": "Family cookbook",
@@ -150,7 +150,7 @@
       "subnavInvitations": "Invitations",
       "nameLabel": "Family name",
       "defaultLanguageLabel": "Default recipe language",
-      "defaultLanguageHint": "Used as a starting language for new recipes and invitations—not your UI locale.",
+      "defaultLanguageHint": "Used for new recipes and invitations. It does not change the app language for you.",
       "readOnlyNote": "Only owners and admins can change family settings.",
       "save": "Save settings",
       "saving": "Saving…",
@@ -169,7 +169,7 @@
       "neutralName": "Family member",
       "suspendedBadge": "Suspended",
       "empty": "No members found for this family.",
-      "privacyNote": "Only display names are shown. Sign-in emails are never listed for other members.",
+      "privacyNote": "Only names are shown. Email addresses are never shown to other members.",
       "errors": {
         "loadFailed": "We could not load the member list. Try again in a moment."
       },
@@ -202,7 +202,7 @@
         "sectionDescription": "Make another active member the family owner. You keep access with the role you choose when you confirm.",
         "openDialog": "Transfer ownership…",
         "dialogTitle": "Transfer family ownership",
-        "dialogDescription": "This updates who can manage membership, invitations, and ownership. It cannot be undone from here—you would need the new owner to transfer back.",
+        "dialogDescription": "The new owner will be able to manage members and invitations. You cannot undo this yourself—the new owner would have to hand ownership back to you.",
         "newOwnerField": "New owner",
         "chooseMember": "Choose a member",
         "formerRoleField": "Your role after transfer",
@@ -273,7 +273,7 @@
   },
   "invitations": {
     "title": "Invite relatives",
-    "subtitle": "Send a single-use email link. The invitee must sign in with the same address.",
+    "subtitle": "Send an email link that works once. They must sign in with the same email address.",
     "form": {
       "emailLabel": "Email address",
       "roleLabel": "Role",
@@ -287,8 +287,8 @@
       "empty": "No pending invitations.",
       "expires": "Expires {date}",
       "expired": "Expired {date}",
-      "revoke": "Revoke",
-      "revoking": "Revoking…"
+      "revoke": "Cancel invitation",
+      "revoking": "Cancelling…"
     },
     "email": {
       "subject": "Invitation to {familyName}",
@@ -302,18 +302,18 @@
       "forbidden": "You cannot invite for this family.",
       "duplicatePending": "An active invitation already exists for this email.",
       "emailFailed": "The invitation email could not be sent. Nothing was saved. Try again.",
-      "emailFailedKept": "The invitation email could not be sent. Revoke the pending invitation and try again.",
+      "emailFailedKept": "The invitation email could not be sent. Cancel the pending invitation and try again.",
       "loadFailed": "We could not load invitations. Refresh the page and try again.",
-      "revokeFailed": "We could not revoke that invitation. Try again.",
+      "revokeFailed": "We could not cancel that invitation. Try again.",
       "createFailed": "Could not create the invitation.",
       "rateLimited": "Too many invitations sent recently. Wait a while and try again."
     }
   },
   "inviteAccept": {
     "title": "Accept invitation",
-    "subtitle": "Join the family workspace shown in your invitation email.",
+    "subtitle": "Join the family named in your invitation email.",
     "signedInAs": "Signed in as {email}",
-    "missingToken": "Open the full invitation link from your email. It contains a secure token.",
+    "missingToken": "Open the whole link from your invitation email.",
     "submit": "Accept invitation",
     "accepting": "Accepting…",
     "signOut": "Sign out and switch email",
@@ -411,7 +411,7 @@
   "recipes": {
     "list": {
       "title": "Recipes",
-      "subtitle": "Search and open family recipes. Results stay inside this workspace.",
+      "subtitle": "Search and open your family's recipes.",
       "resultsLabel": "Recipe results",
       "updated": "Updated {date}",
       "archivedBadge": "Archived",
@@ -481,7 +481,7 @@
       "steps": "Steps",
       "tags": "Tags",
       "notes": "Notes",
-      "sourceLanguage": "Source language",
+      "sourceLanguage": "Original language",
       "category": "Category",
       "step": "Step {position}",
       "media": {
@@ -596,7 +596,7 @@
       "errorTitle": "Could not load recipes",
       "error": "We could not load recipes. Check your connection and try again.",
       "forbiddenTitle": "Not available",
-      "forbidden": "You do not have access to this recipe in this family context.",
+      "forbidden": "You do not have access to this recipe.",
       "invalidFiltersTitle": "Check your filters",
       "invalidFilters": "One or more filters are invalid. Clear filters and try again.",
       "rateLimitedTitle": "Slow down a moment",
@@ -630,7 +630,7 @@
       "fields": {
         "title": "Recipe title",
         "description": "Description",
-        "sourceLanguage": "Source language",
+        "sourceLanguage": "Original language",
         "sourceLanguageOther": "Other language",
         "sourceLanguageOtherPlaceholder": "e.g. sv or en-US",
         "servings": "Servings",
@@ -641,7 +641,7 @@
       },
       "hints": {
         "title": "A clear name helps everyone find this recipe later.",
-        "sourceLanguage": "The language you are writing in — separate from your interface language.",
+        "sourceLanguage": "The language you are writing in — not the app language.",
         "sourceLanguageMore": "Choose the language the recipe is written in, for example Finnish for Grandma’s notes. Translations into other languages are added later on the recipe page: open More, then Translations. They never change the original.",
         "amount": "Amount can be a number, such as 2, 1.5 or 1 1/2, or words, such as “to taste”.",
         "category": "Choose one your family already uses, or type a new one.",
@@ -780,14 +780,14 @@
     "dismiss": "Dismiss"
   },
   "oauthConsent": {
-    "title": "Authorize application",
-    "subtitle": "An application wants to access your Family Cookbook account.",
+    "title": "Allow this app?",
+    "subtitle": "An app wants to open your Family Cookbook.",
     "clientUnknown": "Unknown application",
     "scopesHeading": "It may access:",
     "approve": "Allow access",
     "deny": "Deny",
     "working": "Working…",
-    "missingAuthorization": "This authorization link is invalid or expired.",
+    "missingAuthorization": "This link is not valid or has expired.",
     "signInRequired": "Sign in to continue",
     "signInCta": "Sign in",
     "errorLoad": "We could not load authorization details.",

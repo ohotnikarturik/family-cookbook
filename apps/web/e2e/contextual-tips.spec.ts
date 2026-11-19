@@ -15,8 +15,7 @@ const ROLE_HINTS = {
   viewer: 'Can read recipes but not change them.',
   editor: 'Can add and edit all family recipes.',
 } as const;
-const SOURCE_LANGUAGE_HINT =
-  'The language you are writing in — separate from your interface language.';
+const SOURCE_LANGUAGE_HINT = 'The language you are writing in — not the app language.';
 
 async function expectNoSidewaysScroll(page: Page, width: number) {
   const overflow = await page.evaluate(
@@ -87,7 +86,7 @@ test.describe('W38.7 contextual tips', () => {
     page,
   }) => {
     await page.goto(newRecipe);
-    const language = page.getByRole('combobox', { name: 'Source language' });
+    const language = page.getByRole('combobox', { name: 'Original language' });
     await expect(language).toHaveAccessibleDescription(SOURCE_LANGUAGE_HINT);
     await expect(page.getByRole('textbox', { name: 'Amount' }).first()).toHaveAccessibleDescription(
       /such as 2, 1\.5 or 1 1\/2/,

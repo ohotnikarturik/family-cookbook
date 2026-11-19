@@ -46,6 +46,23 @@ describe('message catalogs', () => {
     expect(bad).toEqual([]);
   });
 
+  // W38.18: engineering words a non-technical relative would not understand.
+  const bannedTerms: Record<string, RegExp> = {
+    en: /workspace|tenant|\bcontext\b|\btoken\b|isolated|\bsessions?\b|\blocale\b|invitee|revoke/i,
+    fi: /työtila|konteks|istunto|tenant/i,
+    ru: /пространств|изолирован|контекст|сеанс|арендатор/i,
+    uk: /простір|простор|ізольов|контекст|сесі[яює]|орендар/i,
+  };
+
+  it.each(locales)('%s copy has no engineering jargon', (locale) => {
+    const found = [...flatten(load(locale))]
+      // The design gallery is a developer page and may use design vocabulary.
+      .filter(([key]) => !key.startsWith('design.'))
+      .filter(([, value]) => typeof value === 'string' && bannedTerms[locale]!.test(value))
+      .map(([key, value]) => `${key}: ${String(value)}`);
+    expect(found).toEqual([]);
+  });
+
   it('defines the contextual tip copy in every locale', () => {
     for (const locale of locales) {
       const messages = flatten(load(locale));

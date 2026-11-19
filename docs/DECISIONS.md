@@ -456,3 +456,9 @@ Reverses the banner rule in "W38.19 — Photo-less recipe cards": from `sm` up, 
 2. **Only the inline line is the field description.** Controls point `aria-describedby` at the inline text only. The longer `<details>` text is reached by opening it, so screen readers don't read a paragraph on every focus.
 3. **Copy reuse:** the invite form and the member dialog use the existing `family.roleDescriptions.*`. The invite form's "What can each role do?" lists only the roles the server says this person may invite. The amount hint keeps its existing copy (it already gives 2, 1.5, 1 1/2 and "to taste"). New keys: `common.whatIsThis`, `recipes.editor.hints.sourceLanguageMore`, `recipes.lifecycle.archiveVsDelete{Summary,}`, `invitations.form.rolesSummary`.
 4. **Locale completeness:** `lib/messages-catalog.test.ts` now requires every locale to have exactly the `en` keys and no empty strings.
+
+## W38.18 — Plain-language vocabulary (2026-11-19)
+
+1. **Words to use in all four locales:** "family" or "family cookbook", never "workspace"; "app language", not "interface language" or "UI locale"; "Cancel invitation", not "revoke"; "Original language", not "source language"; "Your details" for the account card; no "context", "tenant", "token" or "isolated" in visible copy.
+2. **Guard:** `lib/messages-catalog.test.ts` fails if a banned term returns. The developer-only design gallery (`design.*`) is exempt.
+3. **Kept on purpose:** `locale.label` ("Interface language") and the MCP-facing wording in `oauthConsent` beyond title, subtitle and the invalid-link message.

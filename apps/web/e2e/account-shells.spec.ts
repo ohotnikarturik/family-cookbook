@@ -96,7 +96,7 @@ test.describe('account shell', () => {
     await page.setViewportSize(DESKTOP);
     await page.goto('/en/account');
     await expectSingleH1(page, 'Your account');
-    await expect(page.getByRole('region', { name: 'Signed in as' })).toContainText(
+    await expect(page.getByRole('region', { name: 'Your details' })).toContainText(
       TEST_USERS.ownerA,
     );
     await expect(page.getByRole('textbox', { name: 'Display name' })).toBeVisible();
