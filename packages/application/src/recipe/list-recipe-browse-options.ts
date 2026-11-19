@@ -50,7 +50,7 @@ export async function listRecipeBrowseOptions(
     return { status: 'forbidden' };
   }
 
-  if (!isWithinRateLimit('recipe_search', auth.userId)) {
+  if (!isWithinRateLimit('recipe_browse_options', auth.userId)) {
     return { status: 'rate_limited' };
   }
 

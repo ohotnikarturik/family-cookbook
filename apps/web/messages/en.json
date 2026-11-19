@@ -26,17 +26,17 @@
   },
   "auth": {
     "title": "Sign in",
-    "subtitle": "We email you a 6-digit code. No password needed.",
+    "subtitle": "We email you a sign-in message. No password needed.",
     "emailLabel": "Email",
     "sending": "Sending…",
     "verifying": "Checking…",
-    "sendCode": "Email me a sign-in code",
+    "sendCode": "Send me a sign-in email",
     "checkEmailTitle": "Check your email",
     "sentTo": "We sent a message to {email}.",
     "codeLabel": "6-digit code",
-    "codeHint": "Type the code from the message. You can also paste it.",
+    "codeHint": "If the message has a 6-digit code, type it here. You can also paste it.",
     "verifyCode": "Sign in",
-    "orOpenLink": "Or open the link in the email instead.",
+    "orOpenLink": "No code in the message? Open the link in the email instead.",
     "useDifferentEmail": "Use a different email",
     "resend": "Send the message again",
     "resendIn": "Send again in {seconds} s",
@@ -228,6 +228,11 @@
       "addRecipe": "Add recipe",
       "recentRecipes": "Recently updated",
       "seeAllRecipes": "See all recipes",
+      "archivedOnly": {
+        "title": "No active recipes right now",
+        "description": "Every recipe in your cookbook is archived. Archived recipes are kept and can be brought back.",
+        "action": "See archived recipes"
+      },
       "categoriesLabel": "Recipe categories",
       "search": {
         "label": "Search recipes",

@@ -167,6 +167,19 @@ describe.skipIf(!stackReady)('searchRecipes integration (local Supabase)', () =>
       return;
     }
     expect(description.result.items.map((item) => item.title)).toContain("Grandma's cardamom buns");
+
+    // Typing a word still in progress must match the description too, not only whole words.
+    const partialDescription = await searchRecipes(ownerAClient, {
+      familyId: FAMILY_A,
+      anyText: 'pear',
+    });
+    expect(partialDescription.status).toBe('ok');
+    if (partialDescription.status !== 'ok') {
+      return;
+    }
+    expect(partialDescription.result.items.map((item) => item.title)).toContain(
+      "Grandma's cardamom buns",
+    );
   });
 
   it('anyText respects the archived rule', async () => {

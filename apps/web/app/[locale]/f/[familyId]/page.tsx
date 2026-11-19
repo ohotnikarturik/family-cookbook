@@ -67,7 +67,14 @@ async function DashboardContent({ params }: Props) {
 
   const recentItems = recent.status === 'ok' ? recent.result.items : [];
   const recentFailed = recent.status !== 'ok';
-  const isEmpty = !recentFailed && recentItems.length === 0;
+  const noActive = !recentFailed && recentItems.length === 0;
+  // A cookbook whose recipes are all archived is not new: keep search and a way to the archive.
+  let hasArchived = false;
+  if (noActive) {
+    const archived = await searchRecipes(supabase, { familyId, includeArchived: true, limit: 1 });
+    hasArchived = archived.status === 'ok' && archived.result.items.length > 0;
+  }
+  const isEmpty = noActive && !hasArchived;
   const categories =
     browse.status === 'ok' ? browse.options.categories.slice(0, HOME_CATEGORY_LIMIT) : [];
   const recipesHref = `/f/${familyId}/recipes`;
@@ -122,6 +129,17 @@ async function DashboardContent({ params }: Props) {
                 title={tRecipes('status.errorTitle')}
                 description={tRecipes('status.error')}
               />
+            ) : noActive ? (
+              <div className="space-y-3">
+                <RecipeBrowseStates
+                  variant="empty"
+                  title={t('archivedOnly.title')}
+                  description={t('archivedOnly.description')}
+                />
+                <TextLink href={`${recipesHref}?includeArchived=true`}>
+                  {t('archivedOnly.action')}
+                </TextLink>
+              </div>
             ) : (
               <RecipeList
                 familyId={familyId}

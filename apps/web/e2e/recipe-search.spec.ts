@@ -4,6 +4,7 @@ import { expectNoSeriousAxeViolations } from './fixtures/axe';
 import { loginAs } from './fixtures/auth';
 import { FAMILY_A_ID, TEST_USERS } from './fixtures/constants';
 import { isLocalE2eStackReady } from './fixtures/env';
+import { familyMain } from './fixtures/main';
 
 const recipes = `/en/f/${FAMILY_A_ID}/recipes`;
 const NARROW = { width: 320, height: 640 };
@@ -153,7 +154,7 @@ test.describe('search-first recipe browse', () => {
       await page.setViewportSize(NARROW);
       await page.goto(recipes);
       await expect(
-        page.getByText('Results update as you type. Type at least 2 letters.'),
+        familyMain(page).getByText('Results update as you type. Type at least 2 letters.'),
       ).toBeVisible();
       await expect(box(page)).toHaveAccessibleDescription(/at least 2 letters/);
       await expect(page.locator('p[role="status"].sr-only')).toHaveCount(1);
@@ -167,7 +168,7 @@ test.describe('search-first recipe browse', () => {
 
   test('an empty result offers Clear filters', async ({ page }) => {
     await page.goto(`${recipes}?query=zzzznotarecipe`);
-    await expect(page.getByText('No matching recipes').locator('visible=true')).toBeVisible();
+    await expect(familyMain(page).getByText('No matching recipes')).toBeVisible();
     await page.getByRole('link', { name: 'Clear filters' }).first().click();
     await expect(page).toHaveURL(new RegExp(`${recipes}$`));
     await expect(page.getByRole('link', { name: "Grandma's cardamom buns" })).toBeVisible();
@@ -175,7 +176,7 @@ test.describe('search-first recipe browse', () => {
 
   test('another family’s recipes never show up in search', async ({ page }) => {
     await page.goto(`${recipes}?query=pancakes`);
-    await expect(page.getByText('No matching recipes').locator('visible=true')).toBeVisible();
+    await expect(familyMain(page).getByText('No matching recipes')).toBeVisible();
     await expect(page.getByRole('link', { name: "Contributor's pancakes" })).toHaveCount(0);
   });
 

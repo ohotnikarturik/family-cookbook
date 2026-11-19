@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test';
 import { expectNoSeriousAxeViolations } from './fixtures/axe';
 import { loginAs } from './fixtures/auth';
 import { FAMILY_A_ID, RECIPE_ACTIVE_ID, TEST_USERS } from './fixtures/constants';
+import { familyMain } from './fixtures/main';
 import { isLocalE2eStackReady } from './fixtures/env';
 
 const family = `/en/f/${FAMILY_A_ID}`;
@@ -34,7 +35,7 @@ test.describe('language names instead of codes', () => {
   test('a recipe without translations has no reading-language selector', async ({ page }) => {
     await page.goto(`${family}/recipes/${RECIPE_FINNISH_NO_TRANSLATIONS}`);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    await expect(page.getByText('Finnish', { exact: true })).toBeVisible();
+    await expect(familyMain(page).getByText('Finnish', { exact: true })).toBeVisible();
     await expect(page.getByRole('radiogroup', { name: 'Reading language' })).toHaveCount(0);
   });
 

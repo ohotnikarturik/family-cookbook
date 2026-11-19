@@ -26,17 +26,17 @@
   },
   "auth": {
     "title": "Kirjaudu",
-    "subtitle": "Lähetämme sinulle 6-numeroisen koodin sähköpostitse. Salasanaa ei tarvita.",
+    "subtitle": "Lähetämme sinulle kirjautumisviestin sähköpostiin. Salasanaa ei tarvita.",
     "emailLabel": "Sähköposti",
     "sending": "Lähetetään…",
     "verifying": "Vahvistetaan…",
-    "sendCode": "Lähetä kirjautumiskoodi sähköpostiin",
+    "sendCode": "Lähetä kirjautumisviesti sähköpostiin",
     "checkEmailTitle": "Tarkista sähköpostisi",
     "sentTo": "Lähetimme viestin osoitteeseen {email}.",
     "codeLabel": "6-numeroinen koodi",
-    "codeHint": "Kirjoita viestin koodi. Voit myös liittää sen.",
+    "codeHint": "Jos viestissä on 6-numeroinen koodi, kirjoita se tähän. Voit myös liittää sen.",
     "verifyCode": "Kirjaudu",
-    "orOpenLink": "Voit myös avata viestin linkin.",
+    "orOpenLink": "Eikö viestissä ole koodia? Avaa sen sijaan viestin linkki.",
     "useDifferentEmail": "Käytä toista sähköpostiosoitetta",
     "resend": "Lähetä viesti uudelleen",
     "resendIn": "Lähetä uudelleen {seconds} s kuluttua",
@@ -228,6 +228,11 @@
       "addRecipe": "Lisää resepti",
       "recentRecipes": "Viimeksi päivitetty",
       "seeAllRecipes": "Näytä kaikki reseptit",
+      "archivedOnly": {
+        "title": "Ei aktiivisia reseptejä juuri nyt",
+        "description": "Kaikki keittokirjasi reseptit on arkistoitu. Arkistoidut reseptit säilyvät, ja ne voi palauttaa.",
+        "action": "Näytä arkistoidut reseptit"
+      },
       "categoriesLabel": "Reseptien kategoriat",
       "search": {
         "label": "Hae reseptejä",

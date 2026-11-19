@@ -45,51 +45,15 @@ type ActionState = FamilyMemberAdminActionState | null;
  */
 export function FamilyMemberChangeDialog({ familyId, member }: Props) {
   const t = useTranslations('family.members.admin');
-  const tRoles = useTranslations('family.roles');
-  const tRoleDescriptions = useTranslations('family.roleDescriptions');
   const [open, setOpen] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<FamilyRole>(member.role);
   const [saved, setSaved] = useState(false);
-  const roleFieldId = useId();
-  const roleDescriptionId = useId();
-
-  function closeAfter(action: (prev: ActionState, formData: FormData) => Promise<ActionState>) {
-    return async (prev: ActionState, formData: FormData): Promise<ActionState> => {
-      const result = await action(prev, formData);
-      if (result?.ok === true) {
-        setSaved(true);
-        setOpen(false);
-      }
-      return result;
-    };
-  }
-
-  const [roleState, roleAction, rolePending] = useActionState<ActionState, FormData>(
-    closeAfter(setFamilyMemberRoleAction),
-    null,
-  );
-  const [statusState, statusAction, statusPending] = useActionState<ActionState, FormData>(
-    closeAfter(setFamilyMemberStatusAction),
-    null,
-  );
 
   function handleOpenChange(next: boolean) {
     setOpen(next);
     if (next) {
-      setSelectedRole(member.role);
       setSaved(false);
     }
   }
-
-  const pending = rolePending || statusPending;
-  const roleLocked = member.status !== 'active';
-  const active = member.status === 'active';
-  const error =
-    roleState?.ok === false
-      ? roleState.message
-      : statusState?.ok === false
-        ? statusState.message
-        : null;
 
   return (
     <div className="flex flex-col items-end gap-1">
@@ -109,85 +73,147 @@ export function FamilyMemberChangeDialog({ familyId, member }: Props) {
             <DialogTitle>{t('dialogTitle', { name: member.label })}</DialogTitle>
             <DialogDescription>{t('dialogDescription', { name: member.label })}</DialogDescription>
           </DialogHeader>
-
-          <form onSubmit={submitWithoutReset(roleAction)} className="space-y-3">
-            <input type="hidden" name="familyId" value={familyId} />
-            <input type="hidden" name="memberUserId" value={member.userId} />
-            <div className="space-y-2">
-              <Label htmlFor={roleFieldId}>{t('roleField')}</Label>
-              <select
-                id={roleFieldId}
-                name="newRole"
-                value={selectedRole}
-                onChange={(event) => setSelectedRole(event.target.value as FamilyRole)}
-                disabled={pending || roleLocked}
-                aria-describedby={roleDescriptionId}
-                className={nativeSelectClassName}
-              >
-                {member.roleOptions.map((role) => (
-                  <option key={role} value={role}>
-                    {tRoles(role)}
-                  </option>
-                ))}
-              </select>
-              <Hint id={roleDescriptionId}>
-                {roleLocked ? t('roleLocked') : tRoleDescriptions(selectedRole)}
-              </Hint>
-            </div>
-            <Button
-              type="submit"
-              className="min-h-11 w-full whitespace-normal sm:w-auto"
-              disabled={pending || roleLocked || selectedRole === member.role}
-            >
-              {rolePending ? t('savingRole') : t('saveRole')}
-            </Button>
-          </form>
-
-          <form action={statusAction} className="space-y-3 border-t border-border pt-4">
-            <input type="hidden" name="familyId" value={familyId} />
-            <input type="hidden" name="memberUserId" value={member.userId} />
-            <input type="hidden" name="newStatus" value={active ? 'suspended' : 'active'} />
-            <p className="text-sm text-muted-foreground">
-              {active ? t('suspendHelp') : t('reactivateHelp')}
-            </p>
-            <Button
-              type="submit"
-              variant={active ? 'outline' : 'secondary'}
-              className="min-h-11 w-full whitespace-normal sm:w-auto"
-              disabled={pending}
-            >
-              {statusPending
-                ? active
-                  ? t('suspending')
-                  : t('reactivating')
-                : active
-                  ? t('suspend')
-                  : t('reactivate')}
-            </Button>
-          </form>
-
-          {error ? (
-            <p className="text-sm text-destructive" role="alert">
-              {error}
-            </p>
-          ) : null}
-
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              className="min-h-11 w-full sm:w-auto"
-              onClick={() => setOpen(false)}
-              disabled={pending}
-            >
-              {t('close')}
-            </Button>
-          </DialogFooter>
+          {/* Mounted only while the dialog is open, so every opening starts without an old error. */}
+          <ChangeForms
+            familyId={familyId}
+            member={member}
+            onSaved={() => {
+              setSaved(true);
+              setOpen(false);
+            }}
+            onClose={() => setOpen(false)}
+          />
         </DialogContent>
       </Dialog>
       <p role="status" className="text-sm text-muted-foreground">
         {saved ? t('saved') : null}
       </p>
     </div>
+  );
+}
+
+function ChangeForms({
+  familyId,
+  member,
+  onSaved,
+  onClose,
+}: Readonly<{
+  familyId: string;
+  member: Props['member'];
+  onSaved: () => void;
+  onClose: () => void;
+}>) {
+  const t = useTranslations('family.members.admin');
+  const tRoles = useTranslations('family.roles');
+  const tRoleDescriptions = useTranslations('family.roleDescriptions');
+  const [selectedRole, setSelectedRole] = useState<FamilyRole>(member.role);
+  const roleFieldId = useId();
+  const roleDescriptionId = useId();
+
+  function closeAfter(action: (prev: ActionState, formData: FormData) => Promise<ActionState>) {
+    return async (prev: ActionState, formData: FormData): Promise<ActionState> => {
+      const result = await action(prev, formData);
+      if (result?.ok === true) {
+        onSaved();
+      }
+      return result;
+    };
+  }
+
+  const [roleState, roleAction, rolePending] = useActionState<ActionState, FormData>(
+    closeAfter(setFamilyMemberRoleAction),
+    null,
+  );
+  const [statusState, statusAction, statusPending] = useActionState<ActionState, FormData>(
+    closeAfter(setFamilyMemberStatusAction),
+    null,
+  );
+
+  const pending = rolePending || statusPending;
+  const roleLocked = member.status !== 'active';
+  const active = member.status === 'active';
+  const error =
+    roleState?.ok === false
+      ? roleState.message
+      : statusState?.ok === false
+        ? statusState.message
+        : null;
+
+  return (
+    <>
+      <form onSubmit={submitWithoutReset(roleAction)} className="space-y-3">
+        <input type="hidden" name="familyId" value={familyId} />
+        <input type="hidden" name="memberUserId" value={member.userId} />
+        <div className="space-y-2">
+          <Label htmlFor={roleFieldId}>{t('roleField')}</Label>
+          <select
+            id={roleFieldId}
+            name="newRole"
+            value={selectedRole}
+            onChange={(event) => setSelectedRole(event.target.value as FamilyRole)}
+            disabled={pending || roleLocked}
+            aria-describedby={roleDescriptionId}
+            className={nativeSelectClassName}
+          >
+            {member.roleOptions.map((role) => (
+              <option key={role} value={role}>
+                {tRoles(role)}
+              </option>
+            ))}
+          </select>
+          <Hint id={roleDescriptionId}>
+            {roleLocked ? t('roleLocked') : tRoleDescriptions(selectedRole)}
+          </Hint>
+        </div>
+        <Button
+          type="submit"
+          className="min-h-11 w-full whitespace-normal sm:w-auto"
+          disabled={pending || roleLocked || selectedRole === member.role}
+        >
+          {rolePending ? t('savingRole') : t('saveRole')}
+        </Button>
+      </form>
+
+      <form action={statusAction} className="space-y-3 border-t border-border pt-4">
+        <input type="hidden" name="familyId" value={familyId} />
+        <input type="hidden" name="memberUserId" value={member.userId} />
+        <input type="hidden" name="newStatus" value={active ? 'suspended' : 'active'} />
+        <p className="text-sm text-muted-foreground">
+          {active ? t('suspendHelp') : t('reactivateHelp')}
+        </p>
+        <Button
+          type="submit"
+          variant={active ? 'outline' : 'secondary'}
+          className="min-h-11 w-full whitespace-normal sm:w-auto"
+          disabled={pending}
+        >
+          {statusPending
+            ? active
+              ? t('suspending')
+              : t('reactivating')
+            : active
+              ? t('suspend')
+              : t('reactivate')}
+        </Button>
+      </form>
+
+      {error ? (
+        <p className="text-sm text-destructive" role="alert">
+          {error}
+        </p>
+      ) : null}
+
+      <DialogFooter>
+        <Button
+          type="button"
+          variant="outline"
+          className="min-h-11 w-full sm:w-auto"
+          onClick={onClose}
+          disabled={pending}
+        >
+          {t('close')}
+        </Button>
+      </DialogFooter>
+    </>
   );
 }

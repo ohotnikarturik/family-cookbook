@@ -18,19 +18,19 @@ export function RecipeActivityLog({ heading, hint, defaultOpen, children }: Acti
       className="group rounded-xl border border-border bg-card shadow-sm"
       aria-labelledby="audit-heading"
     >
-      <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-xl px-4 py-3 marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:px-5 [&::-webkit-details-marker]:hidden">
-        <span className="space-y-0.5">
-          <h2
-            id="audit-heading"
-            className="font-serif-display text-lg font-semibold text-foreground"
-          >
-            {heading}
-          </h2>
-          <span className="block text-sm text-muted-foreground">{hint}</span>
-        </span>
+      {/* A summary may hold phrasing and heading content only, so no wrapper element: a grid
+          puts the heading and hint in one column and the chevron beside them. */}
+      <summary className="grid min-h-11 cursor-pointer list-none grid-cols-[1fr_auto] items-center gap-x-3 rounded-xl px-4 py-3 marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:px-5 [&::-webkit-details-marker]:hidden">
+        <h2
+          id="audit-heading"
+          className="col-start-1 font-serif-display text-lg font-semibold text-foreground"
+        >
+          {heading}
+        </h2>
+        <span className="col-start-1 block text-sm text-muted-foreground">{hint}</span>
         <ChevronDown
           aria-hidden
-          className="size-5 shrink-0 text-muted-foreground group-open:rotate-180 motion-safe:transition-transform"
+          className="col-start-2 row-span-2 row-start-1 size-5 shrink-0 text-muted-foreground group-open:rotate-180 motion-safe:transition-transform"
         />
       </summary>
       <div className="space-y-4 border-t border-border px-4 py-4 sm:px-5">{children}</div>

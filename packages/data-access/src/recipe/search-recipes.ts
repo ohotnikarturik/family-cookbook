@@ -27,49 +27,10 @@ import {
   decodeRecipeSearchCursor,
   encodeRecipeSearchCursor,
   escapeIlikePattern,
-  isUuid,
-  quotePostgrestValue,
   recipeSearchKeysetFilter,
 } from './search-cursor.js';
 import { listRecipeCoverAssetIds } from './list-recipe-cover-asset-ids.js';
 import { readRecipeSummaryNumber } from './summary-number.js';
-
-/** Upper bound on ingredient-name matches folded into one `anyText` search. */
-const ANY_TEXT_INGREDIENT_MATCH_LIMIT = 200;
-
-/**
- * Recipe ids (this family only) with an ingredient whose name contains `text`.
- * Runs as the caller, so RLS still decides what is visible.
- */
-async function findRecipeIdsByIngredientText(
-  client: AppSupabaseClient,
-  familyId: string,
-  text: string,
-): Promise<string[] | null> {
-  const { data, error } = await client
-    .from('recipe_ingredients')
-    .select('recipe_id')
-    .eq('family_id', familyId)
-    .ilike('name', `%${escapeIlikePattern(text)}%`)
-    .limit(ANY_TEXT_INGREDIENT_MATCH_LIMIT);
-  if (error || !data) {
-    return null;
-  }
-  return [...new Set(data.map((row) => row.recipe_id as string))].filter(isUuid);
-}
-
-/** `.or()` filter: full text OR title substring OR an ingredient-name match. */
-function anyTextFilter(text: string, ingredientRecipeIds: readonly string[]): string {
-  const quoted = quotePostgrestValue(text);
-  const parts = [
-    `search_document.wfts(simple).${quoted}`,
-    `title.ilike.${quotePostgrestValue(`%${escapeIlikePattern(text)}%`)}`,
-  ];
-  if (ingredientRecipeIds.length > 0) {
-    parts.push(`id.in.(${ingredientRecipeIds.join(',')})`);
-  }
-  return parts.join(',');
-}
 
 function recipeSelect(input: SearchRecipesInput, columns: string): string {
   let select = columns;
@@ -87,10 +48,20 @@ function filteredRecipes(
   client: AppSupabaseClient,
   input: SearchRecipesInput,
   select: string,
-  ingredientRecipeIds: readonly string[],
   options?: { count: 'exact'; head: true },
 ) {
-  let query = client.from('recipes').select(select, options).eq('family_id', input.familyId);
+  // `anyText` runs in the database (`recipes_matching_text`, SECURITY INVOKER so RLS still applies).
+  // It returns whole recipe rows, so every other filter, the sort, cursor and count chain onto it.
+  let query = input.anyText
+    ? client
+        .rpc(
+          'recipes_matching_text',
+          { p_family_id: input.familyId, p_text: input.anyText },
+          options,
+        )
+        .select(select)
+    : client.from('recipes').select(select, options);
+  query = query.eq('family_id', input.familyId);
 
   if (!input.includeArchived) {
     query = query.eq('status', 'active');
@@ -101,10 +72,6 @@ function filteredRecipes(
       type: 'websearch',
       config: 'simple',
     });
-  }
-
-  if (input.anyText) {
-    query = query.or(anyTextFilter(input.anyText, ingredientRecipeIds));
   }
 
   if (input.category) {
@@ -140,15 +107,6 @@ export async function searchRecipes(
   const fetchLimit = limit + 1;
   const sort = input.sort ?? 'updatedAt';
 
-  let ingredientRecipeIds: string[] = [];
-  if (input.anyText) {
-    const found = await findRecipeIdsByIngredientText(client, input.familyId, input.anyText);
-    if (found === null) {
-      return { ok: false, error: 'query_failed' };
-    }
-    ingredientRecipeIds = found;
-  }
-
   let query = filteredRecipes(
     client,
     input,
@@ -156,7 +114,6 @@ export async function searchRecipes(
       input,
       'id, family_id, title, source_language, category, servings, prep_minutes, cook_minutes, status, version, created_by, updated_at, created_at',
     ),
-    ingredientRecipeIds,
   );
 
   if (sort === 'title') {
@@ -250,7 +207,6 @@ export async function searchRecipes(
     client,
     input,
     recipeSelect(input, 'id'),
-    ingredientRecipeIds,
     { count: 'exact', head: true },
   );
   const totalCount = countError || count === null ? undefined : count;

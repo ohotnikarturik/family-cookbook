@@ -66,7 +66,7 @@ function linkFrom(message: MailpitMessage): string {
 async function requestCode(page: Page, email: string): Promise<void> {
   await page.goto('/en/auth/sign-in');
   await page.getByRole('textbox', { name: 'Email' }).fill(email);
-  await page.getByRole('button', { name: 'Email me a sign-in code' }).click();
+  await page.getByRole('button', { name: 'Send me a sign-in email' }).click();
   await expect(page.getByRole('heading', { level: 2, name: 'Check your email' })).toBeVisible();
 }
 
@@ -78,7 +78,7 @@ test.describe('sign-in by code', () => {
   test('step 1 shows one email field and no magic-link wording', async ({ page }) => {
     await page.goto('/en/auth/sign-in');
     await expect(page.getByRole('textbox', { name: 'Email' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Email me a sign-in code' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Send me a sign-in email' })).toBeVisible();
     await expect(page.getByText(/magic link/i)).toHaveCount(0);
     await expect(page.getByLabel('6-digit code')).toHaveCount(0);
   });
@@ -153,7 +153,7 @@ test.describe('sign-in by code', () => {
     for (let attempt = 1; attempt <= 6; attempt += 1) {
       const field = page.getByRole('textbox', { name: 'Email' });
       await field.fill(email);
-      await page.getByRole('button', { name: 'Email me a sign-in code' }).click();
+      await page.getByRole('button', { name: 'Send me a sign-in email' }).click();
       if (attempt < 6) {
         await expect(
           page.getByRole('heading', { level: 2, name: 'Check your email' }),

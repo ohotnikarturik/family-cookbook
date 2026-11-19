@@ -15,6 +15,16 @@ describe('createRateLimiter', () => {
     }
   });
 
+  it('keeps the browse-options budget separate from typed searches', () => {
+    const limiter = createRateLimiter();
+    const search = RATE_LIMIT_POLICIES.recipe_search;
+    for (let i = 0; i < search.max; i += 1) {
+      limiter.consume('recipe_search', 'user-1');
+    }
+    expect(limiter.consume('recipe_search', 'user-1').allowed).toBe(false);
+    expect(limiter.consume('recipe_browse_options', 'user-1')).toEqual({ allowed: true });
+  });
+
   it('blocks when the window is exhausted', () => {
     vi.useFakeTimers();
     const limiter = createRateLimiter();

@@ -31,14 +31,19 @@ export function AddTranslationDialog({ familyId, recipeId, languages }: Props) {
   const [open, setOpen] = useState(false);
   const [language, setLanguage] = useState(languages[0]?.tag ?? '');
   const fieldId = useId();
+  // The list can change under an open page (someone else added a translation): never keep a
+  // language that is no longer offered.
+  const selected = languages.some((item) => item.tag === language)
+    ? language
+    : (languages[0]?.tag ?? '');
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!languages.some((item) => item.tag === language)) {
+    if (selected === '') {
       return;
     }
     setOpen(false);
-    router.push(`/f/${familyId}/recipes/${recipeId}/translations/${encodeURIComponent(language)}`);
+    router.push(`/f/${familyId}/recipes/${recipeId}/translations/${encodeURIComponent(selected)}`);
   }
 
   return (
@@ -58,7 +63,7 @@ export function AddTranslationDialog({ familyId, recipeId, languages }: Props) {
             <Label htmlFor={fieldId}>{t('languageField')}</Label>
             <select
               id={fieldId}
-              value={language}
+              value={selected}
               onChange={(event) => setLanguage(event.target.value)}
               className={nativeSelectClassName}
             >

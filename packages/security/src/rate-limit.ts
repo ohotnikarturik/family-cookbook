@@ -7,7 +7,8 @@ export type RateLimitPolicyId =
   | 'invitation_accept'
   | 'upload_slot'
   | 'upload_finalize'
-  | 'recipe_search';
+  | 'recipe_search'
+  | 'recipe_browse_options';
 
 export type RateLimitPolicy = {
   readonly max: number;
@@ -23,7 +24,10 @@ export const RATE_LIMIT_POLICIES: Record<RateLimitPolicyId, RateLimitPolicy> = {
   invitation_accept: { max: 20, windowMs: 60 * 60 * 1000 },
   upload_slot: { max: 60, windowMs: 60 * 60 * 1000 },
   upload_finalize: { max: 60, windowMs: 60 * 60 * 1000 },
-  recipe_search: { max: 120, windowMs: 60 * 1000 },
+  // Search as you type sends at most one request per 300 ms pause (about 200 a minute); keep headroom.
+  recipe_search: { max: 240, windowMs: 60 * 1000 },
+  // Filter lists load once per page visit and must never use up the typing budget.
+  recipe_browse_options: { max: 120, windowMs: 60 * 1000 },
 };
 
 type Bucket = { count: number; windowStart: number };

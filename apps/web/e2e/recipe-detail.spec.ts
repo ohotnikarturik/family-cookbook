@@ -4,6 +4,7 @@ import { expectNoSeriousAxeViolations } from './fixtures/axe';
 import { loginAs } from './fixtures/auth';
 import { FAMILY_A_ID, RECIPE_ACTIVE_ID, TEST_USERS } from './fixtures/constants';
 import { isLocalE2eStackReady } from './fixtures/env';
+import { familyMain } from './fixtures/main';
 
 const detail = `/en/f/${FAMILY_A_ID}/recipes/${RECIPE_ACTIVE_ID}`;
 /** Seeded Ukrainian borscht: prep 30 min, cook 90 min, so the total is exactly 2 h. */
@@ -32,15 +33,15 @@ test.describe('recipe detail readability', () => {
         'Total 1 h 10 min',
         'Serves 12',
       ]);
-      await expect(page.getByText('Prep (min)')).toHaveCount(0);
+      await expect(familyMain(page).getByText('Prep (min)')).toHaveCount(0);
 
       await page.goto(`/en/f/${FAMILY_A_ID}/recipes/${RECIPE_BORSCHT}`);
-      await expect(page.getByText('Total 2 h', { exact: true })).toBeVisible();
+      await expect(familyMain(page).getByText('Total 2 h', { exact: true })).toBeVisible();
     });
 
     test('names the author and the update date, never an email', async ({ page }) => {
       await page.goto(detail);
-      const line = page.getByText(/^Added by .+ · Updated /);
+      const line = familyMain(page).getByText(/^Added by .+ · Updated /);
       await expect(line).toBeVisible();
       await expect(line).not.toContainText('@');
     });
@@ -105,7 +106,7 @@ test.describe('recipe detail readability', () => {
       await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
       await expect(page.getByRole('link', { name: 'Edit recipe' })).toHaveCount(0);
       await expect(page.getByRole('button', { name: 'Archive recipe' })).toHaveCount(0);
-      await expect(page.getByText('Add photos of this dish')).toHaveCount(0);
+      await expect(familyMain(page).getByText('Add photos of this dish')).toHaveCount(0);
     });
   });
 });
