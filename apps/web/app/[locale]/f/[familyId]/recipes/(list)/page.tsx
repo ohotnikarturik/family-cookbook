@@ -7,7 +7,7 @@ import { Suspense } from 'react';
 
 import { RecipeBrowseStates } from '@/components/recipe/recipe-browse-states';
 import { getRecipeCardLabels } from '@/components/recipe/recipe-card-labels';
-import { AnnounceRecipeResults } from '@/components/recipe/recipe-browse-shell';
+import { AnnounceRecipeResults } from '@/components/recipe/recipe-results-announcer';
 import { RecipeList } from '@/components/recipe/recipe-list';
 import { RecipePagination } from '@/components/recipe/recipe-pagination';
 import { LoadingState } from '@/components/product/loading-state';

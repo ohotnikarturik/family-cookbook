@@ -237,7 +237,14 @@
       "search": {
         "label": "Search recipes",
         "placeholder": "Recipe name or ingredient",
-        "submit": "Search"
+        "hint": "Results appear as you type. Type at least 2 letters.",
+        "results": {
+          "heading": "Search results",
+          "seeAll": "See all {count} results",
+          "emptyTitle": "No matching recipes",
+          "emptyDescription": "Try other words, or browse all recipes.",
+          "browseAll": "Browse all recipes"
+        }
       },
       "empty": {
         "title": "Your cookbook is empty",

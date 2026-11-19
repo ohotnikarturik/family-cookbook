@@ -3,15 +3,7 @@
 import type { SearchRecipesInput } from '@family-cookbook/contracts';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-  type ReactNode,
-} from 'react';
+import type { ReactNode } from 'react';
 
 import { RecipeCategoryChips } from '@/components/recipe/recipe-category-chips';
 import { RecipeSearchActiveChips } from '@/components/recipe/recipe-search-active-chips';
@@ -20,10 +12,9 @@ import {
   type RecipeSearchContributorOption,
   type RecipeSearchFormValues,
 } from '@/components/recipe/recipe-search-form';
+import { ResultsAnnouncer } from '@/components/recipe/recipe-results-announcer';
 import { parseRecipeSearchFromUrl } from '@/lib/recipe-search-params';
 import { browseFieldsFromUrl } from '@/lib/search-as-you-type';
-
-const AnnounceContext = createContext<(message: string) => void>(() => {});
 
 type Props = Readonly<{
   familyId: string;
@@ -69,26 +60,8 @@ export function RecipeBrowseShell({
   const urlFields = browseFieldsFromUrl(searchParams);
   const parsed = parseRecipeSearchFromUrl(familyId, Object.fromEntries(searchParams.entries()));
 
-  const [announcement, setAnnouncement] = useState('');
-  const firstMessage = useRef<string | null>(null);
-  const searched = useRef(false);
-  const announce = useCallback((message: string) => {
-    // The count on first load is on screen already; only read out what a search changed. (Effects
-    // can run twice in development, so the first message is skipped by value, not by count.)
-    if (firstMessage.current === null) {
-      firstMessage.current = message;
-      return;
-    }
-    if (!searched.current && message === firstMessage.current) {
-      return;
-    }
-    searched.current = true;
-    // A zero-width space makes an identical message count as new, so it is read again.
-    setAnnouncement((current) => (current === message ? `${message}​` : message));
-  }, []);
-
   return (
-    <AnnounceContext.Provider value={announce}>
+    <ResultsAnnouncer>
       <RecipeSearchForm
         familyId={familyId}
         urlFields={urlFields}
@@ -119,19 +92,7 @@ export function RecipeBrowseShell({
           {membersError}
         </p>
       ) : null}
-      <p role="status" className="sr-only">
-        {announcement}
-      </p>
       {children}
-    </AnnounceContext.Provider>
+    </ResultsAnnouncer>
   );
-}
-
-/** Rendered by the results page: hands its result count to the live region above. */
-export function AnnounceRecipeResults({ message }: Readonly<{ message: string }>) {
-  const announce = useContext(AnnounceContext);
-  useEffect(() => {
-    announce(message);
-  }, [announce, message]);
-  return null;
 }

@@ -237,7 +237,14 @@
       "search": {
         "label": "Hae reseptejä",
         "placeholder": "Reseptin nimi tai ainesosa",
-        "submit": "Hae"
+        "hint": "Tulokset päivittyvät kirjoittaessasi. Kirjoita vähintään 2 kirjainta.",
+        "results": {
+          "heading": "Hakutulokset",
+          "seeAll": "Näytä kaikki {count} tulosta",
+          "emptyTitle": "Ei hakua vastaavia reseptejä",
+          "emptyDescription": "Kokeile muita sanoja tai selaa kaikkia reseptejä.",
+          "browseAll": "Selaa kaikkia reseptejä"
+        }
       },
       "empty": {
         "title": "Keittokirjasi on tyhjä",

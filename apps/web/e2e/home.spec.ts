@@ -50,15 +50,68 @@ test.describe('Home', () => {
       );
     });
 
-    test('search opens Recipes with the query and its results', async ({ page }) => {
+    test('typing searches in place: no button, focus kept, address updated', async ({ page }) => {
       await page.goto(familyA);
-      await page.getByRole('searchbox', { name: 'Search recipes' }).fill('salmon');
-      await main(page).getByRole('button', { name: 'Search' }).click();
-      await expect(page).toHaveURL(/\/recipes\?query=salmon$/);
-      await expect(page.getByRole('heading', { level: 1 })).toHaveText('Recipes');
+      const box = page.getByRole('searchbox', { name: 'Search recipes' });
+      await expect(main(page).getByRole('button', { name: 'Search' })).toHaveCount(0);
+      await expect(main(page).getByRole('heading', { name: 'Recently updated' })).toBeVisible();
+
+      await box.pressSequentially('salmon');
+      await expect(page).toHaveURL(new RegExp(`${familyA}\\?query=salmon$`));
+      await expect(main(page).getByRole('heading', { name: 'Search results' })).toBeVisible();
+      await expect(main(page).getByRole('heading', { name: 'Recently updated' })).toHaveCount(0);
       await expect(
         main(page).getByRole('heading', { name: 'Weeknight salmon soup' }),
       ).toBeVisible();
+      await expect(main(page).getByText('1 recipe', { exact: true })).toBeVisible();
+      await expect(box).toBeFocused();
+      await expect(box).toHaveValue('salmon');
+      // Everything fits on Home: no "see all" link.
+      await expect(main(page).getByRole('link', { name: /^See all \d+ results$/ })).toHaveCount(0);
+
+      // Emptying the box brings the recent recipes back.
+      await box.fill('');
+      await expect(page).toHaveURL(new RegExp(`${familyA}$`));
+      await expect(main(page).getByRole('heading', { name: 'Recently updated' })).toBeVisible();
+      await expect(box).toBeFocused();
+    });
+
+    test('one letter waits for Enter; many matches link to Recipes', async ({ page }) => {
+      await page.goto(familyA);
+      const box = page.getByRole('searchbox', { name: 'Search recipes' });
+      await box.pressSequentially('e');
+      // Longer than the 300 ms pause: still Home with recent recipes.
+      await page.waitForTimeout(700);
+      await expect(page).toHaveURL(new RegExp(`${familyA}$`));
+      await box.press('Enter');
+      await expect(page).toHaveURL(new RegExp(`${familyA}\\?query=e$`));
+      const more = main(page).getByRole('link', { name: /^See all \d+ results$/ });
+      await expect(more).toBeVisible();
+      await more.click();
+      await expect(page).toHaveURL(/\/recipes\?query=e$/);
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText('Recipes');
+    });
+
+    test('no match shows a calm message and a way to all recipes', async ({ page }) => {
+      await page.goto(familyA);
+      await page.getByRole('searchbox', { name: 'Search recipes' }).pressSequentially('zzqx');
+      await expect(main(page).getByRole('heading', { name: 'No matching recipes' })).toBeVisible();
+      await main(page).getByRole('link', { name: 'Browse all recipes' }).click();
+      await expect(page).toHaveURL(new RegExp(`${familyA}/recipes$`));
+    });
+
+    test('the box follows the address when Back returns to Home', async ({ page }) => {
+      await page.goto(`${familyA}?query=salmon`);
+      const box = page.getByRole('searchbox', { name: 'Search recipes' });
+      await expect(box).toHaveValue('salmon');
+      await expect(
+        main(page).getByRole('heading', { name: 'Weeknight salmon soup' }),
+      ).toBeVisible();
+      await main(page).getByRole('link', { name: 'Soup', exact: true }).click();
+      await expect(page).toHaveURL(/\/recipes\?category=Soup$/);
+      await page.goBack();
+      await expect(page).toHaveURL(new RegExp(`${familyA}\\?query=salmon$`));
+      await expect(page.getByRole('searchbox', { name: 'Search recipes' })).toHaveValue('salmon');
     });
 
     test('a category chip opens the filtered list', async ({ page }) => {
@@ -72,10 +125,13 @@ test.describe('Home', () => {
       ).toBeVisible();
     });
 
-    test('has no sideways scroll at 320px', async ({ page }) => {
+    test('has no sideways scroll at 320px, also with results', async ({ page }) => {
       await page.setViewportSize(NARROW);
       await page.goto(familyA);
       await expect(main(page).locator('article').first()).toBeVisible();
+      await expectNoSidewaysScroll(page, NARROW.width);
+      await page.goto(`${familyA}?query=e`);
+      await expect(main(page).getByRole('heading', { name: 'Search results' })).toBeVisible();
       await expectNoSidewaysScroll(page, NARROW.width);
     });
   });
@@ -86,8 +142,9 @@ test.describe('Home', () => {
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Andersen Test Kitchen');
     await expect(main(page).getByRole('link', { name: 'Add recipe' })).toHaveCount(0);
     await expect(main(page).getByRole('link', { name: 'See all recipes' })).toBeVisible();
-    await expect(page.getByRole('searchbox', { name: 'Search recipes' })).toBeVisible();
     await expect(main(page).locator('article').first()).toBeVisible();
+    await page.getByRole('searchbox', { name: 'Search recipes' }).pressSequentially('salmon');
+    await expect(main(page).getByRole('heading', { name: 'Weeknight salmon soup' })).toBeVisible();
   });
 
   test('empty cookbook: the owner gets three numbered steps', async ({ page, baseURL }) => {
@@ -151,6 +208,11 @@ test.describe('Home', () => {
           await expectNoSeriousAxeViolations(page);
           if (size === NARROW) {
             await expectNoSidewaysScroll(page, NARROW.width);
+          }
+          if (path === familyA) {
+            await page.goto(`${path}?query=salmon`);
+            await expect(main(page).getByRole('heading', { name: 'Search results' })).toBeVisible();
+            await expectNoSeriousAxeViolations(page);
           }
         }
       }
