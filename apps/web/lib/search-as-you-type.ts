@@ -1,5 +1,5 @@
 /** Wait this long after the last keystroke before searching. */
-export const SEARCH_DEBOUNCE_MS = 300;
+export const SEARCH_DEBOUNCE_MS = 500;
 
 /** Fewest characters that start a search by typing alone. Enter and the button accept fewer. */
 export const SEARCH_MIN_CHARACTERS = 2;

@@ -18,7 +18,7 @@ type Props = Readonly<{
 }>;
 
 /**
- * Search from Home, with the same rule as Recipes and no confirm button: 300 ms after typing stops
+ * Search from Home, with the same rule as Recipes and no confirm button: 500 ms after typing stops
  * (2 or more characters) the address gets `?query=` and Home shows the matches in place of the
  * recent recipes; empty text brings the recent recipes back; Enter searches at once, even for one
  * character. The form lives in the Home layout, so it keeps focus while the results change.

@@ -79,7 +79,7 @@ function filtersOf(fields: BrowseFields): Filters {
 }
 
 /**
- * Search box and filters. Nothing needs a confirm button: text searches 300 ms after typing stops
+ * Search box and filters. Nothing needs a confirm button: text searches 500 ms after typing stops
  * (2 or more characters), and a filter applies as soon as it is chosen. The form lives in the
  * recipe-list layout, so it keeps focus and the open Filters panel while results change.
  */

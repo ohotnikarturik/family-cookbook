@@ -80,8 +80,8 @@ test.describe('Home', () => {
       await page.goto(familyA);
       const box = page.getByRole('searchbox', { name: 'Search recipes' });
       await box.pressSequentially('e');
-      // Longer than the 300 ms pause: still Home with recent recipes.
-      await page.waitForTimeout(700);
+      // Longer than the 500 ms pause: still Home with recent recipes.
+      await page.waitForTimeout(1000);
       await expect(page).toHaveURL(new RegExp(`${familyA}$`));
       await box.press('Enter');
       await expect(page).toHaveURL(new RegExp(`${familyA}\\?query=e$`));

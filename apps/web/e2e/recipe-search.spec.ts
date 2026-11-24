@@ -102,7 +102,7 @@ test.describe('search-first recipe browse', () => {
       await page.goto(recipes);
       await box(page).click();
       await page.keyboard.type('y');
-      await page.waitForTimeout(700);
+      await page.waitForTimeout(1000);
       await expect(page).toHaveURL(new RegExp(`${recipes}$`));
 
       await page.keyboard.type('east', { delay: 40 });

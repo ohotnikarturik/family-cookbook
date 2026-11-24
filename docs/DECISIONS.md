@@ -411,7 +411,7 @@ Reverses the banner rule in "W38.19 — Photo-less recipe cards": from `sm` up, 
 
 ## W38.21 — Search as you type, filters without a confirm button (2026-11-18)
 
-1. **Rule:** 300 ms after the last keystroke, at least 2 characters counted as code points (one emoji or one Cyrillic letter is one character). Empty text clears the search. Enter searches at once and accepts 1 character. There is no Search button; filters apply on change (no apply button). A content update on the same page with focus kept is not a change of context (WCAG 3.2.2).
+1. **Rule:** 500 ms after the last keystroke (300 ms at first; see "Search pause 500 ms" at the end), at least 2 characters counted as code points (one emoji or one Cyrillic letter is one character). Empty text clears the search. Enter searches at once and accepts 1 character. There is no Search button; filters apply on change (no apply button). A content update on the same page with focus kept is not a change of context (WCAG 3.2.2).
 2. **`router.replace`, not `push`:** one history entry for a typed search. The default sort (`updatedAt`) and `cursor` are left out of the address; a new search starts on page 1.
 3. **Controls live in a layout.** Next.js rebuilds a page when its search params change (focus lost, Filters panel closed) but keeps layouts. The heading, search box, filters and both chip rows are in `app/[locale]/f/[familyId]/recipes/(list)/layout.tsx` with the client `RecipeBrowseShell`, which reads `useSearchParams`; the results stay in `(list)/page.tsx`. Detail, new and edit pages sit outside the `(list)` group. This replaced a short-lived focus-carry module.
 4. **Our own late results are not "outside" changes.** The form keeps the addresses it asked for that have not arrived yet; an older one arriving after a newer request (two filters picked quickly) is ignored. Any other address change resets the controls to the address.
@@ -475,8 +475,16 @@ Reverses the banner rule in "W38.19 — Photo-less recipe cards": from `sm` up, 
 
 ## W38.22 — Home search as you type, no button (2026-11-19)
 
-1. **Same rule as Recipes, no confirm button.** W38.5 shipped Home with a "Search" button that opened Recipes; W38.21 had already removed the button there. Home now searches in place: 300 ms after typing, 2+ characters, Enter at once (1 character ok), empty text restores "Recently updated". Matches (up to 6 cards, count, "See all N results" to `/recipes?query=` when there are more) replace the recent list on Home; category chips still open Recipes.
+1. **Same rule as Recipes, no confirm button.** W38.5 shipped Home with a "Search" button that opened Recipes; W38.21 had already removed the button there. Home now searches in place: 500 ms after typing, 2+ characters, Enter at once (1 character ok), empty text restores "Recently updated". Matches (up to 6 cards, count, "See all N results" to `/recipes?query=` when there are more) replace the recent list on Home; category chips still open Recipes.
 2. **Layout again.** Home's `page.tsx` moved to the route group `f/[familyId]/(home)/`, with a `layout.tsx` that holds the header, search box and chips, for the reason in W38.21 item 3 (a page is rebuilt on search-param changes, a layout is not). URLs are unchanged. The layout makes one `searchRecipes({includeArchived:true, limit:1})` call to decide "empty cookbook" (then it renders only the first-steps page, without search or "Add recipe"); the page keeps its own recent/archived checks.
 3. **Own form, shared announcer.** `HomeSearchForm` is text-only and does not reuse `RecipeSearchForm`, which owns filters and their address fields. The polite live region and `AnnounceRecipeResults` moved to `components/recipe/recipe-results-announcer.tsx` and serve both shells. Only `?query=` is read on Home; other params are ignored.
 4. **Typed Home searches share the `recipe_search` bucket** (240/min per user) with Recipes. No migration, RLS or contract change.
 5. **Dev server note.** After deleting the `next/form` import from Home, an already running `next dev` (Turbopack) kept a stale client manifest ("Could not find the module … form.js in the React Client Manifest"). Restart `pnpm dev` after such a change before running Playwright.
+
+## Search pause 500 ms, 2-character minimum kept (2026-11-24)
+
+Audit of every search box: Home and Recipes are the only typed searches and share `lib/search-as-you-type.ts`; the MCP `query` is request/response and has no pause.
+
+1. **Pause 300 → 500 ms.** Slower typists, including older family members, paused mid-word at 300 ms, so the list flickered and the result count was announced several times per word. Each search is a server render plus three database queries (rows, covers, count). At 500 ms the worst case is about 120 requests a minute, half of the 240/min `recipe_search` limit.
+2. **Still 2 characters, not 1.** The match is a substring match, so one letter matches almost every recipe: the same list with a pointless count announcement. Enter still searches one character at once.
+3. **Not changed:** Enter and filter changes apply immediately (no pause); IME composition still blocks searching.
