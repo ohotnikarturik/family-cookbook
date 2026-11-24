@@ -10,6 +10,7 @@ export {
   canAssignMemberRole,
   canManageFamilyMembers,
   canChangeFamilySettings,
+  canLeaveFamily,
   canReceiveFamilyOwnership,
   canTransferFamilyOwnership,
 } from './member-capabilities.js';

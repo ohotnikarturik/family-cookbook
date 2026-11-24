@@ -5,6 +5,7 @@ import {
   canAdministrateTargetMember,
   canAssignMemberRole,
   canChangeFamilySettings,
+  canLeaveFamily,
   canReceiveFamilyOwnership,
   canTransferFamilyOwnership,
 } from './member-capabilities.js';
@@ -110,5 +111,14 @@ describe('ownership transfer', () => {
     expect(canReceiveFamilyOwnership('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaa0001', targetViewer)).toBe(
       true,
     );
+  });
+});
+
+describe('leaving a family', () => {
+  it('lets every role except the owner leave', () => {
+    expect(canLeaveFamily('owner')).toBe(false);
+    for (const role of ['admin', 'editor', 'contributor', 'viewer'] as const) {
+      expect(canLeaveFamily(role)).toBe(true);
+    }
   });
 });

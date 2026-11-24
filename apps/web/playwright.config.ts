@@ -11,6 +11,12 @@ const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${port}`;
 const SCREENSHOT_SPEC = /screenshots\.spec\.ts/;
 const screensRun = process.env.PW_SCREENS === '1';
 
+/**
+ * Changes who belongs to a family (leave, re-invite, suspend) and restores it. It runs alone, after
+ * the other projects, so no parallel spec sees a seeded member missing.
+ */
+const MEMBERSHIP_SPEC = /membership-changes\.spec\.ts/;
+
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
@@ -36,13 +42,19 @@ export default defineConfig({
           name: 'chromium',
           use: { ...devices['Desktop Chrome'] },
           grepInvert: /narrow viewport/,
-          testIgnore: SCREENSHOT_SPEC,
+          testIgnore: [SCREENSHOT_SPEC, MEMBERSHIP_SPEC],
         },
         {
           name: 'mobile-chrome',
           grep: /narrow viewport/,
           use: { ...devices['Pixel 5'] },
-          testIgnore: SCREENSHOT_SPEC,
+          testIgnore: [SCREENSHOT_SPEC, MEMBERSHIP_SPEC],
+        },
+        {
+          name: 'membership-changes',
+          testMatch: MEMBERSHIP_SPEC,
+          dependencies: ['chromium', 'mobile-chrome'],
+          use: { ...devices['Desktop Chrome'] },
         },
       ],
   webServer: process.env.CI

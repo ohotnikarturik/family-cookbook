@@ -24,6 +24,17 @@
     "description": "That page is not available.",
     "home": "Back to home"
   },
+  "unavailable": {
+    "suspended": {
+      "title": "Your access is paused",
+      "description": "An owner or admin has paused your access to this family. Ask them to turn it back on."
+    },
+    "noAccess": {
+      "title": "You do not have access to this family",
+      "description": "You may have left this family, or the link may be wrong. Ask an owner or admin for a new invitation."
+    },
+    "families": "See my families"
+  },
   "auth": {
     "title": "Sign in",
     "subtitle": "We email you a sign-in message. No password needed.",
@@ -160,6 +171,24 @@
         "forbidden": "You cannot change family settings.",
         "notFound": "Family not found.",
         "failed": "Could not save settings. Try again."
+      }
+    },
+    "leave": {
+      "sectionTitle": "Leave this family",
+      "sectionDescription": "You will lose access to this family's recipes. Nothing you added is deleted.",
+      "openDialog": "Leave family…",
+      "dialogTitle": "Leave {familyName}?",
+      "dialogDescription": "You will no longer see this family's recipes or members. The recipes you added stay with the family. An owner or admin can invite you back later.",
+      "submit": "Leave family",
+      "submitting": "Leaving…",
+      "cancel": "Cancel",
+      "ownerNote": "You are the owner, so you cannot leave yet. Transfer ownership to another member first.",
+      "ownerLink": "Go to members",
+      "errors": {
+        "validation": "Check the family and try again.",
+        "forbidden": "You cannot leave this family right now.",
+        "soleOwner": "Transfer ownership to another member before you leave.",
+        "failed": "Could not leave the family. Try again."
       }
     },
     "members": {

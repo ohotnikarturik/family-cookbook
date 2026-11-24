@@ -24,6 +24,17 @@
     "description": "Tätä sivua ei ole saatavilla.",
     "home": "Takaisin etusivulle"
   },
+  "unavailable": {
+    "suspended": {
+      "title": "Pääsysi on keskeytetty",
+      "description": "Omistaja tai ylläpitäjä on keskeyttänyt pääsysi tähän perheeseen. Pyydä heitä palauttamaan se."
+    },
+    "noAccess": {
+      "title": "Sinulla ei ole pääsyä tähän perheeseen",
+      "description": "Olet ehkä poistunut perheestä, tai linkki on väärä. Pyydä omistajalta tai ylläpitäjältä uusi kutsu."
+    },
+    "families": "Näytä perheeni"
+  },
   "auth": {
     "title": "Kirjaudu",
     "subtitle": "Lähetämme sinulle kirjautumisviestin sähköpostiin. Salasanaa ei tarvita.",
@@ -160,6 +171,24 @@
         "forbidden": "Et voi muuttaa perheen asetuksia.",
         "notFound": "Perhettä ei löytynyt.",
         "failed": "Asetuksia ei voitu tallentaa. Yritä uudelleen."
+      }
+    },
+    "leave": {
+      "sectionTitle": "Poistu perheestä",
+      "sectionDescription": "Menetät pääsyn tämän perheen resepteihin. Mitään lisäämääsi ei poisteta.",
+      "openDialog": "Poistu perheestä…",
+      "dialogTitle": "Poistutko perheestä {familyName}?",
+      "dialogDescription": "Et enää näe perheen reseptejä etkä jäseniä. Lisäämäsi reseptit jäävät perheelle. Omistaja tai ylläpitäjä voi kutsua sinut myöhemmin takaisin.",
+      "submit": "Poistu perheestä",
+      "submitting": "Poistutaan…",
+      "cancel": "Peruuta",
+      "ownerNote": "Olet omistaja, joten et voi vielä poistua. Siirrä ensin omistajuus toiselle jäsenelle.",
+      "ownerLink": "Siirry jäseniin",
+      "errors": {
+        "validation": "Tarkista perhe ja yritä uudelleen.",
+        "forbidden": "Et voi poistua tästä perheestä juuri nyt.",
+        "soleOwner": "Siirrä omistajuus toiselle jäsenelle ennen poistumista.",
+        "failed": "Perheestä poistuminen epäonnistui. Yritä uudelleen."
       }
     },
     "members": {

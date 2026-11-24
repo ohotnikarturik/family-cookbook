@@ -53,6 +53,12 @@ async function FamilyLayoutShell({ children, params }: Props) {
   if (workspace.status === 'auth_required') {
     redirect(`/${locale}/auth/sign-in?next=/${locale}/f/${familyId}`);
   }
+  if (workspace.status === 'suspended') {
+    return <UnavailablePage locale={locale} reason="suspended" />;
+  }
+  if (workspace.status === 'forbidden') {
+    return <UnavailablePage locale={locale} reason="noAccess" />;
+  }
   if (workspace.status !== 'ok') {
     return <UnavailablePage locale={locale} />;
   }

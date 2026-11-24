@@ -38,6 +38,7 @@ export {
   transferFamilyOwnership,
   type TransferFamilyOwnershipResult,
 } from './family/transfer-family-ownership.js';
+export { leaveFamily, type LeaveFamilyResult } from './family/leave-family.js';
 export {
   resolveAccessibleFamily,
   type ResolveAccessibleFamilyResult,

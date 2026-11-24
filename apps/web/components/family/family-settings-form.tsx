@@ -36,19 +36,21 @@ export function FamilySettingsForm({ familyId, name, defaultLanguage, canEdit }:
 
   if (!canEdit) {
     return (
-      <dl className="space-y-4 rounded-xl border border-border bg-card p-5">
-        <div className="space-y-1">
-          <dt className="text-sm text-muted-foreground">{t('nameLabel')}</dt>
-          <dd className="text-base font-medium text-foreground">{name}</dd>
-        </div>
-        <div className="space-y-1">
-          <dt className="text-sm text-muted-foreground">{t('defaultLanguageLabel')}</dt>
-          <dd className="text-base font-medium text-foreground">
-            {languageLabel(defaultLanguage, locale)}
-          </dd>
-        </div>
+      <div className="space-y-4 rounded-xl border border-border bg-card p-5">
+        <dl className="space-y-4">
+          <div className="space-y-1">
+            <dt className="text-sm text-muted-foreground">{t('nameLabel')}</dt>
+            <dd className="text-base font-medium text-foreground">{name}</dd>
+          </div>
+          <div className="space-y-1">
+            <dt className="text-sm text-muted-foreground">{t('defaultLanguageLabel')}</dt>
+            <dd className="text-base font-medium text-foreground">
+              {languageLabel(defaultLanguage, locale)}
+            </dd>
+          </div>
+        </dl>
         <p className="text-sm text-muted-foreground">{t('readOnlyNote')}</p>
-      </dl>
+      </div>
     );
   }
 

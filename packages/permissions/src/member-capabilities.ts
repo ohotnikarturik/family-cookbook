@@ -46,6 +46,11 @@ export function assignableMemberRolesForActor(actorRole: FamilyRole): FamilyRole
   return candidates.filter((role) => canAssignMemberRole(actorRole, role));
 }
 
+/** UI hint only. The `leave_family` RPC decides; an owner must transfer first. */
+export function canLeaveFamily(role: FamilyRole): boolean {
+  return role !== 'owner';
+}
+
 export function canTransferFamilyOwnership(actorRole: FamilyRole): boolean {
   return actorRole === 'owner';
 }
