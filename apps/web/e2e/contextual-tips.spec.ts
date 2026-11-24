@@ -4,6 +4,7 @@ import { expectNoSeriousAxeViolations } from './fixtures/axe';
 import { loginAs } from './fixtures/auth';
 import { FAMILY_A_ID, RECIPE_ACTIVE_ID, TEST_USERS } from './fixtures/constants';
 import { isLocalE2eStackReady } from './fixtures/env';
+import { familyMain } from './fixtures/main';
 
 const familyA = `/en/f/${FAMILY_A_ID}`;
 const invitations = `${familyA}/settings/invitations`;
@@ -92,13 +93,16 @@ test.describe('W38.7 contextual tips', () => {
       /such as 2, 1\.5 or 1 1\/2/,
     );
 
-    const more = page.getByText('What is this?', { exact: true });
+    // Scoped to the page content: a production build can leave an inert hidden copy of a streamed
+    // Suspense boundary at the end of <body>, which `getByText` would count a second time.
+    const content = familyMain(page);
+    const more = content.getByText('What is this?', { exact: true });
     await more.click();
     await expect(
-      page.getByText(/added later on the recipe page: open More, then Translations/),
+      content.getByText(/added later on the recipe page: open More, then Translations/),
     ).toBeVisible();
     await more.click();
-    await expect(page.getByText(/added later on the recipe page/)).toBeHidden();
+    await expect(content.getByText(/added later on the recipe page/)).toBeHidden();
   });
 
   test('archive dialog explains archive versus delete and Cancel archives nothing', async ({
@@ -133,8 +137,8 @@ test.describe('W38.7 contextual tips', () => {
       await expectNoSidewaysScroll(page, NARROW.width);
 
       await page.goto(newRecipe);
-      await page.getByText('What is this?', { exact: true }).click();
-      await expect(page.getByText(/open More, then Translations/)).toBeVisible();
+      await familyMain(page).getByText('What is this?', { exact: true }).click();
+      await expect(familyMain(page).getByText(/open More, then Translations/)).toBeVisible();
       await expectNoSeriousAxeViolations(page);
       await expectNoSidewaysScroll(page, NARROW.width);
 

@@ -95,7 +95,10 @@ test.describe('Home', () => {
     test('no match shows a calm message and a way to all recipes', async ({ page }) => {
       await page.goto(familyA);
       await page.getByRole('searchbox', { name: 'Search recipes' }).pressSequentially('zzqx');
-      await expect(main(page).getByRole('heading', { name: 'No matching recipes' })).toBeVisible();
+      // The empty message is a status region (title and hint), not a heading.
+      await expect(
+        main(page).getByRole('status').filter({ hasText: 'No matching recipes' }),
+      ).toBeVisible();
       await main(page).getByRole('link', { name: 'Browse all recipes' }).click();
       await expect(page).toHaveURL(new RegExp(`${familyA}/recipes$`));
     });
