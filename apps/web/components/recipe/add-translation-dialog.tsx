@@ -83,7 +83,7 @@ export function AddTranslationDialog({ familyId, recipeId, languages }: Props) {
             >
               {t('cancel')}
             </Button>
-            <Button type="submit" className="min-h-11 w-full sm:w-auto">
+            <Button type="submit" className="min-h-11 w-full sm:w-auto" disabled={selected === ''}>
               {t('continue')}
             </Button>
           </DialogFooter>

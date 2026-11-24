@@ -10,7 +10,6 @@ import { redirect } from 'next/navigation';
 
 import { LOCALE_COOKIE, parseAppLocale } from '@/lib/locale';
 import { writeProfilePreferenceCookies } from '@/lib/profile-preference-cookies';
-import { type ThemePreference } from '@/lib/theme';
 
 function accountPath(locale: string): string {
   return `/${locale}/account`;
@@ -20,7 +19,6 @@ export type AccountProfileActionState =
   | null
   | {
       ok: true;
-      themePreference: ThemePreference;
     }
   | {
       ok: false;
@@ -39,21 +37,32 @@ export async function updateAccountProfileAction(
   const locale = await actionLocale();
   const t = await getTranslations({ locale, namespace: 'account.preferences' });
 
+  const displayName = formData.get('displayName');
+  if (typeof displayName !== 'string') {
+    return { ok: false, message: t('errors.validation') };
+  }
+
+  const supabase = await createServerSupabaseClient();
+  const loaded = await getOwnProfile(supabase);
+  if (loaded.status === 'auth_required') {
+    redirect(`/${locale}/auth/sign-in?next=${accountPath(locale)}`);
+  }
+  if (loaded.status !== 'ok') {
+    return { ok: false, message: t('errors.notFound') };
+  }
+
+  // Language and theme are saved when they are chosen. Keep the stored values here so a form
+  // rendered earlier cannot write an older choice back.
   const parsed = updateProfileInputSchema.safeParse({
-    displayName: typeof formData.get('displayName') === 'string' ? formData.get('displayName') : '',
-    preferredLanguage:
-      typeof formData.get('preferredLanguage') === 'string'
-        ? formData.get('preferredLanguage')
-        : '',
-    themePreference:
-      typeof formData.get('themePreference') === 'string' ? formData.get('themePreference') : '',
+    displayName,
+    preferredLanguage: loaded.profile.preferredLanguage,
+    themePreference: loaded.profile.themePreference,
   });
 
   if (!parsed.success) {
     return { ok: false, message: t('errors.validation') };
   }
 
-  const supabase = await createServerSupabaseClient();
   const result = await updateOwnProfile(supabase, parsed.data);
 
   if (result.status === 'auth_required') {
@@ -69,18 +78,8 @@ export async function updateAccountProfileAction(
     return { ok: false, message: t('errors.failed') };
   }
 
-  const jar = await cookies();
-  writeProfilePreferenceCookies(jar, parsed.data);
-
-  const nextLocale = parsed.data.preferredLanguage;
   revalidatePath(accountPath(locale));
-  revalidatePath(accountPath(nextLocale));
-
-  if (nextLocale !== locale) {
-    redirect(accountPath(nextLocale));
-  }
-
-  return { ok: true, themePreference: parsed.data.themePreference };
+  return { ok: true };
 }
 
 export async function persistSignedInUiPreferences(

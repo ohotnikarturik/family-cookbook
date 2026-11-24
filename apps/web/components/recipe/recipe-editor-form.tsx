@@ -8,6 +8,7 @@ import {
   updateRecipeAction,
   type RecipeEditorActionState,
 } from '@/app/actions/recipe';
+import { DisabledReason } from '@/components/product/disabled-reason';
 import { FormField } from '@/components/product/form-field';
 import { Hint } from '@/components/product/hint';
 import { textLinkClassName } from '@/components/product/text-link';
@@ -16,6 +17,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Link } from '@/i18n/navigation';
+import { isFormDirty } from '@/lib/form-dirty';
 import { fieldErrorForPath } from '@/lib/recipe-editor';
 import type {
   PreservedTranslationCollections,
@@ -78,6 +80,7 @@ export function RecipeEditorForm({
       key={rehydrateKey}
       mode={mode}
       initialDraft={draftSeed}
+      originalDraft={initialDraft}
       canManageRecipeTags={canManageRecipeTags}
       cancelHref={cancelHref}
       recipeAssets={recipeAssets}
@@ -94,6 +97,7 @@ export function RecipeEditorForm({
 function RecipeEditorFormBody({
   mode,
   initialDraft,
+  originalDraft,
   canManageRecipeTags,
   cancelHref,
   recipeAssets = [],
@@ -108,6 +112,8 @@ function RecipeEditorFormBody({
     state: RecipeEditorActionState | null;
     action: (formData: FormData) => void;
     pending: boolean;
+    /** The draft as loaded, not the one re-seeded after a failed save. */
+    originalDraft: RecipeEditorDraft;
     sessionAssetIds: readonly string[];
     onAssetUploaded: (assetId: string) => void;
   }
@@ -115,6 +121,7 @@ function RecipeEditorFormBody({
   const t = useTranslations('recipes.editor');
   const tLang = useTranslations('locale.languages');
   const tCommon = useTranslations('common');
+  const tDisabled = useTranslations('common.disabledReason');
   const locale = useLocale();
 
   const [draft, setDraft] = useState(initialDraft);
@@ -139,6 +146,13 @@ function RecipeEditorFormBody({
           onAssetUploaded,
         }
       : undefined;
+
+  // Edit: Save waits for a change. Create: Save waits for a title. After a failed save the draft is
+  // re-seeded from the server's copy, which still differs from `originalDraft`, so Save stays on.
+  const noTitle = draft.title.trim() === '';
+  const unchanged = mode.kind === 'edit' && !isFormDirty(originalDraft, draft);
+  const blockedReason =
+    mode.kind === 'create' && noTitle ? 'titleNeeded' : unchanged ? 'unchanged' : null;
 
   const titleId = useId();
   const descriptionId = useId();
@@ -165,7 +179,7 @@ function RecipeEditorFormBody({
   }, [state]);
 
   return (
-    <div className="space-y-6 pb-28 md:pb-24">
+    <div className="space-y-6 pb-40 md:pb-24">
       <form id={formId} action={action} className="space-y-6" aria-busy={pending} noValidate>
         <input type="hidden" name="familyId" value={mode.familyId} />
         <input type="hidden" name="payload" value={JSON.stringify(draft)} />
@@ -221,6 +235,7 @@ function RecipeEditorFormBody({
             label={t('fields.title')}
             hint={t('hints.title')}
             error={titleError}
+            required
           >
             <Input
               value={draft.title}
@@ -429,7 +444,7 @@ function RecipeEditorFormBody({
           <Button
             type="submit"
             form={formId}
-            disabled={pending}
+            disabled={pending || blockedReason !== null}
             className="min-h-11 w-full sm:w-auto"
           >
             {pending ? t('saving') : t('submit')}
@@ -437,6 +452,9 @@ function RecipeEditorFormBody({
           <Button type="button" variant="outline" className="min-h-11 w-full sm:w-auto" asChild>
             <Link href={cancelHref}>{t('cancel')}</Link>
           </Button>
+          <DisabledReason show={blockedReason !== null && !pending} className="sm:ml-2">
+            {blockedReason === 'titleNeeded' ? tDisabled('titleNeeded') : tDisabled('unchanged')}
+          </DisabledReason>
         </div>
       </div>
     </div>

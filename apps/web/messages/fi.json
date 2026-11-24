@@ -10,7 +10,17 @@
   },
   "common": {
     "loading": "Ladataan…",
-    "whatIsThis": "Mikä tämä on?"
+    "whatIsThis": "Mikä tämä on?",
+    "disabledReason": {
+      "unchanged": "Muuta jotain, niin voit tallentaa.",
+      "titleNeeded": "Lisää nimi, niin voit tallentaa.",
+      "familyNameNeeded": "Kirjoita perheen nimi jatkaaksesi.",
+      "emailNeeded": "Kirjoita sähköpostiosoite jatkaaksesi.",
+      "codeNeeded": "Kirjoita 6-numeroinen koodi jatkaaksesi.",
+      "roleUnchanged": "Valitse eri rooli, niin voit tallentaa.",
+      "transferNeeded": "Valitse jäsen ja vahvista jatkaaksesi."
+    },
+    "required": "pakollinen"
   },
   "uiPreferences": {
     "legend": "Kieli ja ulkoasu",
@@ -72,18 +82,15 @@
       "title": "Kieli ja ulkoasu",
       "displayNameLabel": "Näyttönimi",
       "displayNameHint": "Näkyy perheen jäsenille sähköpostisi sijaan.",
-      "languageLabel": "Sovelluksen kieli",
-      "languageHint": "Vaihtaa sovelluksen kielen kaikilla laitteilla, joihin olet kirjautunut.",
-      "themeLabel": "Ulkoasu",
-      "themeHint": "Valitse vaalea, tumma tai seuraa laitettasi.",
-      "save": "Tallenna asetukset",
+      "save": "Tallenna nimi",
       "saving": "Tallennetaan…",
-      "saved": "Asetukset tallennettu.",
+      "saved": "Nimi tallennettu.",
       "errors": {
         "validation": "Tarkista kentät ja yritä uudelleen.",
         "notFound": "Profiilia ei voitu ladata.",
         "failed": "Asetuksia ei voitu tallentaa. Yritä uudelleen."
-      }
+      },
+      "appliesNow": "Kieli ja ulkoasu vaihtuvat heti valitessasi, kaikilla laitteilla, joihin olet kirjautunut."
     }
   },
   "validation": {
@@ -484,7 +491,8 @@
       "categoriesLabel": "Selaa kategorioittain",
       "anyCategory": "Mikä tahansa kategoria",
       "anyTag": "Mikä tahansa tunniste",
-      "selected": "valittu"
+      "selected": "valittu",
+      "clearDisabled": "Mitään suodatinta ei ole käytössä."
     },
     "sort": {
       "updatedAt": "Viimeksi päivitetty",

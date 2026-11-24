@@ -2,15 +2,19 @@
 
 import type { RecipeDetail } from '@family-cookbook/contracts';
 import { useActionState, useId, useMemo, useState, type ReactNode } from 'react';
+import { useTranslations } from 'next-intl';
 
 import {
   saveRecipeTranslationAction,
   type TranslationActionErrorCode,
 } from '@/app/actions/recipe-translations';
+import { RequiredMark } from '@/components/product/required-mark';
+import { DisabledReason } from '@/components/product/disabled-reason';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { useFormBaseline } from '@/lib/form-dirty';
 
 type Labels = Readonly<{
   title: string;
@@ -57,6 +61,50 @@ export function RecipeTranslationForm(props: Props) {
   const [stepInstructions, setStepInstructions] = useState(props.initial.stepInstructions);
   const [reviewed, setReviewed] = useState(props.initial.reviewStatus === 'reviewed');
   const [version, setVersion] = useState(props.recipe.version);
+  const tCommon = useTranslations('common.disabledReason');
+  // Positions without a saved translation have no key yet; treat them as empty on both sides so
+  // typing and then clearing a field counts as unchanged.
+  const snapshot = (values: {
+    title: string;
+    description: string;
+    notes: string;
+    ingredientNames: Record<number, string>;
+    ingredientNotes: Record<number, string>;
+    stepInstructions: Record<number, string>;
+    reviewed: boolean;
+  }) => ({
+    ...values,
+    ingredientNames: props.recipe.ingredients.map(
+      (item) => values.ingredientNames[item.position] ?? '',
+    ),
+    ingredientNotes: props.recipe.ingredients.map(
+      (item) => values.ingredientNotes[item.position] ?? '',
+    ),
+    stepInstructions: props.recipe.steps.map(
+      (item) => values.stepInstructions[item.position] ?? '',
+    ),
+  });
+  const { dirty } = useFormBaseline(
+    snapshot({
+      title: props.initial.title,
+      description: props.initial.description,
+      notes: props.initial.notes,
+      ingredientNames: props.initial.ingredientNames,
+      ingredientNotes: props.initial.ingredientNotes,
+      stepInstructions: props.initial.stepInstructions,
+      reviewed: props.initial.reviewStatus === 'reviewed',
+    }),
+    snapshot({
+      title,
+      description,
+      notes,
+      ingredientNames,
+      ingredientNotes,
+      stepInstructions,
+      reviewed,
+    }),
+    state?.ok === true ? state : null,
+  );
   const formId = useId();
   const nextVersion = Math.max(
     version,
@@ -119,6 +167,7 @@ export function RecipeTranslationForm(props: Props) {
         original={props.recipe.title}
         originalLabel={props.labels.originalLabel}
         originalLang={props.recipe.sourceLanguage}
+        required
       >
         <Input
           id={`${formId}-title`}
@@ -261,7 +310,7 @@ export function RecipeTranslationForm(props: Props) {
         </label>
       ) : null}
 
-      {state?.ok === true ? (
+      {state?.ok === true && !dirty ? (
         <p className="text-sm text-foreground" role="status">
           {props.savedMessage}
         </p>
@@ -273,9 +322,12 @@ export function RecipeTranslationForm(props: Props) {
         </p>
       ) : null}
 
-      <Button type="submit" className="min-h-11 w-full sm:w-auto" disabled={pending}>
-        {pending ? props.labels.saving : props.labels.save}
-      </Button>
+      <div className="space-y-2">
+        <Button type="submit" className="min-h-11 w-full sm:w-auto" disabled={pending || !dirty}>
+          {pending ? props.labels.saving : props.labels.save}
+        </Button>
+        <DisabledReason show={!dirty && !pending}>{tCommon('unchanged')}</DisabledReason>
+      </div>
     </form>
   );
 }
@@ -286,6 +338,7 @@ function FieldBlock({
   original,
   originalLabel,
   originalLang,
+  required = false,
   children,
 }: Readonly<{
   id: string;
@@ -293,6 +346,7 @@ function FieldBlock({
   original: string;
   originalLabel: string;
   originalLang: string;
+  required?: boolean;
   children: ReactNode;
 }>) {
   return (
@@ -300,6 +354,7 @@ function FieldBlock({
       <div className="space-y-1">
         <Label htmlFor={id} className="text-sm font-medium">
           {label}
+          {required ? <RequiredMark /> : null}
         </Label>
         {children}
       </div>

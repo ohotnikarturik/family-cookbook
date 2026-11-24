@@ -1,6 +1,7 @@
 import { cloneElement, isValidElement, type ReactElement, type ReactNode } from 'react';
 
 import { Hint } from '@/components/product/hint';
+import { RequiredMark } from '@/components/product/required-mark';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 
@@ -9,11 +10,13 @@ type Props = Readonly<{
   label: string;
   hint?: string | undefined;
   error?: string | undefined;
+  /** Shows a visible "(required)" after the label; the control carries `required` itself. */
+  required?: boolean;
   children: ReactNode;
   className?: string;
 }>;
 
-export function FormField({ id, label, hint, error, children, className }: Props) {
+export function FormField({ id, label, hint, error, required, children, className }: Props) {
   const describedBy =
     [hint ? `${id}-hint` : null, error ? `${id}-error` : null].filter(Boolean).join(' ') ||
     undefined;
@@ -27,7 +30,10 @@ export function FormField({ id, label, hint, error, children, className }: Props
 
   return (
     <div className={cn('space-y-1.5', className)}>
-      <Label htmlFor={id}>{label}</Label>
+      <Label htmlFor={id}>
+        {label}
+        {required ? <RequiredMark /> : null}
+      </Label>
       {control}
       {hint ? <Hint id={`${id}-hint`}>{hint}</Hint> : null}
       {error ? (

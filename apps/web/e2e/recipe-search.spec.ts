@@ -25,7 +25,7 @@ test.describe('search-first recipe browse', () => {
     await expect(page.getByRole('searchbox', { name: 'Search', exact: true })).toBeVisible();
     // Typing searches and filters apply on change, so there is nothing to confirm.
     await expect(page.getByRole('button', { name: 'Search', exact: true })).toHaveCount(0);
-    const filters = page.getByRole('button', { name: 'Filters' });
+    const filters = page.getByRole('button', { name: 'Filters', exact: true });
     await expect(filters).toHaveAttribute('aria-expanded', 'false');
     await expect(page.getByLabel('Category', { exact: true })).toBeHidden();
     await filters.click();
@@ -60,7 +60,7 @@ test.describe('search-first recipe browse', () => {
 
   test('a filter applies as soon as it is chosen; the panel stays open', async ({ page }) => {
     await page.goto(recipes);
-    const filters = page.getByRole('button', { name: 'Filters' });
+    const filters = page.getByRole('button', { name: 'Filters', exact: true });
     await filters.click();
     const category = page.getByLabel('Category', { exact: true });
     await category.focus();
@@ -74,7 +74,7 @@ test.describe('search-first recipe browse', () => {
 
   test('filters picked from the panel stay when searching', async ({ page }) => {
     await page.goto(recipes);
-    await page.getByRole('button', { name: 'Filters' }).click();
+    await page.getByRole('button', { name: 'Filters', exact: true }).click();
     await page.getByLabel('Category', { exact: true }).selectOption('Baking');
     await page.getByLabel('Recipe language').selectOption('en');
     await page.getByRole('searchbox', { name: 'Search', exact: true }).fill('buns');
@@ -183,7 +183,7 @@ test.describe('search-first recipe browse', () => {
   test('no sideways scroll at 320px, with the panel open', async ({ page }) => {
     await page.setViewportSize(NARROW);
     await page.goto(recipes);
-    await page.getByRole('button', { name: 'Filters' }).click();
+    await page.getByRole('button', { name: 'Filters', exact: true }).click();
     const overflow = await page.evaluate(
       (width) => document.documentElement.scrollWidth > width + 1,
       NARROW.width,
@@ -196,7 +196,7 @@ test.describe('search-first recipe browse', () => {
       await page.emulateMedia({ colorScheme: scheme });
       await page.setViewportSize(NARROW);
       await page.goto(`${recipes}?category=Baking`);
-      await page.getByRole('button', { name: 'Filters' }).click();
+      await page.getByRole('button', { name: 'Filters', exact: true }).click();
       await expectNoSeriousAxeViolations(page);
     });
   }

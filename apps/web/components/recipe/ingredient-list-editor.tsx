@@ -5,6 +5,7 @@ import { Plus } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useId, useState } from 'react';
 
+import { DisabledReason } from '@/components/product/disabled-reason';
 import { FormField } from '@/components/product/form-field';
 import { Hint } from '@/components/product/hint';
 import { Button } from '@/components/ui/button';
@@ -313,13 +314,21 @@ export function IngredientListEditor({ ingredients, onChange, disabled, fieldErr
           />
         </FormField>
         <div className="flex flex-wrap gap-2">
-          <Button type="button" variant="secondary" disabled={disabled} onClick={applyBulk}>
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={disabled || bulkText.trim() === ''}
+            onClick={applyBulk}
+          >
             {t('ingredients.bulk.add')}
           </Button>
           <Button type="button" variant="ghost" onClick={closeBulk}>
             {t('ingredients.bulk.cancel')}
           </Button>
         </div>
+        <DisabledReason show={bulkText.trim() === '' && !disabled}>
+          {t('ingredients.bulk.empty')}
+        </DisabledReason>
       </div>
       <p role="status" aria-live="polite" className="sr-only">
         {message}

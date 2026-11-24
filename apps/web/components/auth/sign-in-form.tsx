@@ -9,6 +9,8 @@ import {
   type MagicLinkState,
   type VerifyOtpState,
 } from '@/app/actions/auth';
+import { RequiredMark } from '@/components/product/required-mark';
+import { DisabledReason } from '@/components/product/disabled-reason';
 import { textLinkClassName } from '@/components/product/text-link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,11 +28,14 @@ const wrapLabelClassName = 'h-auto whitespace-normal py-2 text-center';
 
 export function SignInForm({ locale, nextPath, callbackError = false }: Props) {
   const t = useTranslations('auth');
+  const tDisabled = useTranslations('common.disabledReason');
 
   // Send and resend share one action; a successful send (re)starts the resend countdown.
   const [cooldownEndsAt, setCooldownEndsAt] = useState(0);
   const [now, setNow] = useState(0);
   const [resent, setResent] = useState(false);
+  const [emailValue, setEmailValue] = useState('');
+  const [code, setCode] = useState('');
   const requestWithCooldown = async (
     prev: MagicLinkState,
     formData: FormData,
@@ -107,7 +112,10 @@ export function SignInForm({ locale, nextPath, callbackError = false }: Props) {
         >
           <input type="hidden" name="next" value={nextPath} />
           <div className="space-y-2">
-            <Label htmlFor={emailId}>{t('emailLabel')}</Label>
+            <Label htmlFor={emailId}>
+              {t('emailLabel')}
+              <RequiredMark />
+            </Label>
             <Input
               id={emailId}
               ref={emailRef}
@@ -117,7 +125,8 @@ export function SignInForm({ locale, nextPath, callbackError = false }: Props) {
               inputMode="email"
               required
               disabled={sendPending}
-              defaultValue={dismissed?.ok === true ? dismissed.email : ''}
+              value={emailValue}
+              onChange={(event) => setEmailValue(event.target.value)}
               aria-invalid={sendState?.ok === false}
               aria-describedby={sendState?.ok === false ? `${emailId}-error` : undefined}
             />
@@ -127,9 +136,18 @@ export function SignInForm({ locale, nextPath, callbackError = false }: Props) {
               </p>
             ) : null}
           </div>
-          <Button type="submit" disabled={sendPending} className={wrapLabelClassName}>
-            {sendPending ? t('sending') : t('sendCode')}
-          </Button>
+          <div className="space-y-2">
+            <Button
+              type="submit"
+              disabled={sendPending || emailValue.trim() === ''}
+              className={wrapLabelClassName}
+            >
+              {sendPending ? t('sending') : t('sendCode')}
+            </Button>
+            <DisabledReason show={emailValue.trim() === '' && !sendPending}>
+              {tDisabled('emailNeeded')}
+            </DisabledReason>
+          </div>
         </form>
       ) : (
         <section
@@ -168,6 +186,7 @@ export function SignInForm({ locale, nextPath, callbackError = false }: Props) {
                   const input = event.currentTarget;
                   const digits = input.value.replace(/\D/g, '').slice(0, CODE_LENGTH);
                   input.value = digits;
+                  setCode(digits);
                   if (digits.length === CODE_LENGTH) {
                     input.form?.requestSubmit();
                   }
@@ -182,9 +201,18 @@ export function SignInForm({ locale, nextPath, callbackError = false }: Props) {
                 </p>
               ) : null}
             </div>
-            <Button type="submit" disabled={otpPending} className={wrapLabelClassName}>
-              {otpPending ? t('verifying') : t('verifyCode')}
-            </Button>
+            <div className="space-y-2">
+              <Button
+                type="submit"
+                disabled={otpPending || code.length < CODE_LENGTH}
+                className={wrapLabelClassName}
+              >
+                {otpPending ? t('verifying') : t('verifyCode')}
+              </Button>
+              <DisabledReason show={code.length < CODE_LENGTH && !otpPending}>
+                {tDisabled('codeNeeded')}
+              </DisabledReason>
+            </div>
           </form>
 
           <p className="text-sm text-muted-foreground">{t('orOpenLink')}</p>
@@ -206,7 +234,10 @@ export function SignInForm({ locale, nextPath, callbackError = false }: Props) {
               type="button"
               variant="quiet"
               className={`${wrapLabelClassName} sm:w-auto`}
-              onClick={() => setDismissed(sendState)}
+              onClick={() => {
+                setCode('');
+                setDismissed(sendState);
+              }}
             >
               {t('useDifferentEmail')}
             </Button>

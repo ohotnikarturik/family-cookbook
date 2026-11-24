@@ -1,17 +1,20 @@
 'use client';
 
 import type { UpdateFamilyInput } from '@family-cookbook/contracts';
-import { useActionState, useId } from 'react';
+import { useActionState, useId, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 
 import {
   updateFamilySettingsAction,
   type FamilySettingsActionState,
 } from '@/app/actions/family-settings';
+import { RequiredMark } from '@/components/product/required-mark';
+import { DisabledReason } from '@/components/product/disabled-reason';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { locales } from '@/i18n/routing';
+import { useFormBaseline } from '@/lib/form-dirty';
 import { languageLabel } from '@/lib/language-label';
 import { submitWithoutReset } from '@/lib/submit-without-reset';
 
@@ -25,10 +28,19 @@ type Props = Readonly<{
 export function FamilySettingsForm({ familyId, name, defaultLanguage, canEdit }: Props) {
   const locale = useLocale();
   const t = useTranslations('family.settings');
+  const tCommon = useTranslations('common.disabledReason');
   const tLocale = useTranslations('locale.languages');
   const [state, action, pending] = useActionState<FamilySettingsActionState | null, FormData>(
     updateFamilySettingsAction,
     null,
+  );
+
+  const [nameValue, setNameValue] = useState(name);
+  const [languageValue, setLanguageValue] = useState<string>(defaultLanguage);
+  const { dirty } = useFormBaseline(
+    { name, defaultLanguage: defaultLanguage as string },
+    { name: nameValue, defaultLanguage: languageValue },
+    state?.ok === true ? state : null,
   );
 
   const nameId = useId();
@@ -61,7 +73,10 @@ export function FamilySettingsForm({ familyId, name, defaultLanguage, canEdit }:
     >
       <input type="hidden" name="familyId" value={familyId} />
       <div className="space-y-2">
-        <Label htmlFor={nameId}>{t('nameLabel')}</Label>
+        <Label htmlFor={nameId}>
+          {t('nameLabel')}
+          <RequiredMark />
+        </Label>
         <Input
           id={nameId}
           name="name"
@@ -69,7 +84,8 @@ export function FamilySettingsForm({ familyId, name, defaultLanguage, canEdit }:
           required
           minLength={1}
           maxLength={120}
-          defaultValue={name}
+          value={nameValue}
+          onChange={(event) => setNameValue(event.target.value)}
           autoComplete="organization"
           disabled={pending}
           className="min-h-11"
@@ -81,7 +97,8 @@ export function FamilySettingsForm({ familyId, name, defaultLanguage, canEdit }:
         <select
           id={langId}
           name="defaultLanguage"
-          defaultValue={defaultLanguage}
+          value={languageValue}
+          onChange={(event) => setLanguageValue(event.target.value)}
           disabled={pending}
           className="flex min-h-11 w-full rounded-md border border-input bg-background px-3 text-base shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
@@ -98,14 +115,17 @@ export function FamilySettingsForm({ familyId, name, defaultLanguage, canEdit }:
           {state.message}
         </p>
       ) : null}
-      {state?.ok === true ? (
+      {state?.ok === true && !dirty ? (
         <p className="text-sm text-muted-foreground" role="status">
           {t('saved')}
         </p>
       ) : null}
-      <Button type="submit" disabled={pending} className="min-h-11 w-full sm:w-auto">
-        {pending ? t('saving') : t('save')}
-      </Button>
+      <div className="space-y-2">
+        <Button type="submit" disabled={pending || !dirty} className="min-h-11 w-full sm:w-auto">
+          {pending ? t('saving') : t('save')}
+        </Button>
+        <DisabledReason show={!dirty && !pending}>{tCommon('unchanged')}</DisabledReason>
+      </div>
     </form>
   );
 }

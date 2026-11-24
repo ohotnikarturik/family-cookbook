@@ -26,7 +26,7 @@ test.describe('critical journeys', () => {
 
     await expect(page.getByRole('link', { name: "Grandma's cardamom buns" })).toBeVisible();
 
-    await page.getByRole('button', { name: 'Filters' }).click();
+    await page.getByRole('button', { name: 'Filters', exact: true }).click();
     await page.getByRole('checkbox', { name: 'Include archived recipes' }).check();
     await page.getByRole('searchbox', { name: 'Search', exact: true }).fill('beet');
     await expect(page.getByRole('link', { name: 'Archived beet salad' })).toBeVisible();

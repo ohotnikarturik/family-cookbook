@@ -100,7 +100,7 @@ test.describe('account shell', () => {
       TEST_USERS.ownerA,
     );
     await expect(page.getByRole('textbox', { name: 'Display name' })).toBeVisible();
-    await expect(page.getByRole('combobox', { name: 'App language' })).toBeVisible();
+    await expect(page.getByRole('combobox', { name: 'Interface language' })).toBeVisible();
     await expect(page.getByRole('group', { name: 'Appearance' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Sign out' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Back to home' })).toHaveCount(0);

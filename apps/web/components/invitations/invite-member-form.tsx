@@ -6,6 +6,8 @@ import { useActionState, useEffect, useId, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { createInvitationAction, type CreateInvitationState } from '@/app/actions/invitations';
+import { RequiredMark } from '@/components/product/required-mark';
+import { DisabledReason } from '@/components/product/disabled-reason';
 import { Hint } from '@/components/product/hint';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,17 +23,20 @@ export function InviteMemberForm({ familyId, invitableRoles }: Props) {
   const tr = useTranslations('invitations');
   const trRoles = useTranslations('family.roles');
   const trRoleDescriptions = useTranslations('family.roleDescriptions');
+  const tCommon = useTranslations('common.disabledReason');
   const router = useRouter();
   const defaultRole: FamilyRole = invitableRoles.includes('viewer')
     ? 'viewer'
     : (invitableRoles[0] ?? 'viewer');
   const [selectedRole, setSelectedRole] = useState<FamilyRole>(defaultRole);
+  const [email, setEmail] = useState('');
   const [state, action, pending] = useActionState<CreateInvitationState, FormData>(
     async (prev, formData) => {
       const result = await createInvitationAction(prev, formData);
       // The form resets after a successful send; keep the role description in step with it.
       if (result?.ok === true) {
         setSelectedRole(defaultRole);
+        setEmail('');
       }
       return result;
     },
@@ -55,12 +60,17 @@ export function InviteMemberForm({ familyId, invitableRoles }: Props) {
     >
       <input type="hidden" name="familyId" value={familyId} readOnly />
       <div className="space-y-2">
-        <Label htmlFor={emailId}>{tr('form.emailLabel')}</Label>
+        <Label htmlFor={emailId}>
+          {tr('form.emailLabel')}
+          <RequiredMark />
+        </Label>
         <Input
           id={emailId}
           name="email"
           type="email"
           autoComplete="email"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
           required
           disabled={pending}
           aria-invalid={state?.ok === false}
@@ -113,9 +123,18 @@ export function InviteMemberForm({ familyId, invitableRoles }: Props) {
           {tr('form.sent')}
         </p>
       ) : null}
-      <Button type="submit" disabled={pending} className="min-h-11 w-full sm:w-auto">
-        {pending ? tr('form.sending') : tr('form.submit')}
-      </Button>
+      <div className="space-y-2">
+        <Button
+          type="submit"
+          disabled={pending || email.trim() === ''}
+          className="min-h-11 w-full sm:w-auto"
+        >
+          {pending ? tr('form.sending') : tr('form.submit')}
+        </Button>
+        <DisabledReason show={email.trim() === '' && !pending}>
+          {tCommon('emailNeeded')}
+        </DisabledReason>
+      </div>
     </form>
   );
 }

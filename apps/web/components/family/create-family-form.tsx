@@ -1,9 +1,11 @@
 'use client';
 
-import { useActionState, useId } from 'react';
+import { useActionState, useId, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import { createFamilyAction, type CreateFamilyState } from '@/app/actions/family';
+import { RequiredMark } from '@/components/product/required-mark';
+import { DisabledReason } from '@/components/product/disabled-reason';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,11 +14,13 @@ import { locales } from '@/i18n/routing';
 export function CreateFamilyForm() {
   const t = useTranslations('onboarding');
   const tLocale = useTranslations('locale.languages');
+  const tCommon = useTranslations('common.disabledReason');
   const [state, action, pending] = useActionState<CreateFamilyState, FormData>(
     createFamilyAction,
     null,
   );
 
+  const [nameValue, setNameValue] = useState('');
   const nameId = useId();
   const langId = useId();
 
@@ -26,7 +30,10 @@ export function CreateFamilyForm() {
       className="space-y-4 rounded-xl border border-border bg-card p-5 shadow-sm"
     >
       <div className="space-y-2">
-        <Label htmlFor={nameId}>{t('nameLabel')}</Label>
+        <Label htmlFor={nameId}>
+          {t('nameLabel')}
+          <RequiredMark />
+        </Label>
         <Input
           id={nameId}
           name="name"
@@ -34,6 +41,8 @@ export function CreateFamilyForm() {
           required
           minLength={1}
           maxLength={120}
+          value={nameValue}
+          onChange={(event) => setNameValue(event.target.value)}
           autoComplete="organization"
           disabled={pending}
           aria-invalid={state?.ok === false}
@@ -61,9 +70,18 @@ export function CreateFamilyForm() {
           {state.error}
         </p>
       ) : null}
-      <Button type="submit" disabled={pending} className="min-h-11 w-full sm:w-auto">
-        {pending ? t('creating') : t('submit')}
-      </Button>
+      <div className="space-y-2">
+        <Button
+          type="submit"
+          disabled={pending || nameValue.trim() === ''}
+          className="min-h-11 w-full sm:w-auto"
+        >
+          {pending ? t('creating') : t('submit')}
+        </Button>
+        <DisabledReason show={nameValue.trim() === '' && !pending}>
+          {tCommon('familyNameNeeded')}
+        </DisabledReason>
+      </div>
     </form>
   );
 }

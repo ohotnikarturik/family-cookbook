@@ -10,7 +10,17 @@
   },
   "common": {
     "loading": "Loading…",
-    "whatIsThis": "What is this?"
+    "whatIsThis": "What is this?",
+    "disabledReason": {
+      "unchanged": "Change something to save.",
+      "titleNeeded": "Add a title to save.",
+      "familyNameNeeded": "Enter a family name to continue.",
+      "emailNeeded": "Enter an email address to continue.",
+      "codeNeeded": "Enter the 6-digit code to continue.",
+      "roleUnchanged": "Choose a different role to save.",
+      "transferNeeded": "Choose a member and confirm to continue."
+    },
+    "required": "required"
   },
   "uiPreferences": {
     "legend": "Language and appearance",
@@ -72,18 +82,15 @@
       "title": "Language and appearance",
       "displayNameLabel": "Display name",
       "displayNameHint": "Shown to family members instead of your email.",
-      "languageLabel": "App language",
-      "languageHint": "Changes the app language on every device where you are signed in.",
-      "themeLabel": "Appearance",
-      "themeHint": "Choose light, dark, or match your device.",
-      "save": "Save preferences",
+      "save": "Save name",
       "saving": "Saving…",
-      "saved": "Preferences saved.",
+      "saved": "Name saved.",
       "errors": {
         "validation": "Check the fields and try again.",
         "notFound": "We could not load your profile.",
         "failed": "We could not save your preferences. Try again."
-      }
+      },
+      "appliesNow": "Language and appearance change as soon as you choose them, on every device where you are signed in."
     }
   },
   "validation": {
@@ -484,7 +491,8 @@
       "categoriesLabel": "Browse by category",
       "anyCategory": "Any category",
       "anyTag": "Any tag",
-      "selected": "selected"
+      "selected": "selected",
+      "clearDisabled": "No filters are applied."
     },
     "sort": {
       "updatedAt": "Last updated",

@@ -9,6 +9,7 @@ import {
   setFamilyMemberStatusAction,
   type FamilyMemberAdminActionState,
 } from '@/app/actions/family-member-admin';
+import { DisabledReason } from '@/components/product/disabled-reason';
 import { Hint } from '@/components/product/hint';
 import { Button } from '@/components/ui/button';
 import {
@@ -106,6 +107,7 @@ function ChangeForms({
   const t = useTranslations('family.members.admin');
   const tRoles = useTranslations('family.roles');
   const tRoleDescriptions = useTranslations('family.roleDescriptions');
+  const tDisabled = useTranslations('common.disabledReason');
   const [selectedRole, setSelectedRole] = useState<FamilyRole>(member.role);
   const roleFieldId = useId();
   const roleDescriptionId = useId();
@@ -172,6 +174,9 @@ function ChangeForms({
         >
           {rolePending ? t('savingRole') : t('saveRole')}
         </Button>
+        <DisabledReason show={!roleLocked && !pending && selectedRole === member.role}>
+          {tDisabled('roleUnchanged')}
+        </DisabledReason>
       </form>
 
       <form action={statusAction} className="space-y-3 border-t border-border pt-4">

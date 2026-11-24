@@ -121,6 +121,12 @@ test.describe('sign-in by code', () => {
   test('a wrong code shows an error and stays on the code step', async ({ page }) => {
     const email = uniqueEmail('wrong');
     await requestCode(page, email);
+    // Verify waits for all six digits and says so.
+    const verify = page.getByRole('button', { name: 'Sign in', exact: true });
+    await expect(verify).toBeDisabled();
+    await expect(page.getByText('Enter the 6-digit code to continue.')).toBeVisible();
+    await page.getByLabel('6-digit code').fill('123');
+    await expect(verify).toBeDisabled();
     // A 1-in-a-million collision with the real code would fail this test; acceptable.
     await page.getByLabel('6-digit code').fill('000000');
     await expect(

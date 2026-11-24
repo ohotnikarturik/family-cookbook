@@ -2,11 +2,13 @@
 
 import type { FamilyRole } from '@family-cookbook/contracts';
 import { useActionState, useId, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 import {
   transferFamilyOwnershipAction,
   type FamilyOwnershipTransferActionState,
 } from '@/app/actions/family-ownership-transfer';
+import { DisabledReason } from '@/components/product/disabled-reason';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -58,6 +60,7 @@ export function FamilyOwnershipTransferSection({
   const [open, setOpen] = useState(false);
   const [confirmChecked, setConfirmChecked] = useState(false);
   const [newOwnerUserId, setNewOwnerUserId] = useState('');
+  const tDisabled = useTranslations('common.disabledReason');
   const confirmId = useId();
   const newOwnerFieldId = useId();
   const formerRoleFieldId = useId();
@@ -163,6 +166,9 @@ export function FamilyOwnershipTransferSection({
                 {labels.confirmLabel}
               </span>
             </label>
+            <DisabledReason show={!canSubmit && !pending}>
+              {tDisabled('transferNeeded')}
+            </DisabledReason>
             <DialogFooter className="gap-2 sm:gap-0">
               <Button
                 type="button"

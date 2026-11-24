@@ -5,6 +5,7 @@ import { ChevronDown, Search } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useEffect, useId, useRef, useState, useTransition } from 'react';
 
+import { DisabledReason } from '@/components/product/disabled-reason';
 import { FormField } from '@/components/product/form-field';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -334,9 +335,18 @@ export function RecipeSearchForm({
             </label>
           </div>
         </div>
-        <Button type="button" variant="outline" className="min-h-11" asChild>
-          <Link href={`/f/${familyId}/recipes`}>{t('clear')}</Link>
-        </Button>
+        {urlQuery === '' ? (
+          <div className="space-y-2">
+            <Button type="button" variant="outline" className="min-h-11" disabled>
+              {t('clear')}
+            </Button>
+            <DisabledReason show>{t('clearDisabled')}</DisabledReason>
+          </div>
+        ) : (
+          <Button type="button" variant="outline" className="min-h-11" asChild>
+            <Link href={`/f/${familyId}/recipes`}>{t('clear')}</Link>
+          </Button>
+        )}
       </div>
     </form>
   );

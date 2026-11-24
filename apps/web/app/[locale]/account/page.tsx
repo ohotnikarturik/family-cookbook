@@ -1,8 +1,10 @@
 import { signOutAction } from '@/app/actions/auth';
 import { AccountPreferencesForm } from '@/components/account/account-preferences-form';
+import { LanguageSwitcher } from '@/components/i18n/language-switcher';
 import { LoadingState } from '@/components/product/loading-state';
 import { PageHeader } from '@/components/product/page-header';
 import { AccountShell } from '@/components/shell/account-shell';
+import { ThemeSwitcher } from '@/components/theme/ThemeSwitcher';
 import { Button } from '@/components/ui/button';
 import { locales, type AppLocale } from '@/i18n/routing';
 import { profileBootstrapHintsFromCookies } from '@/lib/auth-hints';
@@ -84,11 +86,17 @@ async function AccountContent({ params }: Props) {
         </section>
       ) : null}
 
+      <AccountPreferencesForm profile={loaded.profile} />
+
       <section className="space-y-4" aria-labelledby="account-preferences-heading">
         <h2 id="account-preferences-heading" className="text-base font-semibold">
           {t('preferences.title')}
         </h2>
-        <AccountPreferencesForm profile={loaded.profile} />
+        <div className="grid gap-6 rounded-xl border border-border bg-card p-5 shadow-sm sm:grid-cols-2">
+          <LanguageSwitcher />
+          <ThemeSwitcher />
+        </div>
+        <p className="text-sm text-muted-foreground">{t('preferences.appliesNow')}</p>
       </section>
 
       <form action={signOutAction}>
